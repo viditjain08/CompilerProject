@@ -71,8 +71,11 @@ GRAMMAR populateGrammar(char* grammar_file) {
         RULE r_temp;
         TK_NODE tk_temp=NULL;
         int is_term=-1;
+        line[strlen(line)+1]='\0';
+        line[strlen(line)]=' ';
         for(int i=0;line[i]!='\0';i++) {
-            if(left==1 && line[i]=='\t') {
+        //    printf("%c  ",line[i]);
+            if(left==1 && (line[i]=='\t' || line[i]==' ')) {
                 continue;
             }
             if(left==1) {
@@ -98,6 +101,7 @@ GRAMMAR populateGrammar(char* grammar_file) {
                 } else {
                     token[token_ptr]=line[i];
                     token_ptr++;
+
                 }
             } else {
                 if(line[i]=='=') {
@@ -107,61 +111,63 @@ GRAMMAR populateGrammar(char* grammar_file) {
                     continue;
                 }
                 if(is_term==1) {
-                    // if(line[i]=='<' || line[i]=='\t' || line[i]=='|') {
-                    //     token[token_ptr]='\0';
-                    //     if(tk_temp==NULL) {
-                    //         r_temp->start=(TK_NODE)malloc(sizeof(tk_node));
-                    //         r_temp->start->next=NULL;
-                    //         strcpy((r_temp->start->info).term_name, token);
-                    //         tk_temp = r_temp->start;
-                    //     } else {
-                    //         tk_temp->next=(TK_NODE)malloc(sizeof(tk_node));
-                    //         tk_temp=tk_temp->next;
-                    //         tk_temp->next=NULL;
-                    //         strcpy((tk_temp->info).term_name, token);
-                    //     }
-                    //     token_ptr=0;
-                    //     if(line[i]=='<') {
-                    //         is_term=0;
-                    //     } else if(line[i]=='\t') {
-                    //         if(line[i+1]=='\0') {
-                    //             break;
-                    //         } else {
-                    //             is_term=-1;
-                    //         }
-                    //     } else {
-                    //         tk_temp=NULL;
-                    //         r_temp->next=(RULE)malloc(sizeof(rule));
-                    //         r_temp=r_temp->next;
-                    //         r_temp->next=NULL;
-                    //         is_term=-1;
-                    //     }
-                    // } else {
-                    //     token[token_ptr]=line[i];
-                    //     token_ptr++;
-                    // }
+                    if(line[i]=='<' || line[i]=='\t' || line[i]=='|' || line[i]==' ') {
+                        token[token_ptr]='\0';
+                        if(tk_temp==NULL) {
+                            r_temp->start=(TK_NODE)malloc(sizeof(tk_node));
+                            r_temp->start->next=NULL;
+                            (r_temp->start->info).term_name = (char*)malloc(sizeof(char)*(strlen(token)+1));
+                            strcpy((r_temp->start->info).term_name, token);
+                            tk_temp = r_temp->start;
+                        } else {
+                            tk_temp->next=(TK_NODE)malloc(sizeof(tk_node));
+                            tk_temp=tk_temp->next;
+                            tk_temp->next=NULL;
+                            (tk_temp->info).term_name = (char*)malloc(sizeof(char)*(strlen(token)+1));
+                            strcpy((tk_temp->info).term_name, token);
+                        }
+                        token_ptr=0;
+                        if(line[i]=='<') {
+                            is_term=0;
+                        } else if(line[i]=='\t' || line[i]==' ') {
+                            if(line[i+1]=='\0') {
+                                break;
+                            } else {
+                                is_term=-1;
+                            }
+                        } else {
+                            tk_temp=NULL;
+                            r_temp->next=(RULE)malloc(sizeof(rule));
+                            r_temp=r_temp->next;
+                            r_temp->next=NULL;
+                            is_term=-1;
+                        }
+                    } else {
+                        token[token_ptr]=line[i];
+                        token_ptr++;
+                    }
                 } else if(is_term==0) {
-                    // if(line[i]=='>') {
-                    //     token[token_ptr]='\0';
-                    //     if(tk_temp==NULL) {
-                    //         r_temp->start=(TK_NODE)malloc(sizeof(tk_node));
-                    //         r_temp->start->next=NULL;
-                    //         (r_temp->start->info).non_term=checkexisting(token, g);
-                    //         tk_temp = r_temp->start;
-                    //     } else {
-                    //         tk_temp->next=(TK_NODE)malloc(sizeof(tk_node));
-                    //         tk_temp=tk_temp->next;
-                    //         tk_temp->next=NULL;
-                    //         (tk_temp->info).non_term=checkexisting(token, g);
-                    //     }
-                    //     is_term=-1;
-                    //     token_ptr=0;
-                    // } else {
-                    //     token[token_ptr]=line[i];
-                    //     token_ptr++;
-                    // }
+                    if(line[i]=='>') {
+                        token[token_ptr]='\0';
+                        if(tk_temp==NULL) {
+                            r_temp->start=(TK_NODE)malloc(sizeof(tk_node));
+                            r_temp->start->next=NULL;
+                            (r_temp->start->info).non_term=checkexisting(token, g);
+                            tk_temp = r_temp->start;
+                        } else {
+                            tk_temp->next=(TK_NODE)malloc(sizeof(tk_node));
+                            tk_temp=tk_temp->next;
+                            tk_temp->next=NULL;
+                            (tk_temp->info).non_term=checkexisting(token, g);
+                        }
+                        is_term=-1;
+                        token_ptr=0;
+                    } else {
+                        token[token_ptr]=line[i];
+                        token_ptr++;
+                    }
                 } else {
-                    if(line[i]=='\t') {
+                    if(line[i]=='\t' || line[i]==' ') {
                         continue;
                     }
                     if(line[i]=='<') {
@@ -182,11 +188,11 @@ GRAMMAR populateGrammar(char* grammar_file) {
                     }
                 }
             }
-        }
 
+        }
+        // printf("%s\n",token);
         // temp->index
-        printf("%s\n",token);
-        // printf("%s\n",line);
+        printf("%s\n",line);
 
         line[0]='\0';
     }
@@ -198,4 +204,5 @@ GRAMMAR populateGrammar(char* grammar_file) {
 
 void main() {
     GRAMMAR g = populateGrammar("grammar.txt");
+
 }
