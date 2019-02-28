@@ -65,7 +65,7 @@ typedef union{
 typedef struct{
     tokenType token;
     char* lexeme;
-    Value val;
+    Value* val;
     int lineNo;
     int dataType;   // 0 for int, 1 for float, 2 for identifier, 3 for reserved keyword, 4 for erorr
 }tokenInfo;

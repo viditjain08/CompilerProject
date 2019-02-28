@@ -45,6 +45,7 @@ void removeComments(const char* testCase, const char* outfile){
     getStream(fin);
     currChar = 0;
     int preChar = 0;
+
     while(1){
         if (fileEnd == 0) {
             while (bufferCurr[currChar] != '%' && !(bufferCurr[currChar] == '\0' && currChar < BUFFER_SIZE)) {
