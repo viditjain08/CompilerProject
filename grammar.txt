@@ -20,7 +20,7 @@
 <global_or_not>===>TK_COLON TK_GLOBAL| eps
 <otherStmts>===> <stmt> <otherStmts> | eps
 <stmt>===> <assignmentStmt> | <iterativeStmt> | <conditionalStmt> | <ioStmt> | <funCallStmt>
-<assignmentStmt>===><SingleOrRecId> TK_ASSIGNOP <arithmeticExpression> TK_SEM
+<assignmentStmt>===><singleOrRecId> TK_ASSIGNOP <arithmeticExpression> TK_SEM
 <singleOrRecId>===> TK_ID <new_24>
 <new_24>===> TK_DOT TK_FIELDID | eps
 <funCallStmt>===><outputParameters> TK_CALL TK_FUNID TK_WITH TK_PARAMETERS <inputParameters> TK_SEM
@@ -36,7 +36,7 @@
 <term>===> <factor> <termPrime>
 <termPrime> ===> <highPrecedenceOperators> <factor> <termPrime> | eps
 <factor> ===> TK_OP <arithmeticExpression> TK_CL | <all>
-<highPrecedenceOperator>===> TK_MUL | TK_DIV
+<highPrecedenceOperators>===> TK_MUL | TK_DIV
 <lowPrecedenceOperators> ===> TK_PLUS | TK_MINUS
 <all>===> TK_ID | TK_NUM| TK_RNUM | TK_RECORDID <temp>
 <temp>===> eps | TK_DOT TK_FIELD
@@ -50,7 +50,3 @@
 <optionalReturn>===>TK_SQL <idList> TK_SQR | eps
 <idList>===> TK_ID <more_ids>
 <more_ids>===> TK_COMMA <idList> | eps
-
-
-
-

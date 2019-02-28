@@ -8,11 +8,10 @@ typedef struct tk_node tk_node;
 typedef struct rule rule;
 typedef struct grammar * GRAMMAR;
 typedef struct grammar grammar;
-typedef struct hash_block * HASH_BLOCK;
-typedef struct hash_block hash_block;
+typedef struct nont_block * NONT_BLOCK;
+typedef struct nont_block nont_block;
 
 #define grammar_len 50
-#define HASH_SIZE 300
 // typedef enum{
 // 	program,
 // 	mainFunction,
@@ -67,8 +66,8 @@ typedef struct hash_block hash_block;
 // } non_term;
 
 typedef union{
-	char* term_name;
-	HASH_BLOCK non_term;
+	char** term_name;
+	NONT_BLOCK non_term;
 } t_or_nt;
 
 struct tk_node{
@@ -81,12 +80,14 @@ struct rule{
     RULE next;
 };
 
-struct hash_block{
-		char* name;
-		RULE r;
-		HASH_BLOCK next;
+struct nont_block{
+	char* name;
+	RULE r;
 };
 
 struct grammar{
-	HASH_BLOCK hash_table[HASH_SIZE];
+	char** terminals;
+	NONT_BLOCK nonterminals;
+	int non_t_count;
+	int t_count;
 };
