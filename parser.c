@@ -82,12 +82,21 @@ GRAMMAR populateGrammar(char* grammar_file) {
 
                         nont_count++;
                     } else {
-                        RULE r_temp2=(g->nonterminals)[h_temp].r;
-                        while(r_temp2->next!=NULL) {
-                            r_temp2 = r_temp2->next;
+                        if((g->nonterminals)[h_temp].r==NULL) {
+
+                            (g->nonterminals)[h_temp].r=(RULE)malloc(sizeof(rule));
+                            r_temp = (g->nonterminals)[h_temp].r;
+
+                        } else {
+
+                            RULE r_temp2=(g->nonterminals)[h_temp].r;
+                            while(r_temp2->next!=NULL) {
+                                r_temp2 = r_temp2->next;
+                            }
+                            r_temp = (RULE)malloc(sizeof(rule));
+                            r_temp2->next=r_temp;
                         }
-                        r_temp = (RULE)malloc(sizeof(rule));
-                        r_temp2->next=r_temp;
+
                     }
                     token_ptr=0;
 
@@ -121,13 +130,17 @@ GRAMMAR populateGrammar(char* grammar_file) {
 
                             r_temp->start=(TK_NODE)malloc(sizeof(tk_node));
                             r_temp->start->next=NULL;
-                            (r_temp->start->info).term_name = &(g->terminals)[t_ind];
+                            (r_temp->start->info).term_index = t_ind;
+                            r_temp->start->type = T;
+
                             tk_temp = r_temp->start;
                         } else {
                             tk_temp->next=(TK_NODE)malloc(sizeof(tk_node));
                             tk_temp=tk_temp->next;
                             tk_temp->next=NULL;
-                            (tk_temp->info).term_name = &(g->terminals)[t_ind];
+                            (tk_temp->info).term_index = t_ind;
+                            tk_temp->type = T;
+
                         }
                         token_ptr=0;
                         if(line[i]=='<') {
@@ -158,11 +171,12 @@ GRAMMAR populateGrammar(char* grammar_file) {
 
                             if(nont_count==nont_max) {
                                 nont_max+=10;
+                                printf("%d-%d\n",nont_count,nont_max);
                                 g->nonterminals=(NONT_BLOCK)realloc(g->nonterminals,sizeof(nont_block)*nont_max);
                             }
                             (g->nonterminals)[nont_count].name = (char*)malloc(sizeof(char)*strlen(token)+1);
                             strcpy((g->nonterminals)[nont_count].name,token);
-                            (g->nonterminals)[nont_count].r=(RULE)malloc(sizeof(rule));
+                            // (g->nonterminals)[nont_count].r=(RULE)malloc(sizeof(rule));
                             h_temp=nont_count;
                             nont_count++;
                         }
@@ -172,12 +186,14 @@ GRAMMAR populateGrammar(char* grammar_file) {
                             r_temp->start->next=NULL;
 
                             (r_temp->start->info).non_term=&(g->nonterminals)[nont_count];
+                            r_temp->start->type = NT;
                             tk_temp = r_temp->start;
                         } else {
                             tk_temp->next=(TK_NODE)malloc(sizeof(tk_node));
                             tk_temp=tk_temp->next;
                             tk_temp->next=NULL;
                             (tk_temp->info).non_term=&(g->nonterminals)[nont_count];
+                            tk_temp->type=NT;
                         }
                         is_term=-1;
                         token_ptr=0;
@@ -222,6 +238,33 @@ GRAMMAR populateGrammar(char* grammar_file) {
     return g;
 }
 
+FirstFollow ComputeFirstAndFollowSets(GRAMMAR g) {
+    FirstFollow f = (FirstFollow)malloc(sizeof(firstfollow));
+    f->first = (int**)malloc(sizeof(int*)*g->non_t_count);
+    f->follow = (int**)malloc(sizeof(int*)*g->non_t_count);
+    for(int i=0;i<g->non_t_count;i++) {
+        (f->first)[i] = (int*)malloc(sizeof(int)*g->t_count);
+        (f->follow)[i] = (int*)malloc(sizeof(int)*g->t_count);
+        memset((f->first)[i], 0, g->t_count*sizeof(int));
+        memset((f->follow)[i], 0, g->t_count*sizeof(int));
+        RULE temp = ((g->nonterminals)+i)->r;
+        while(temp!=NULL) {
+            printf("%d.%s\n",i,(g->nonterminals)[i].name);
+            TK_NODE temp_node = temp->start;
+            while(temp_node!=NULL) {
+                if(temp_node->type==T) {
+                    (f->first)[i][(temp_node->info).term_index]=1;
+                    break;
+                }
+                temp_node = temp_node->next;
+            }
+            temp=temp->next;
+        }
+    }
+}
+
 void main() {
     GRAMMAR g = populateGrammar("grammar.txt");
+
+    FirstFollow f = ComputeFirstAndFollowSets(g);
 }

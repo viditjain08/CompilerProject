@@ -10,67 +10,16 @@ typedef struct grammar * GRAMMAR;
 typedef struct grammar grammar;
 typedef struct nont_block * NONT_BLOCK;
 typedef struct nont_block nont_block;
-
-#define grammar_len 50
-// typedef enum{
-// 	program,
-// 	mainFunction,
-// 	otherFunctions,
-// 	function,
-// 	input_par,
-// 	output_par,
-// 	parameter_list,
-// 	dataType,
-// 	primitiveDatatype,
-// 	constructedDatatype,
-// 	remaining_list,
-// 	stmts,
-// 	typeDefinitions,
-// 	typeDefinition,
-// 	fieldDefinitions,
-// 	fieldDefinition,
-// 	moreFields,
-// 	declarations,
-//     declaration,
-// 	global_or_not,
-// 	otherStmts,
-// 	stmt,
-// 	assignmentStmt,
-// 	singleOrRecId,
-//     new_24,
-// 	funCallStmt,
-// 	outputParameters,
-// 	inputParameters,
-// 	iterativeStmt,
-// 	conditionalStmt,
-//     elsePart,
-// 	ioStmt,
-// 	allVar,
-// 	arithmeticExpression,
-// 	expPrime,
-//     term,
-// 	termPrime,
-//     factor,
-//     highPrecedenceOperator,
-//     lowPrecedenceOperators,
-//     all,
-//     temp,
-// 	booleanExpression,
-// 	var,
-// 	logicalOp,
-// 	relationalOp,
-// 	returnStmt,
-// 	optionalReturn,
-// 	idList,
-// 	more_ids,
-// } non_term;
+typedef struct firstfollow * FirstFollow;
+typedef struct firstfollow firstfollow;
 
 typedef union{
-	char** term_name;
+	int term_index;
 	NONT_BLOCK non_term;
 } t_or_nt;
 
 struct tk_node{
+	enum {T, NT} type;
     t_or_nt info;
     TK_NODE next;
 } ;
@@ -90,4 +39,9 @@ struct grammar{
 	NONT_BLOCK nonterminals;
 	int non_t_count;
 	int t_count;
+};
+
+struct firstfollow{
+	int** first;
+	int** follow;
 };
