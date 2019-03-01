@@ -142,7 +142,7 @@ void printList(struct list ls){
 	Node tmp = ls.head;
 
 	while(tmp != NULL){
-		printf("%s                                 %s\n",tmp->key,tokenMap[tmp->token] );
+		printf("%-20s\t\t%-20s\n",tmp->key,tokenMap[tmp->token] );
 		tmp = tmp->next;
 	}
 }
@@ -152,6 +152,7 @@ void printTable(){
 	int n = keywordTable->no_rows;
 
 	for (i =0;i<n;i++){
+        printf("Bucket %d\n", i+1);
 		printList(keywordTable->rows[i]);
 		printf("\n");
 		printf("\n");

@@ -4,7 +4,7 @@ int main(){
 	hashInit(15);
 	printTable();
 
-	printf("%s\n", tokenMap[lookup("parameters")]);
+	// printf("%s\n", tokenMap[lookup("parameters")]);
 
 	char file[] = "source_code";
 	char outFile[] = "output.txt";

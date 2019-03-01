@@ -93,7 +93,7 @@ void printTokens(const char *source_Code){
     while (tk!=NULL) {
         tk = getNextToken(fp);
         if(tk!=NULL){
-            printf("%s\t\t%s\t\t%d\n",tokenMap[tk->token],tk->lexeme,tk->lineNo);
+            printf("%-20s\t%-30s\t%-5d\n",tokenMap[tk->token],tk->lexeme,tk->lineNo);
         }
     }
 
