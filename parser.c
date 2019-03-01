@@ -278,16 +278,16 @@ void addFollowFirstRows(FirstFollow f, int t_count, int i, int j) {
 
 void computeFollow(FirstFollow f, GRAMMAR g, int i, int* global, int* local) {
     local[i]=1;
-    printf("%s %d %d\n",((g->nonterminals)[i]).name, i, (g->follow)[i].size);
-    for(int x=0;x<(g->follow)[i].size;i++) {
+    for(int x=0;x<(g->follow)[i].size;x++) {
         TK_NODE temp_node = (((g->follow)[i].f[x]).tk)->next;
         while(temp_node!=NULL) {
             if(temp_node->type==T) {
                 (f->follow)[i][(temp_node->info).term_index]=1;
+                // printf("%s\n",g->terminals[(temp_node->info).term_index]);
                 break;
             } else {
                 int ind = (temp_node->info).non_term_index;
-                printf("%d\n",ind);
+                // printf("%s.\n",g->nonterminals[ind].name);
 
                 if((f->first)[ind][0]==0) {
                     addFollowFirstRows(f, g->t_count, i, ind);
@@ -307,7 +307,7 @@ void computeFollow(FirstFollow f, GRAMMAR g, int i, int* global, int* local) {
         if(temp_node==NULL) {
             if(global[((g->follow)[i].f[x]).index]==1) {
                 addFollowRows(f,g->t_count, i, ((g->follow)[i].f[x]).index);
-            } else {
+            } else if(local[((g->follow)[i].f[x]).index]==0){
                 computeFollow(f, g, ((g->follow)[i].f[x]).index, global, local);
                 addFollowRows(f,g->t_count, i, ((g->follow)[i].f[x]).index);
             }
@@ -413,17 +413,30 @@ FirstFollow ComputeFirstAndFollowSets(GRAMMAR g) {
         int localfollow[g->non_t_count];
         memset(localfollow,0,g->non_t_count*sizeof(int));
         computeFollow(f, g, i, globalfollow, localfollow);
-
     }
-    // for(int i=0;i<54;i++) {
-    //     if((f->first)[22][i]==1) {
-    //         printf("-%s",(g->terminals)[i]);
-    //     }
-    // }
+
+    for(int x=0;x<50;x++) {
+        printf("\n\n%s",(g->nonterminals)[x].name);
+        printf("\nFIRST");
+        for(int i=0;i<54;i++) {
+            if((f->first)[x][i]==1) {
+                printf("-%s",(g->terminals)[i]);
+            }
+        }
+        printf("\nFOLLOW");
+        for(int i=0;i<54;i++) {
+            if((f->follow)[x][i]==1) {
+                printf("-%s",(g->terminals)[i]);
+            }
+        }
+    }
+
 }
+
 
 void main() {
     GRAMMAR g = populateGrammar("grammar.txt");
+    // printf("%d\n",((g->follow)[2].size));
     // for(int i=0;i<50;i++) {
     //     printf("%s\n",(g->nonterminals)[i].name);
     // }
