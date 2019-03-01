@@ -76,14 +76,3 @@ void removeComments(const char* testCase, const char* outfile){
     fclose(fout);
 
 }
-
-int main() {
-
-    char file[] = "source_code";
-    char outFile[] = "output.txt";
-    // test(file);
-
-    removeComments(file,outFile);
-
-    return 0;
-}

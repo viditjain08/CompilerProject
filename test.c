@@ -49,6 +49,7 @@ char *tokenMap[] = {
     "TK_RECORD",
     "TK_ENDRECORD",
     "TK_ELSE",
+    "TK_AND",
     "TK_OR",
     "TK_NOT",
     "TK_LT",
@@ -71,6 +72,7 @@ char* bufferPre;
 
 int currChar;
 int fileEnd;
+int lineNo;
 
 void getStream(FILE *fp){
     char *tmp = bufferPre;
@@ -105,20 +107,19 @@ void printTokens(const char *source_Code){
 
     getStream(fp);
     currChar = 0;
+    lineNo = 1;
 
-    int tk = 0;
-    int i = 0;
-    while (tk!=-1) {
+    tokenInfo *tk;
+    while (tk!=NULL) {
         tk = getNextToken(fp);
-        if(tk >= 0){
-            printf("%s\n",tokenMap[tk]);
+        if(tk!=NULL){
+            printf("%s\t\t%s\t\t%d\n",tokenMap[tk->token],tk->lexeme,tk->lineNo);
         }
-        i++;
     }
 
 }
 
-tokenType getNextToken(FILE *fp){
+tokenInfo* getNextToken(FILE *fp){
     char *lexeme = (char*)malloc(MAX_LEXEME_SIZE*sizeof(char));
     memset(lexeme,0,MAX_LEXEME_SIZE*sizeof(char));
     int j = 0;      // forward pointer for lexeme
@@ -131,7 +132,7 @@ tokenType getNextToken(FILE *fp){
 
     while(tkGenerated!=1){
         if(currChar < BUFFER_SIZE && bufferCurr[currChar] == '\0'){
-            return -1;
+            return NULL;
         }else if(currChar == BUFFER_SIZE){
             getStream(fp);
             currChar=0;
@@ -162,7 +163,7 @@ tokenType getNextToken(FILE *fp){
                         finalStateReached = 1;
                         tkGenerated = 1;
                         state = 0;
-                        return TK_NOT;
+                        return getTKinfo(TK_NOT,"~",lineNo);
 
                     }else if (c == '@') {
                         /* code */
@@ -180,7 +181,7 @@ tokenType getNextToken(FILE *fp){
                                 finalStateReached = 1;
                                 state = 0;
                                 currChar++;
-                                return TK_SQL;
+                                return getTKinfo(TK_SQL,"[",lineNo);
                             break;
 
                             case ']':
@@ -188,7 +189,7 @@ tokenType getNextToken(FILE *fp){
                                 finalStateReached = 1;
                                 state = 0;
                                 currChar++;
-                                return TK_SQR;
+                                return getTKinfo(TK_SQR,"]",lineNo);
                             break;
 
                             case ',':
@@ -196,7 +197,7 @@ tokenType getNextToken(FILE *fp){
                                 finalStateReached = 1;
                                 state = 0;
                                 currChar++;
-                                return TK_COMMA;
+                                return getTKinfo(TK_COMMA,",",lineNo);
                             break;
 
                             case ';':
@@ -204,7 +205,7 @@ tokenType getNextToken(FILE *fp){
                                 finalStateReached = 1;
                                 state = 0;
                                 currChar++;
-                                return TK_SEM;
+                                return getTKinfo(TK_SEM,";",lineNo);
                             break;
 
                             case ':':
@@ -212,7 +213,7 @@ tokenType getNextToken(FILE *fp){
                                 finalStateReached = 1;
                                 state = 0;
                                 currChar++;
-                                return TK_COLON;
+                                return getTKinfo(TK_COLON,":",lineNo);
                             break;
 
                             case '.':
@@ -220,7 +221,7 @@ tokenType getNextToken(FILE *fp){
                                 finalStateReached = 1;
                                 state = 0;
                                 currChar++;
-                                return TK_DOT;
+                                return getTKinfo(TK_DOT,".",lineNo);
                             break;
 
                             case '(':
@@ -228,7 +229,7 @@ tokenType getNextToken(FILE *fp){
                                 finalStateReached = 1;
                                 state = 0;
                                 currChar++;
-                                return TK_OP;
+                                return getTKinfo(TK_OP,"(",lineNo);
                             break;
 
                             case ')':
@@ -236,7 +237,7 @@ tokenType getNextToken(FILE *fp){
                                 finalStateReached = 1;
                                 state = 0;
                                 currChar++;
-                                return TK_CL;
+                                return getTKinfo(TK_CL,")",lineNo);
                             break;
 
                             case '+':
@@ -244,7 +245,7 @@ tokenType getNextToken(FILE *fp){
                                 finalStateReached = 1;
                                 state = 0;
                                 currChar++;
-                                return TK_PLUS;
+                                return getTKinfo(TK_PLUS,"+",lineNo);
                             break;
 
                             case '-':
@@ -252,7 +253,7 @@ tokenType getNextToken(FILE *fp){
                                 finalStateReached = 1;
                                 state = 0;
                                 currChar++;
-                                return TK_MINUS;
+                                return getTKinfo(TK_MINUS,"-",lineNo);
                             break;
 
                             case '*':
@@ -260,7 +261,7 @@ tokenType getNextToken(FILE *fp){
                                 finalStateReached = 1;
                                 state = 0;
                                 currChar++;
-                                return TK_MUL;
+                                return getTKinfo(TK_MUL,"*",lineNo);
                             break;
 
                             case '/':
@@ -268,7 +269,7 @@ tokenType getNextToken(FILE *fp){
                                 finalStateReached = 1;
                                 state = 0;
                                 currChar++;
-                                return TK_DIV;
+                                return getTKinfo(TK_DIV,"/",lineNo);
                             break;
 
                         }
@@ -290,6 +291,9 @@ tokenType getNextToken(FILE *fp){
                         /* code */
                         currChar++;
                         state = 0;
+                        if (c==10) {
+                            lineNo++;
+                        }
                     }else if (c >=98 && c<=100) {       // for b-d
                         /* code */
                         state = 20;
@@ -316,7 +320,7 @@ tokenType getNextToken(FILE *fp){
                         finalStateReached = 1;
                         state = 0;
                         currChar++;
-                        return TK_LE;
+                        return getTKinfo(TK_LE,"<=",lineNo);;
                     }else if(c == '-'){
                         state = 2;
                         currChar++;
@@ -324,7 +328,7 @@ tokenType getNextToken(FILE *fp){
                         tkGenerated = 1;
                         finalStateReached = 1;
                         state = 0;
-                        return TK_LT;
+                        return getTKinfo(TK_LT,"<",lineNo);;
                     }
                 break;
 
@@ -343,7 +347,7 @@ tokenType getNextToken(FILE *fp){
                         finalStateReached = 1;
                         state = 0;
                         currChar++;
-                        return TK_ASSIGNOP;
+                        return getTKinfo(TK_ASSIGNOP,"<---",lineNo);;
                     }else{
                         printf("Error while tokenizing\n");
                     }
@@ -355,12 +359,12 @@ tokenType getNextToken(FILE *fp){
                         finalStateReached = 1;
                         tkGenerated = 1;
                         state = 0;
-                        return TK_GE;
+                        return getTKinfo(TK_GE,">=",lineNo);;
                     }else{
                         finalStateReached = 1;
                         tkGenerated = 1;
                         state = 0;
-                        return TK_GT;
+                        return getTKinfo(TK_GT,">",lineNo);;
                     }
                 break;
 
@@ -370,7 +374,7 @@ tokenType getNextToken(FILE *fp){
                         finalStateReached = 1;
                         tkGenerated = 1;
                         state = 0;
-                        return TK_EQ;
+                        return getTKinfo(TK_EQ,"==",lineNo);;
                     }else{
                         printf("Error while tokenizing\n" );
                     }
@@ -382,7 +386,7 @@ tokenType getNextToken(FILE *fp){
                         finalStateReached = 1;
                         tkGenerated = 1;
                         state = 0;
-                        return TK_NE;
+                        return getTKinfo(TK_NE,"!=",lineNo);;
                     }else{
                         printf("Error while tokenizing\n" );
                     }
@@ -407,6 +411,7 @@ tokenType getNextToken(FILE *fp){
                         currChar++;
                         finalStateReached = 1;
                         tkGenerated = 1;
+                        return getTKinfo(TK_OR,"@@@",lineNo);
                     }else{
                         printf("Error while tokeninzing\n");
                     }
@@ -427,6 +432,7 @@ tokenType getNextToken(FILE *fp){
                         currChar++;
                         finalStateReached = 1;
                         tkGenerated = 1;
+                        return getTKinfo(TK_AND,"&&&",lineNo);
                     }else{
                         printf("Error while tokeninzing\n");
                     }
@@ -440,6 +446,7 @@ tokenType getNextToken(FILE *fp){
                     if(c == '\n'){
                         state=0;
                         currChar++;
+                        lineNo++;
                     }else{
                         state = 13;
                         currChar++;
@@ -459,7 +466,8 @@ tokenType getNextToken(FILE *fp){
                         state = 0;
                         finalStateReached = 1;
                         tkGenerated = 1;
-                        return TK_NUM;
+                        lexeme[j] = '\0';
+                        return getTKinfo(TK_NUM,lexeme,lineNo);
                     }
                 break;
 
@@ -480,7 +488,8 @@ tokenType getNextToken(FILE *fp){
                         currChar++;
                         finalStateReached = 1;
                         tkGenerated = 1;
-                        return TK_RNUM;
+                        lexeme[j] = '\0';
+                        return getTKinfo(TK_RNUM,lexeme,lineNo);
                     }else{
                         printf("Error while tokeninzing\n" );
                     }
@@ -503,7 +512,11 @@ tokenType getNextToken(FILE *fp){
                         state = 0;
                         finalStateReached = 1;
                         tkGenerated = 1;
-                        return TK_RECORDID;
+                        if (c==10) {
+                            lineNo++;
+                        }
+                        lexeme[j] = '\0';
+                        return getTKinfo(TK_RECORDID,lexeme,lineNo);
                     }else{
                         printf("Error while tokenizing\n");
                     }
@@ -538,10 +551,11 @@ tokenType getNextToken(FILE *fp){
                         currChar++;
                     }else{
                         state =0;
-                        lexeme[j++] = c;
+                        // lexeme[j++] = c;
                         tkGenerated = 1;
                         finalStateReached = 1;
-                        return TK_ID;
+                        lexeme[j] = '\0';
+                        return getTKinfo(TK_ID,lexeme,lineNo);
                     }
                 break;
 
@@ -552,10 +566,11 @@ tokenType getNextToken(FILE *fp){
                         currChar++;
                     }else{
                         state =0;
-                        lexeme[j++] = c;
+                        // lexeme[j++] = c;
                         tkGenerated = 1;
                         finalStateReached = 1;
-                        return TK_ID;
+                        lexeme[j] = '\0';
+                        return getTKinfo(TK_ID,lexeme,lineNo);
                     }
                 break;
 
@@ -569,7 +584,8 @@ tokenType getNextToken(FILE *fp){
                         tkGenerated = 1;
                         /* we have to see if lexeme is a reserved keyword or not*/
                         state = 0;
-                        return TK_FIELDID;
+                        lexeme[j] = '\0';
+                        return getTKinfo(TK_FIELDID,lexeme,lineNo);
                     }
                 break;
 
@@ -638,7 +654,11 @@ tokenType getNextToken(FILE *fp){
                         state =0;
                         finalStateReached =1;
                         tkGenerated = 1;
-                        return TK_MAIN;
+                        if (c==10) {
+                            lineNo++;
+                        }
+                        lexeme[j] = '\0';
+                        return getTKinfo(TK_MAIN,lexeme,lineNo);
                     }else {
                         printf("Error while tokenizing\n");
                     }
@@ -657,7 +677,11 @@ tokenType getNextToken(FILE *fp){
                         state = 0;
                         finalStateReached = 1;
                         tkGenerated = 1;
-                        return TK_FUNID;
+                        if (c==10) {
+                            lineNo++;
+                        }
+                        lexeme[j] = '\0';
+                        return getTKinfo(TK_FUNID,lexeme,lineNo);
                     }else{
                         printf("Error while tokenizing\n");
                     }
@@ -672,7 +696,11 @@ tokenType getNextToken(FILE *fp){
                         state = 0;
                         finalStateReached = 1;
                         tkGenerated = 1;
-                        return TK_FUNID;
+                        if (c==10) {
+                            lineNo++;
+                        }
+                        lexeme[j] = '\0';
+                        return getTKinfo(TK_FUNID,lexeme,lineNo);
                     }else{
                         printf("Error while tokenizing\n");
                     }
@@ -683,6 +711,48 @@ tokenType getNextToken(FILE *fp){
     }
 
 
+}
+
+tokenInfo* getTKinfo(int token,char* lexeme,int lineNo){
+	tokenInfo* temp = (tokenInfo*)malloc(sizeof(tokenInfo));
+	temp->token = token;
+	int len = 0;
+	while(lexeme[len] != '\0')
+	{
+		len++;
+	}
+	len++;
+	// temp->lexeme = (char*)malloc(sizeof(char)*len);
+	// int i = 0;
+	// while(i < len)
+	// {
+	// 	temp->lexeme[i] = lexeme[i];
+	// 	i++;
+	// }
+    temp->lexeme = lexeme;
+	temp->lineNo = lineNo;
+	if(token == TK_ID)
+		temp->dataType = 2;
+	else if(token == TK_NUM)
+		temp->dataType = 0;
+	else if(token == TK_RNUM)
+		temp->dataType = 1;
+	else if(token >= TK_ASSIGNOP && token <= TK_NE && (token-(int)token == 0))
+		temp->dataType = 3;
+	else
+		temp->dataType = 4;
+	if(temp->dataType == 0)
+	{	temp->val = (Value*)malloc(sizeof(int));
+		temp->val->valI = atoi(lexeme);
+	}
+	else if (temp->dataType == 1)
+	{	temp->val = (Value*)malloc(sizeof(float));
+		temp->val->valF = atof(lexeme);
+	}
+	else
+		temp->val = NULL;
+
+	return temp;
 }
 
 int main() {

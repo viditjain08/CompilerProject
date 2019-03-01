@@ -47,6 +47,7 @@ typedef enum{
     TK_RECORD,
     TK_ENDRECORD,
     TK_ELSE,
+    TK_AND,
     TK_OR,
     TK_NOT,
     TK_LT,

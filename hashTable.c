@@ -1,59 +1,113 @@
-
-#include<stdbool.h>
-#include<stdlib.h>
 #include "hashTable.h"
-#include<stdio.h>
-#include<string.h>
-
-Node newNode(char* token,char* key)
-{
-	Node temp = (Node)malloc(sizeof(struct node));
-	int length_tok = 0;
-	int length_key = 0;
-	while(token[length_tok] != '\0')
-	length_tok++;
-	while(key[length_key] != '\0')
-	length_key++;
-
-	temp->next = NULL;
-	temp->token = (char*)malloc(sizeof(char)*(length_tok+1));
-	temp->key = (char*)malloc(sizeof(char)*(length_key+1));
-	int i = 0;
-	while(i<length_tok)
-	{
-		temp->token[i] = token[i];
-		i++;
-	}
-	temp->token[i] = '\0';
-	i = 0;
-	while(i<length_key)
-	{
-		temp->key[i] = key[i];
-		i++;
-	}
-	temp->key[i] = '\0';
-
-	return temp;
-}
-
-
-struct hashTable* hashinit(int no)
-{
-	struct hashTable* table = (struct hashTable*)malloc(sizeof(struct hashTable));
-	table->no_rows = no;
-	table->rows = (List)malloc(sizeof(struct list)*no);
+extern struct hashTable* keywordTable;
+char *tokenMap[] = {
+    "TK_ASSIGNOP",
+    "TK_COMMENT",
+    "TK_FIELDID",
+    "TK_ID",
+    "TK_NUM",
+    "TK_RNUM",
+    "TK_FUNID",
+    "TK_RECORDID",
+    "TK_WITH",
+    "TK_PARAMETERS",
+    "TK_END",
+    "TK_WHILE",
+    "TK_TYPE",
+    "TK_MAIN",
+    "TK_GLOBAL",
+    "TK_PARAMETER",
+    "TK_LIST",
+    "TK_SQL",
+    "TK_SQR",
+    "TK_INPUT",
+    "TK_OUTPUT",
+    "TK_INT",
+    "TK_REAL",
+    "TK_COMMA",
+    "TK_SEM",
+    "TK_COLON",
+    "TK_DOT",
+    "TK_ENDWHILE",
+    "TK_OP",
+    "TK_CL",
+    "TK_IF",
+    "TK_THEN",
+    "TK_ENDIF",
+    "TK_READ",
+    "TK_WRITE",
+    "TK_RETURN",
+    "TK_PLUS",
+    "TK_MINUS",
+    "TK_MUL",
+    "TK_DIV",
+    "TK_CALL",
+    "TK_RECORD",
+    "TK_ENDRECORD",
+    "TK_ELSE",
+    "TK_AND",
+    "TK_OR",
+    "TK_NOT",
+    "TK_LT",
+    "TK_LE",
+    "TK_EQ",
+    "TK_GT",
+    "TK_GE",
+    "TK_NE"
+};
+void hashInit(int no){
+	keywordTable = (struct hashTable*)malloc(sizeof(struct hashTable));
+	keywordTable->no_rows = no;
+	keywordTable->rows = (List)malloc(sizeof(struct list)*no);
 	int i = 0;
 	for(i;i<no;i++)
 	{
-		table->rows[i].head = NULL;
+		keywordTable->rows[i].head = NULL;
 	}
 
-	return table;
+	// adding all keywords
+	addEntry("with",TK_WITH);
+	addEntry("parameters",TK_PARAMETERS);
+	addEntry("end",TK_END);
+	addEntry("while",TK_WHILE);
+	addEntry("type",TK_TYPE);
+	addEntry("global",TK_GLOBAL);
+	addEntry("parameter",TK_PARAMETER);
+	addEntry("list",TK_LIST);
+	addEntry("input",TK_INPUT);
+	addEntry("output",TK_OUTPUT);
+	addEntry("int",TK_INT);
+	addEntry("real",TK_REAL);
+	addEntry("endwhile",TK_ENDWHILE);
+	addEntry("if",TK_IF);
+	addEntry("then",TK_THEN);
+	addEntry("endif",TK_ENDIF);
+	addEntry("read",TK_READ);
+	addEntry("write",TK_WRITE);
+	addEntry("return",TK_RETURN);
+	addEntry("call",TK_CALL);
+	addEntry("record",TK_RECORD);
+	addEntry("endrecord",TK_ENDRECORD);
+	addEntry("else",TK_ELSE);
 
 }
 
-int hashFunc(char* key,int no)
+void addEntry(char* key,tokenType token)
 {
+	int index = hashFunc(key,keywordTable->no_rows);
+	printf("index while adding is %d \n",index);
+
+	Node tmp = (Node)malloc(sizeof(struct node));
+	tmp->key = (char*)malloc(sizeof(char)*(strlen(key)+1));
+	strcpy(tmp->key,key);
+	tmp->key[strlen(key)] = '\0';
+	tmp->token = token;
+	tmp->next = keywordTable->rows[index].head;
+	keywordTable->rows[index].head = tmp;
+
+}
+
+int hashFunc(char* key,int no){
 	int length = 0;
 	while(key[length] != '\0')
 	length++;
@@ -65,82 +119,50 @@ int hashFunc(char* key,int no)
 		value = 53*value + key[i];
 	}
 	value = value % no;
-	//printf("\n values and no is %lld   %d \n",value,no);
+
 	return value;
 }
 
-void listAdd(List lst,Node nd)
+int lookup(char* key)
 {
-	Node tmp = lst->head;
-	if(tmp == NULL)
-	{
-		lst->head = nd;
-		return;
-	}
-	while(tmp->next != NULL)
-	{
-		tmp = tmp->next;
-	}
-	tmp->next = nd;
-	printf("head is %s",lst->head->key);
-	return;
-}
-
-bool lookup(struct hashTable* table,char* key)
-{
-	int index = hashFunc(key,table->no_rows);
-	Node temp = table->rows[index].head;
+	int index = hashFunc(key,keywordTable->no_rows);
+	Node temp = keywordTable->rows[index].head;
 	while(temp != NULL)
 	{
-		if(strcmp(temp->key,key) == 0)
-		return true;
+		if(strcmp(temp->key,key) == 0){
+			return temp->token;
+		}
 		temp = temp->next;
 	}
-	return false;
+	return -1;
+}
+void printList(struct list ls){
+	Node tmp = ls.head;
+
+	while(tmp != NULL){
+		printf("%s                                 %s\n",tmp->key,tokenMap[tmp->token] );
+		tmp = tmp->next;
+	}
 }
 
 
+void printTable(){
+	int i = 0;
+	int n = keywordTable->no_rows;
 
-
-void add(struct hashTable* table,char* key,char* token)
-{
-	int index = hashFunc(key,table->no_rows);
-	printf("index while adding is %d \n",index);
-
-	if(lookup(table,key) == true)
-	return;
-	else
-	{
-		listAdd(&(table->rows[index]),newNode(token,key));
+	for (i =0;i<n;i++){
+		printList(keywordTable->rows[i]);
+		printf("\n");
+		printf("\n");
 	}
-	return;
 }
 
 int main()
 {
-	struct hashTable* table = hashinit(2);
-	printf("No. of rows %d\n",table->no_rows);
-	add(table,"abc","TK_abc");
-	add(table,"def","def");
-	add(table,"edf","eff");
-	add(table,"list","TK_LIST");
-	//printf("\n the value in 5 is table->rows[1] is %s ",table->rows[1].head->key);
-	if(lookup(table,"abc"))
-	{
-		printf("abc is present");
-	}
-	if(lookup(table,"def"))
-	{
-		printf("\n def is present");
-	}
-	if(lookup(table,"edf"))
-	{
-		printf("\n edf is present");
-	}
-	if(lookup(table,"list1"))
-	{
-		printf("\n list is present");
-	}
+	hashInit(11);
+	printTable();
+
+	printf("%s\n", tokenMap[lookup("parameters")]);
 
 	return 0;
 }

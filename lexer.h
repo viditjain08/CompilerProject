@@ -5,5 +5,6 @@ void getStream(FILE *fp);
 
 void removeComments(const char* testCase, const char* outfile);
 
-tokenType getNextToken(FILE *fp);
-void printTokens(char* testCase);
+tokenInfo* getNextToken(FILE *fp);
+tokenInfo* getTKinfo(int token,char* lexeme,int lineNo);
+void printTokens(const char* testCase);
