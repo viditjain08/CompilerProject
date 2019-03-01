@@ -49,4 +49,4 @@
 <returnStmt>===>TK_RETURN <optionalReturn> TK_SEM
 <optionalReturn>===>TK_SQL <idList> TK_SQR | eps
 <idList>===> TK_ID <more_ids>
-<more_ids>===> TK_COMMA <idList> | eps
+<more_ids>===> TK_COMMA TK_ID <more_ids> | eps
