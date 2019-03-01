@@ -437,19 +437,78 @@ FirstFollow ComputeFirstAndFollowSets(GRAMMAR g) {
         printf("\nFIRST");
         for(int i=0;i<54;i++) {
             if((f->first)[x][i]>0) {
+                (f->first)[x][i]=1;
                 printf("-%s",(g->terminals)[i]);
             }
         }
         printf("\nFOLLOW");
         for(int i=0;i<54;i++) {
-            if((f->follow)[x][i]>=1) {
+            if((f->follow)[x][i]>0) {
+                (f->follow)[x][i]=1;
                 printf("-%s",(g->terminals)[i]);
             }
         }
     }
     printf("\n");
+    return f;
 }
 
+PARSETABLE createParseTable(FirstFollow F, GRAMMAR G, PARSETABLE PT) {
+    PT = (PARSETABLE)malloc(sizeof(RULE*)*(G->non_t_count));
+    for(int i=0;i<(G->non_t_count);i++) {
+        PT[i] = (RULE*)malloc(sizeof(RULE)*(G->t_count));
+        for(int j=0;j<G->t_count;j++) {
+            PT[i][j]=NULL;
+        }
+        if((G->nonterminals)[i].r->next==NULL) {
+            RULE r_temp = (G->nonterminals)[i].r;
+            for(int j=1;j<G->t_count;j++) {
+                if((F->first)[i][j]==1) {
+                    PT[i][j]=r_temp;
+                }
+            }
+            if((F->first)[i][0]==1) {
+                RULE r_temp = (G->nonterminals)[i].r;
+                for(int j=0;j<G->t_count;j++) {
+                    if((F->follow)[i][j]==1) {
+                        PT[i][j]=r_temp;
+                    }
+                }
+            }
+        } else {
+            RULE r_temp = (G->nonterminals)[i].r;
+            while(r_temp!=NULL) {
+                TK_NODE t_temp = r_temp->start;
+                while(t_temp!=NULL) {
+                    if(t_temp->type==T) {
+                        PT[i][t_temp->info.term_index]=r_temp;
+                        break;
+                    } else {
+                        int ind = t_temp->info.non_term_index;
+                        for(int j=1;j<G->t_count;j++) {
+                            if((F->first)[ind][j]==1) {
+                                PT[i][j]=r_temp;
+                            }
+                        }
+                        if(F->first[ind][0]==0) {
+                            break;
+                        }
+                    }
+                    t_temp=t_temp->next;
+                }
+                if(t_temp==NULL) {
+                    for(int j=0;j<G->t_count;j++) {
+                        if((F->follow)[i][j]==1) {
+                            PT[i][j]=r_temp;
+                        }
+                    }
+                }
+                r_temp=r_temp->next;
+            }
+        }
+    }
+    return PT;
+}
 
 void main() {
     GRAMMAR g = populateGrammar("grammar.txt");
@@ -459,6 +518,17 @@ void main() {
     // }
 
     FirstFollow f = ComputeFirstAndFollowSets(g);
-
+    PARSETABLE t;
+    t = createParseTable(f, g, t);
+    // for(int i=0;i<g->non_t_count;i++) {
+    //     printf("%s\n",(g->nonterminals)[i].name);
+    //     for(int j=0;j<g->t_count;j++) {
+    //         if(t[i][j]!=NULL) {
+    //             printf("%s ",(g->terminals)[j]);
+    //         }
+    //     }
+    //     printf("\n");
+    //
+    // }
     // for(int i)
 }
