@@ -16,6 +16,9 @@ typedef struct followds * FOLLOWDS;
 typedef struct followds followds;
 typedef struct followind * FOLLOWIND;
 typedef struct followind followind;
+typedef RULE * parsetable;
+typedef parsetable * PARSETABLE;
+
 
 typedef union{
 	int term_index;
