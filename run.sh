@@ -1,4 +1,4 @@
 #!/bin/bash
 clear
-gcc parser.c
+gcc -g parser.c
 ./a.out
