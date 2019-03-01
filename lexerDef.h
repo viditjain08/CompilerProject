@@ -2,6 +2,11 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define BUFFER_SIZE 32
+#define MAX_LEXEME_SIZE 50
+
+#ifndef TOKEN
+#define TOKEN 23
 typedef enum{
     TK_ASSIGNOP,
     TK_COMMENT,
@@ -57,6 +62,9 @@ typedef enum{
     TK_GE,
     TK_NE
 }tokenType;
+extern char *tokenMap[];
+#endif
+
 
 typedef union{
     int valI;
@@ -71,4 +79,12 @@ typedef struct{
     int dataType;   // 0 for int, 1 for float, 2 for identifier, 3 for reserved keyword, 4 for erorr
 }tokenInfo;
 
+extern char* bufferCurr;
+extern char* bufferPre;
+
+extern int currChar;
+extern int fileEnd;
+extern int lineNo;
+
 #include "lexer.h"
+#include "hashTable.h"

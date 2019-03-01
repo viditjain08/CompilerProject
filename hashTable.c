@@ -1,5 +1,5 @@
 #include "hashTable.h"
-extern struct hashTable* keywordTable;
+struct hashTable* keywordTable = NULL;
 char *tokenMap[] = {
     "TK_ASSIGNOP",
     "TK_COMMENT",
@@ -55,6 +55,8 @@ char *tokenMap[] = {
     "TK_GE",
     "TK_NE"
 };
+
+
 void hashInit(int no){
 	keywordTable = (struct hashTable*)malloc(sizeof(struct hashTable));
 	keywordTable->no_rows = no;
@@ -95,7 +97,7 @@ void hashInit(int no){
 void addEntry(char* key,tokenType token)
 {
 	int index = hashFunc(key,keywordTable->no_rows);
-	printf("index while adding is %d \n",index);
+	//printf("index while adding is %d \n",index);
 
 	Node tmp = (Node)malloc(sizeof(struct node));
 	tmp->key = (char*)malloc(sizeof(char)*(strlen(key)+1));
@@ -145,7 +147,6 @@ void printList(struct list ls){
 	}
 }
 
-
 void printTable(){
 	int i = 0;
 	int n = keywordTable->no_rows;
@@ -155,14 +156,4 @@ void printTable(){
 		printf("\n");
 		printf("\n");
 	}
-}
-
-int main()
-{
-	hashInit(11);
-	printTable();
-
-	printf("%s\n", tokenMap[lookup("parameters")]);
-
-	return 0;
 }

@@ -3,6 +3,9 @@
 #include<stdio.h>
 #include<string.h>
 
+#ifndef TOKEN
+#define TOKEN 23
+
 typedef enum{
     TK_ASSIGNOP,
     TK_COMMENT,
@@ -58,6 +61,9 @@ typedef enum{
     TK_GE,
     TK_NE
 }tokenType;
+extern char *tokenMap[];
+
+#endif
 
 struct node{
 	char* key;
@@ -81,5 +87,7 @@ void hashInit(int no);
 void addEntry(char* key,tokenType token);
 int hashFunc(char* key,int no);
 int lookup(char* key);
+void printTable();
+void printList(struct list ls);
 
-struct hashTable* keywordTable = NULL;
+ extern struct hashTable* keywordTable;

@@ -1,72 +1,5 @@
-// #include <stdio.h>
-// #include <stdlib.h>
-// #include <string.h>
-
 #include "lexerDef.h"
-void test(const char *source_Code);
-char *tokenMap[] = {
-    "TK_ASSIGNOP",
-    "TK_COMMENT",
-    "TK_FIELDID",
-    "TK_ID",
-    "TK_NUM",
-    "TK_RNUM",
-    "TK_FUNID",
-    "TK_RECORDID",
-    "TK_WITH",
-    "TK_PARAMETERS",
-    "TK_END",
-    "TK_WHILE",
-    "TK_TYPE",
-    "TK_MAIN",
-    "TK_GLOBAL",
-    "TK_PARAMETER",
-    "TK_LIST",
-    "TK_SQL",
-    "TK_SQR",
-    "TK_INPUT",
-    "TK_OUTPUT",
-    "TK_INT",
-    "TK_REAL",
-    "TK_COMMA",
-    "TK_SEM",
-    "TK_COLON",
-    "TK_DOT",
-    "TK_ENDWHILE",
-    "TK_OP",
-    "TK_CL",
-    "TK_IF",
-    "TK_THEN",
-    "TK_ENDIF",
-    "TK_READ",
-    "TK_WRITE",
-    "TK_RETURN",
-    "TK_PLUS",
-    "TK_MINUS",
-    "TK_MUL",
-    "TK_DIV",
-    "TK_CALL",
-    "TK_RECORD",
-    "TK_ENDRECORD",
-    "TK_ELSE",
-    "TK_AND",
-    "TK_OR",
-    "TK_NOT",
-    "TK_LT",
-    "TK_LE",
-    "TK_EQ",
-    "TK_GT",
-    "TK_GE",
-    "TK_NE"
-};
-#define BUFFER_SIZE 32
-#define MAX_LEXEME_SIZE 50
 
-// void getStream(FILE *fp);
-// void test(const char *source_Code);
-// int getNextToken(FILE *fp);
-
-// declaring Buffers
 char* bufferCurr;
 char* bufferPre;
 
@@ -585,7 +518,12 @@ tokenInfo* getNextToken(FILE *fp){
                         /* we have to see if lexeme is a reserved keyword or not*/
                         state = 0;
                         lexeme[j] = '\0';
-                        return getTKinfo(TK_FIELDID,lexeme,lineNo);
+                        int tk = lookup(lexeme);
+                        if (tk>=0) {
+                            return getTKinfo(tk,lexeme,lineNo);
+                        }else{
+                            return getTKinfo(TK_FIELDID,lexeme,lineNo);
+                        }
                     }
                 break;
 
@@ -754,15 +692,15 @@ tokenInfo* getTKinfo(int token,char* lexeme,int lineNo){
 
 	return temp;
 }
-
-int main() {
-
-    char file[] = "source_code";
-    char outFile[] = "output.txt";
-
-    //removeComments(file,outFile);
-
-    printTokens(file);
-
-    return 0;
-}
+//
+// int main() {
+//
+//     char file[] = "source_code";
+//     char outFile[] = "output.txt";
+//
+//     //removeComments(file,outFile);
+//
+//     printTokens(file);
+//
+//     return 0;
+// }
