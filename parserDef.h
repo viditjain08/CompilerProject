@@ -61,6 +61,8 @@ struct grammar{
 };
 
 struct firstfollow{
+	// first 0th column eps, rest terminals as in grammar
 	int** first;
+	// follow 0th column $, rest terminals as in grammar
 	int** follow;
 };
