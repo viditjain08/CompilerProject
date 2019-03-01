@@ -12,10 +12,14 @@ typedef struct nont_block * NONT_BLOCK;
 typedef struct nont_block nont_block;
 typedef struct firstfollow * FirstFollow;
 typedef struct firstfollow firstfollow;
+typedef struct followds * FOLLOWDS;
+typedef struct followds followds;
+typedef struct followind * FOLLOWIND;
+typedef struct followind followind;
 
 typedef union{
 	int term_index;
-	NONT_BLOCK non_term;
+	int non_term_index;
 } t_or_nt;
 
 struct tk_node{
@@ -34,7 +38,19 @@ struct nont_block{
 	RULE r;
 };
 
+
+struct followind {
+	TK_NODE tk;
+	int index;
+};
+
+struct followds {
+	FOLLOWIND f;
+	int size;
+};
+
 struct grammar{
+	FOLLOWDS follow;
 	char** terminals;
 	NONT_BLOCK nonterminals;
 	int non_t_count;

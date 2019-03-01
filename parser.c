@@ -36,6 +36,8 @@ GRAMMAR populateGrammar(char* grammar_file) {
     GRAMMAR g;
     g = (GRAMMAR)malloc(sizeof(grammar));
     g->nonterminals=(NONT_BLOCK)malloc(sizeof(nont_block)*20);
+    g->follow=(FOLLOWDS)malloc(sizeof(followds)*20);
+
     g->terminals=(char**)malloc(sizeof(char*)*20);
     (g->terminals)[0]=(char*)malloc(sizeof(char)*4);
     strcpy((g->terminals)[0], "eps");
@@ -58,6 +60,7 @@ GRAMMAR populateGrammar(char* grammar_file) {
         int is_term=-1;
         line[strlen(line)+1]='\0';
         line[strlen(line)]=' ';
+        int ruleindex;
         for(int i=0;line[i]!='\0';i++) {
         //    printf("%c  ",line[i]);
             if(left==1 && (line[i]=='\t' || line[i]==' ')) {
@@ -74,14 +77,17 @@ GRAMMAR populateGrammar(char* grammar_file) {
                         if(nont_count==nont_max) {
                             nont_max+=10;
                             g->nonterminals=(NONT_BLOCK)realloc(g->nonterminals,sizeof(nont_block)*nont_max);
+                            g->follow=(FOLLOWDS)realloc(g->follow, sizeof(followds)*nont_max);
                         }
                         (g->nonterminals)[nont_count].name = (char*)malloc(sizeof(char)*strlen(token)+1);
                         strcpy((g->nonterminals)[nont_count].name,token);
                         (g->nonterminals)[nont_count].r=(RULE)malloc(sizeof(rule));
                         r_temp = (g->nonterminals)[nont_count].r;
-
+                        ruleindex=nont_count;
+                        h_temp = nont_count;
                         nont_count++;
                     } else {
+                        ruleindex=h_temp;
                         if((g->nonterminals)[h_temp].r==NULL) {
 
                             (g->nonterminals)[h_temp].r=(RULE)malloc(sizeof(rule));
@@ -173,6 +179,8 @@ GRAMMAR populateGrammar(char* grammar_file) {
                                 nont_max+=10;
                                 printf("%d-%d\n",nont_count,nont_max);
                                 g->nonterminals=(NONT_BLOCK)realloc(g->nonterminals,sizeof(nont_block)*nont_max);
+                                g->follow=(FOLLOWDS)realloc(g->follow, sizeof(followds)*nont_max);
+
                             }
                             (g->nonterminals)[nont_count].name = (char*)malloc(sizeof(char)*strlen(token)+1);
                             strcpy((g->nonterminals)[nont_count].name,token);
@@ -185,16 +193,28 @@ GRAMMAR populateGrammar(char* grammar_file) {
                             r_temp->start=(TK_NODE)malloc(sizeof(tk_node));
                             r_temp->start->next=NULL;
 
-                            (r_temp->start->info).non_term=&(g->nonterminals)[nont_count];
+                            (r_temp->start->info).non_term_index = h_temp;
                             r_temp->start->type = NT;
                             tk_temp = r_temp->start;
                         } else {
                             tk_temp->next=(TK_NODE)malloc(sizeof(tk_node));
                             tk_temp=tk_temp->next;
                             tk_temp->next=NULL;
-                            (tk_temp->info).non_term=&(g->nonterminals)[nont_count];
+                            (tk_temp->info).non_term_index = h_temp;
                             tk_temp->type=NT;
                         }
+                        if((g->follow)[h_temp].f==NULL) {
+                            (g->follow)[h_temp].f = (FOLLOWIND)malloc(sizeof(followind)*10);
+                            (g->follow)[h_temp].size=0;
+                        } else if((g->follow)[h_temp].size%10==0) {
+                            (g->follow)[h_temp].f = (FOLLOWIND)realloc((g->follow)[h_temp].f, (sizeof(followind))*((g->follow)[h_temp].size+10));
+                        }
+                        (g->follow)[h_temp].f[(g->follow)[h_temp].size].tk=tk_temp;
+                        (g->follow)[h_temp].f[(g->follow)[h_temp].size].index=ruleindex;
+
+                        (g->follow)[h_temp].size++;
+                        // if((g->follow)[h_temp].size)
+
                         is_term=-1;
                         token_ptr=0;
                     } else {
@@ -238,33 +258,174 @@ GRAMMAR populateGrammar(char* grammar_file) {
     return g;
 }
 
+void addFirstRows(FirstFollow f, int t_count, int i, int j) {
+    for(int x=0;x<t_count;x++) {
+        (f->first)[i][x]+=(f->first)[j][x];
+    }
+}
+
+void addFollowRows(FirstFollow f, int t_count, int i, int j) {
+    for(int x=0;x<t_count;x++) {
+        (f->follow)[i][x]+=(f->follow)[j][x];
+    }
+}
+
+void addFollowFirstRows(FirstFollow f, int t_count, int i, int j) {
+    for(int x=0;x<t_count;x++) {
+        (f->follow)[i][x]+=(f->first)[j][x];
+    }
+}
+
+void computeFollow(FirstFollow f, GRAMMAR g, int i, int* global, int* local) {
+    local[i]=1;
+    printf("%s %d %d\n",((g->nonterminals)[i]).name, i, (g->follow)[i].size);
+    for(int x=0;x<(g->follow)[i].size;i++) {
+        TK_NODE temp_node = (((g->follow)[i].f[x]).tk)->next;
+        while(temp_node!=NULL) {
+            if(temp_node->type==T) {
+                (f->follow)[i][(temp_node->info).term_index]=1;
+                break;
+            } else {
+                int ind = (temp_node->info).non_term_index;
+                printf("%d\n",ind);
+
+                if((f->first)[ind][0]==0) {
+                    addFollowFirstRows(f, g->t_count, i, ind);
+                    break;
+                } else {
+                    (f->first)[ind][0]=0;
+                    addFollowFirstRows(f, g->t_count, i, ind);
+                    (f->first)[ind][0]=1;
+
+                    temp_node=temp_node->next;
+                    continue;
+                }
+
+            }
+            temp_node = temp_node->next;
+        }
+        if(temp_node==NULL) {
+            if(global[((g->follow)[i].f[x]).index]==1) {
+                addFollowRows(f,g->t_count, i, ((g->follow)[i].f[x]).index);
+            } else {
+                computeFollow(f, g, ((g->follow)[i].f[x]).index, global, local);
+                addFollowRows(f,g->t_count, i, ((g->follow)[i].f[x]).index);
+            }
+        }
+    }
+    if((g->follow)[i].size==0) {
+        (f->follow)[i][0]=1;
+    }
+    global[i]=1;
+}
+
+
+
+
+void computeFirst(FirstFollow f, GRAMMAR g, int i, int* global, int* local) {
+    local[i]=1;
+    // printf("%s %d\n",((g->nonterminals)[i]).name, i);
+    RULE temp = ((g->nonterminals)[i]).r;
+    while(temp!=NULL) {
+        TK_NODE temp_node = temp->start;
+        while(temp_node!=NULL) {
+            if(temp_node->type==T) {
+                (f->first)[i][(temp_node->info).term_index]=1;
+                break;
+            } else {
+                int ind = (temp_node->info).non_term_index;
+                if(global[ind]==1) {
+                    if((f->first)[ind][0]==0) {
+                        addFirstRows(f, g->t_count, i, ind);
+                        break;
+                    } else {
+                        (f->first)[ind][0]=0;
+                        addFirstRows(f, g->t_count, i, ind);
+                        (f->first)[ind][0]=1;
+
+                        temp_node=temp_node->next;
+                        continue;
+                    }
+                } else if(local[ind]==0) {
+                    computeFirst(f, g, ind, global, local);
+                    if((f->first)[ind][0]==0) {
+                        addFirstRows(f, g->t_count, i, ind);
+                        break;
+                    } else {
+                        (f->first)[ind][0]=0;
+                        addFirstRows(f, g->t_count, i, ind);
+                        (f->first)[ind][0]=1;
+
+                        temp_node=temp_node->next;
+                        continue;
+                    }
+                } else {
+                    continue;
+                }
+            }
+            temp_node = temp_node->next;
+        }
+        if(temp_node==NULL) {
+            (f->first)[i][0]=1;
+        }
+        temp=temp->next;
+    }
+    global[i]=1;
+}
+
 FirstFollow ComputeFirstAndFollowSets(GRAMMAR g) {
     FirstFollow f = (FirstFollow)malloc(sizeof(firstfollow));
     f->first = (int**)malloc(sizeof(int*)*g->non_t_count);
     f->follow = (int**)malloc(sizeof(int*)*g->non_t_count);
+    int global[g->non_t_count];
+    memset(global,0,g->non_t_count*sizeof(int));
     for(int i=0;i<g->non_t_count;i++) {
         (f->first)[i] = (int*)malloc(sizeof(int)*g->t_count);
         (f->follow)[i] = (int*)malloc(sizeof(int)*g->t_count);
         memset((f->first)[i], 0, g->t_count*sizeof(int));
         memset((f->follow)[i], 0, g->t_count*sizeof(int));
-        RULE temp = ((g->nonterminals)+i)->r;
-        while(temp!=NULL) {
-            printf("%d.%s\n",i,(g->nonterminals)[i].name);
-            TK_NODE temp_node = temp->start;
-            while(temp_node!=NULL) {
-                if(temp_node->type==T) {
-                    (f->first)[i][(temp_node->info).term_index]=1;
-                    break;
-                }
-                temp_node = temp_node->next;
-            }
-            temp=temp->next;
-        }
     }
+            // printf("%d.%s\n",i,(g->nonterminals)[i].name);
+            // TK_NODE temp_node = temp->start;
+            // while(temp_node!=NULL) {
+            //     if(temp_node->type==T) {
+            //         (f->first)[i][(temp_node->info).term_index]=1;
+            //         break;
+            //     }
+            //     temp_node = temp_node->next;
+            // }
+    for(int i=0;i<g->non_t_count;i++) {
+        if(global[i]==1) {
+            continue;
+        }
+        int local[g->non_t_count];
+        memset(local,0,g->non_t_count*sizeof(int));
+        computeFirst(f, g, i, global, local);
+
+    }
+    int globalfollow[g->non_t_count];
+    memset(globalfollow,0,g->non_t_count*sizeof(int));
+
+    for(int i=0;i<g->non_t_count;i++) {
+        if(globalfollow[i]==1) {
+            continue;
+        }
+        int localfollow[g->non_t_count];
+        memset(localfollow,0,g->non_t_count*sizeof(int));
+        computeFollow(f, g, i, globalfollow, localfollow);
+
+    }
+    // for(int i=0;i<54;i++) {
+    //     if((f->first)[22][i]==1) {
+    //         printf("-%s",(g->terminals)[i]);
+    //     }
+    // }
 }
 
 void main() {
     GRAMMAR g = populateGrammar("grammar.txt");
-
+    // for(int i=0;i<50;i++) {
+    //     printf("%s\n",(g->nonterminals)[i].name);
+    // }
     FirstFollow f = ComputeFirstAndFollowSets(g);
 }
