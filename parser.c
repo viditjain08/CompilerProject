@@ -495,17 +495,17 @@ FirstFollow ComputeFirstAndFollowSets(GRAMMAR g) {
         computeFollow(f, g, i, globalfollow, localfollow);
     }
 
-    for(int x=0;x<50;x++) {
+    for(int x=0;x<g->non_t_count;x++) {
         printf("\n\n%s",(g->nonterminals)[x].name);
         printf("\nFIRST");
-        for(int i=0;i<54;i++) {
+        for(int i=0;i<g->t_count;i++) {
             if((f->first)[x][i]>0) {
                 (f->first)[x][i]=1;
                 printf("-%s",(g->terminals)[i]);
             }
         }
         printf("\nFOLLOW");
-        for(int i=0;i<54;i++) {
+        for(int i=0;i<g->t_count;i++) {
             if((f->follow)[x][i]>0) {
                 (f->follow)[x][i]=1;
                 printf("-%s",(g->terminals)[i]);
@@ -530,7 +530,11 @@ PARSETABLE createParseTable(FirstFollow F, GRAMMAR G, PARSETABLE PT) {
             // Add this rule's pointer for every terminal in first(X) except eps
             for(int j=1;j<G->t_count;j++) {
                 if((F->first)[i][j]==1) {
+                    if(PT[i][j]!=NULL) {
+                        printf("sdfghj");
+                    }
                     PT[i][j]=cur_rule;
+
                 }
             }
             if((F->first)[i][0]==1) {
@@ -538,6 +542,9 @@ PARSETABLE createParseTable(FirstFollow F, GRAMMAR G, PARSETABLE PT) {
                 RULE cur_rule = (G->nonterminals)[i].r;
                 for(int j=0;j<G->t_count;j++) {
                     if((F->follow)[i][j]==1) {
+                        if(PT[i][j]!=NULL) {
+                            printf("qwert");
+                        }
                         PT[i][j]=cur_rule;
                     }
                 }
@@ -551,6 +558,9 @@ PARSETABLE createParseTable(FirstFollow F, GRAMMAR G, PARSETABLE PT) {
                 while(t_temp!=NULL) {
                     if(t_temp->type==T) {
                         // A->b.... rule will be added for [A,b]
+                        if(PT[i][t_temp->info.term_index]!=NULL) {
+                            printf("%d %d %s\n",i,t_temp->info.term_index,G->nonterminals[i].name);
+                        }
                         PT[i][t_temp->info.term_index]=cur_rule;
                         break;
                     } else {
@@ -558,6 +568,9 @@ PARSETABLE createParseTable(FirstFollow F, GRAMMAR G, PARSETABLE PT) {
                         int ind = t_temp->info.non_term_index;
                         for(int j=1;j<G->t_count;j++) {
                             if((F->first)[ind][j]==1) {
+                                if(PT[i][j]!=NULL) {
+                                    printf("rtghj");
+                                }
                                 PT[i][j]=cur_rule;
                             }
                         }
@@ -571,6 +584,9 @@ PARSETABLE createParseTable(FirstFollow F, GRAMMAR G, PARSETABLE PT) {
                     // if A->BCD.... & first(BCD...) contains eps, add this rule for all follow(A) including $
                     for(int j=0;j<G->t_count;j++) {
                         if((F->follow)[i][j]==1) {
+                            if(PT[i][j]!=NULL) {
+                                printf("zdf5rds");
+                            }
                             PT[i][j]=cur_rule;
                         }
                     }
