@@ -96,6 +96,7 @@ void printTokens(const char *source_Code){
             printf("%-20s\t%-30s\t%-5d\n",tokenMap[tk->token],tk->lexeme,tk->lineNo);
         }
     }
+    fclose(fp);
 
 }
 
