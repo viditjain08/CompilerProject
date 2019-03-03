@@ -60,7 +60,8 @@ typedef enum{
     TK_EQ,
     TK_GT,
     TK_GE,
-    TK_NE
+    TK_NE,
+    TK_ERROR
 }tokenType;
 extern char *tokenMap[];
 #endif
