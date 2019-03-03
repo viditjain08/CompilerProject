@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+typedef struct tokenInfo * TOKENINFO;
+typedef struct tokenInfo tokenInfo;
 
 #define BUFFER_SIZE 32
 #define MAX_LEXEME_SIZE 50
@@ -72,13 +74,13 @@ typedef union{
     float valF;
 }Value;
 
-typedef struct{
+struct tokenInfo{
     tokenType token;
     char* lexeme;
     Value* val;
     int lineNo;
     int dataType;   // 0 for int, 1 for float, 2 for identifier, 3 for reserved keyword, 4 for erorr
-}tokenInfo;
+};
 
 extern char* bufferCurr;
 extern char* bufferPre;

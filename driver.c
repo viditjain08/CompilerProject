@@ -10,7 +10,7 @@ int main() {
   // //
 	GRAMMAR g = populateGrammar("grammar.txt");
 	// printf("%d\n",((g->follow)[2].size));
-	// for(int i=0;i<54;i++) {
+	// for(int i=0;i<50;i++) {
 	//     printf("%s %d\n",(g->terminals)[i], i);
 	// }
 
@@ -18,17 +18,23 @@ int main() {
 	PARSETABLE t;
 	t = createParseTable(f, g, t);
 
+
+
+    char file[] = "testcases/testcase2.txt";
+    printf("\n\n\n");
+    TREE_NODE x = parseInputSourceCode(file, t, f, g);
+
+
   // hashInit(15);
 //	printTable();
 
 //	printf("%s\n", tokenMap[lookup("parameters")]);
 
-	// char file[] = "source_code";
 	// char outFile[] = "output.txt";
 
 	//removeComments(file,outFile);
 
-	// printTokens(file);
+	printTokens(file);
 
 	// int i;
 	// for(i=0;i<g->t_count;i++){
@@ -46,7 +52,11 @@ int main() {
     //
     // }
     // for(int i)
-
+    for(int i=0;i<g->t_count;i++) {
+        if(t[9][i]!=NULL) {
+            printf("%d\n",i);
+        }
+    }
     end_time = clock();
     total_CPU_time  =  (double) (end_time - start_time);
     total_CPU_time_in_seconds =   total_CPU_time / CLOCKS_PER_SEC;

@@ -1,5 +1,6 @@
 #include "parser.h"
 
+TOKENINFO globaltk;
 // returns the index of the nonterminal in grammar
 int check_nont(char* token, GRAMMAR g, int nont_count) {
     if(nont_count==0) {
@@ -555,6 +556,20 @@ PARSETABLE createParseTable(FirstFollow F, GRAMMAR G, PARSETABLE PT) {
             while(cur_rule!=NULL) {
                 //iterate through each rule
                 TK_NODE t_temp = cur_rule->start;
+
+                if(t_temp->info==0 && t_temp->type==T) {
+                    printf("%d %d %s\n",i,t_temp->info,G->nonterminals[i].name);
+                    for(int j=0;j<G->t_count;j++) {
+                        if((F->follow)[i][j]==1) {
+                            // if(PT[i][j]!=NULL) {
+                            //     printf("qwert");
+                            // }
+                            PT[i][j]=cur_rule;
+                        }
+                    }
+                    cur_rule=cur_rule->next;
+                    continue;
+                }
                 while(t_temp!=NULL) {
                     if(t_temp->type==T) {
                         // A->b.... rule will be added for [A,b]
@@ -596,4 +611,86 @@ PARSETABLE createParseTable(FirstFollow F, GRAMMAR G, PARSETABLE PT) {
         }
     }
     return PT;
+}
+
+TREE_NODE initialize(int t, int p_ind, int ind) {
+    TREE_NODE s = (TREE_NODE)malloc(sizeof(tree_node));
+    s->child=NULL;
+    s->next=NULL;
+    s->parent_index=p_ind;
+    s->type = t;
+    s->tk_info.index = ind;
+    return s;
+}
+
+TREE_NODE buildParseTree(TREE_NODE s, FILE* fp, PARSETABLE pt, FirstFollow f, GRAMMAR g) {
+    if(s->type==T) {
+        if((s->tk_info).index==0) {
+            return s;
+        }
+        if(globaltk->token==(s->tk_info).index) {
+            s->tk_info.tk = globaltk;
+            printf("%s\n",globaltk->lexeme);
+            globaltk = getNextToken(fp);
+            return s;
+        } else {
+            printf("Error\n");
+            return NULL;
+        }
+    } else {
+        printf("-----%s------\n",g->nonterminals[(s->tk_info).index].name);
+        if(pt[s->tk_info.index][globaltk->token]!=NULL) {
+            TK_NODE temp = pt[s->tk_info.index][globaltk->token]->start;
+            TREE_NODE tn = initialize(temp->type, s->tk_info.index, temp->info);
+            s->child = tn;
+            TREE_NODE prev;
+            while(temp!=NULL) {
+                prev = buildParseTree(tn, fp, pt, f, g);
+                temp = temp->next;
+                if(temp!=NULL) {
+                    tn = initialize(temp->type, s->tk_info.index, temp->info);
+                    prev->next = tn;
+                } else {
+                    prev->next = NULL;
+                }
+            }
+            return s;
+        } else if((f->follow)[s->tk_info.index][globaltk->token]==1) {
+            printf("Syn error\n");
+            return s;
+        } else {
+            printf("Input Error, going to next token");
+            globaltk = getNextToken(fp);
+            s = buildParseTree(s, fp, pt, f, g);
+            return s;
+        }
+    }
+    return NULL;
+}
+
+
+TREE_NODE parseInputSourceCode(char *testcaseFile, PARSETABLE pt, FirstFollow f, GRAMMAR g) {
+
+    hashInit(15);
+
+    FILE *fp = fopen(testcaseFile,"r");
+    fileEnd = 0;
+    free(bufferPre);
+    free(bufferCurr);
+    bufferPre = (char*)malloc(BUFFER_SIZE*sizeof(char));
+    bufferCurr = (char*)malloc(BUFFER_SIZE*sizeof(char));
+
+    memset(bufferPre,0,BUFFER_SIZE*sizeof(char));
+    memset(bufferCurr,0,BUFFER_SIZE*sizeof(char));
+
+    getStream(fp);
+    currChar = 0;
+    lineNo = 1;
+
+    TREE_NODE s = initialize(1, -1, 0);
+    globaltk = getNextToken(fp);
+    s = buildParseTree(s, fp, pt, f, g);
+    fflush(fp);
+    fclose(fp);
+    return NULL;
 }

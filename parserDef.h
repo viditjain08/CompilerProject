@@ -19,10 +19,12 @@ typedef struct followind * FOLLOWIND;
 typedef struct followind followind;
 typedef RULE * parsetable;
 typedef parsetable * PARSETABLE;
+typedef struct tree_node * TREE_NODE;
+typedef struct tree_node tree_node;
 
-
+typedef enum {T, NT} ntt;
 struct tk_node{
-	enum {T, NT} type;
+	ntt type;
     int info;
     TK_NODE next;
 } ;
@@ -61,4 +63,18 @@ struct firstfollow{
 	int** first;
 	// follow 0th column $, rest terminals as in grammar
 	int** follow;
+};
+
+typedef union {
+	TOKENINFO tk;
+	int index;
+} node_info;
+
+struct tree_node {
+
+	ntt type;
+	node_info tk_info;
+	int parent_index;
+	TREE_NODE child;
+	TREE_NODE next;
 };
