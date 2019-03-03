@@ -176,7 +176,7 @@ GRAMMAR populateGrammar(char* grammar_file) {
                         TK_NODE temp;
                         temp=(TK_NODE)malloc(sizeof(tk_node));
                         temp->next=NULL;
-                        (temp->info).term_index = t_ind;
+                        temp->info = t_ind;
                         temp->type = T;
 
                         if(tk_temp==NULL) {
@@ -239,7 +239,7 @@ GRAMMAR populateGrammar(char* grammar_file) {
                         // nt_ind = current index of non-terminal referred
                         TK_NODE temp = (TK_NODE)malloc(sizeof(tk_node));
                         temp->next = NULL;
-                        temp->info.non_term_index = nt_ind;
+                        temp->info = nt_ind;
                         temp->type = NT;
                         if(tk_temp==NULL) {
                             // First token in current rule
@@ -345,12 +345,12 @@ void computeFirst(FirstFollow f, GRAMMAR g, int i, int* global, int* local) {
         while(temp_node!=NULL) {
 
             if(temp_node->type==T) {
-            	// printf("%s\n",g->terminals[(temp_node->info).term_index]);
+            	// printf("%s\n",g->terminals[(temp_node->info)]);
                 // A->b
-                (f->first)[i][(temp_node->info).term_index]=1;
+                (f->first)[i][temp_node->info]=1;
                 break;
             } else {
-                int ind = (temp_node->info).non_term_index;
+                int ind = temp_node->info;
                 if(global[ind]==1) {
                     // First of ind non terminal already computed
                     if((f->first)[ind][0]==0) {
@@ -413,11 +413,11 @@ void computeFollow(FirstFollow f, GRAMMAR g, int i, int* global, int* local) {
             if(temp_node->type==T) {
 
                 // X->Ab => follow(A)=first(b)=b
-                (f->follow)[i][(temp_node->info).term_index]=1;
+                (f->follow)[i][temp_node->info]=1;
                 break;
 
             } else {
-                int ind = (temp_node->info).non_term_index;
+                int ind = temp_node->info;
 
                 if((f->first)[ind][0]==0) {
                     // X->AB if first(B) does not contain eps, follow(A)+=first(B)
@@ -558,14 +558,14 @@ PARSETABLE createParseTable(FirstFollow F, GRAMMAR G, PARSETABLE PT) {
                 while(t_temp!=NULL) {
                     if(t_temp->type==T) {
                         // A->b.... rule will be added for [A,b]
-                        if(PT[i][t_temp->info.term_index]!=NULL) {
-                            printf("%d %d %s\n",i,t_temp->info.term_index,G->nonterminals[i].name);
+                        if(PT[i][t_temp->info]!=NULL) {
+                            printf("%d %d %s\n",i,t_temp->info,G->nonterminals[i].name);
                         }
-                        PT[i][t_temp->info.term_index]=cur_rule;
+                        PT[i][t_temp->info]=cur_rule;
                         break;
                     } else {
                         // A->BCD.... rule will be added to first(B), first(C).... till first() does not contain eps
-                        int ind = t_temp->info.non_term_index;
+                        int ind = t_temp->info;
                         for(int j=1;j<G->t_count;j++) {
                             if((F->first)[ind][j]==1) {
                                 // if(PT[i][j]!=NULL) {

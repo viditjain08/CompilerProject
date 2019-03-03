@@ -1,6 +1,7 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
+#include "lexerDef.h"
 
 typedef struct tk_node * TK_NODE;
 typedef struct rule * RULE;
@@ -20,14 +21,9 @@ typedef RULE * parsetable;
 typedef parsetable * PARSETABLE;
 
 
-typedef union{
-	int term_index;
-	int non_term_index;
-} t_or_nt;
-
 struct tk_node{
 	enum {T, NT} type;
-    t_or_nt info;
+    int info;
     TK_NODE next;
 } ;
 

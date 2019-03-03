@@ -8,27 +8,27 @@ int main() {
   double total_CPU_time, total_CPU_time_in_seconds;
   start_time = clock();
   // //
-	// GRAMMAR g = populateGrammar("grammar.txt");
-	// // printf("%d\n",((g->follow)[2].size));
-	// // for(int i=0;i<54;i++) {
-	// //     printf("%s %d\n",(g->terminals)[i], i);
-	// // }
-  //
-	// FirstFollow f = ComputeFirstAndFollowSets(g);
-	// PARSETABLE t;
-	// t = createParseTable(f, g, t);
+	GRAMMAR g = populateGrammar("grammar.txt");
+	// printf("%d\n",((g->follow)[2].size));
+	// for(int i=0;i<54;i++) {
+	//     printf("%s %d\n",(g->terminals)[i], i);
+	// }
 
-  hashInit(15);
+	FirstFollow f = ComputeFirstAndFollowSets(g);
+	PARSETABLE t;
+	t = createParseTable(f, g, t);
+
+  // hashInit(15);
 //	printTable();
 
 //	printf("%s\n", tokenMap[lookup("parameters")]);
 
-	char file[] = "source_code";
-	char outFile[] = "output.txt";
+	// char file[] = "source_code";
+	// char outFile[] = "output.txt";
 
 	//removeComments(file,outFile);
 
-	printTokens(file);
+	// printTokens(file);
 
 	// int i;
 	// for(i=0;i<g->t_count;i++){
