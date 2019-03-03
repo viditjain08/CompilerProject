@@ -97,13 +97,15 @@ void printTokens(const char *source_Code){
         tk = getNextToken(fp);
 
     }
+    fflush(fp);
     fclose(fp);
 
 }
 
 tokenInfo* getNextToken(FILE *fp){
-    char *lexeme = (char*)malloc(MAX_LEXEME_SIZE*sizeof(char));
-    memset(lexeme,0,MAX_LEXEME_SIZE*sizeof(char));
+    //char *lexeme = (char*)malloc(MAX_LEXEME_SIZE*sizeof(char));
+    char lexeme[MAX_LEXEME_SIZE];
+    //memset(lexeme,0,MAX_LEXEME_SIZE*sizeof(char));
     int j = 0;      // forward pointer for lexeme
 
     int tkGenerated = 0;
@@ -799,20 +801,9 @@ tokenInfo* getNextToken(FILE *fp){
 tokenInfo* getTKinfo(int token,char* lexeme,int lineNo){
 	tokenInfo* temp = (tokenInfo*)malloc(sizeof(tokenInfo));
 	temp->token = token;
-	int len = 0;
-	while(lexeme[len] != '\0')
-	{
-		len++;
-	}
-	len++;
-	// temp->lexeme = (char*)malloc(sizeof(char)*len);
-	// int i = 0;
-	// while(i < len)
-	// {
-	// 	temp->lexeme[i] = lexeme[i];
-	// 	i++;
-	// }
-    temp->lexeme = lexeme;
+  //temp->lexeme =NULL;
+  temp->lexeme = (char*)malloc(strlen(lexeme)+1);
+  strcpy(temp->lexeme,lexeme);
 	temp->lineNo = lineNo;
 	if(token == TK_ID)
 		temp->dataType = 2;
