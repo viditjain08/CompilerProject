@@ -89,12 +89,13 @@ void printTokens(const char *source_Code){
     currChar = 0;
     lineNo = 1;
 
-    tokenInfo *tk;
+    tokenInfo *tk = getNextToken(fp);
     while (tk!=NULL) {
-        tk = getNextToken(fp);
         if(tk!=NULL){
             printf("%-20s\t%-30s\t%-5d\n",tokenMap[tk->token],tk->lexeme,tk->lineNo);
         }
+        tk = getNextToken(fp);
+
     }
     fclose(fp);
 
