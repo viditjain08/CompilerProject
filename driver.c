@@ -20,13 +20,12 @@ int main() {
 
 
 
-    char file[] = "testcases/testcase2.txt";
+    char file[] = "testcases/testcase5.txt";
     printf("\n\n\n");
-    TREE_NODE x = parseInputSourceCode(file, t, f, g);
 
 
-  // hashInit(15);
-//	printTable();
+    hashInit(15);
+	printTable();
 
 //	printf("%s\n", tokenMap[lookup("parameters")]);
 
@@ -35,6 +34,7 @@ int main() {
 	//removeComments(file,outFile);
 
 	printTokens(file);
+    TREE_NODE x = parseInputSourceCode(file, t, f, g);
 
 	// int i;
 	// for(i=0;i<g->t_count;i++){

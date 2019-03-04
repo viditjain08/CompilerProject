@@ -1,6 +1,8 @@
 #include "parser.h"
 
 TOKENINFO globaltk;
+TOKENINFO nexttk;
+int invalid_token=0;
 // returns the index of the nonterminal in grammar
 int check_nont(char* token, GRAMMAR g, int nont_count) {
     if(nont_count==0) {
@@ -623,22 +625,61 @@ TREE_NODE initialize(int t, int p_ind, int ind) {
     return s;
 }
 
+int check_token(TOKENINFO tk, GRAMMAR g) {
+    if(tk->token==g->t_count) {
+        if(strcmp(tk->lexeme, "error")==0) {
+            printf("Line %d: Unknown symbol encountered\n", tk->lineNo);
+        } else {
+            printf("Line %d: Identifier is longer than the prescribed length\n", tk->lineNo);
+        }
+        return 0;
+    }
+    return 1;
+}
 TREE_NODE buildParseTree(TREE_NODE s, FILE* fp, PARSETABLE pt, FirstFollow f, GRAMMAR g) {
+
     if(s->type==T) {
         if((s->tk_info).index==0) {
             return s;
         }
         if(globaltk->token==(s->tk_info).index) {
             s->tk_info.tk = globaltk;
-            printf("%s\n",globaltk->lexeme);
-            globaltk = getNextToken(fp);
+            // printf("%s\n",globaltk->lexeme);
+            if(nexttk==NULL) {
+                globaltk = getNextToken(fp);
+                if(globaltk==NULL) {
+                    return s;
+                }
+                while(check_token(globaltk, g)==0) {
+                    invalid_token++;
+                    globaltk = getNextToken(fp);
+                    if(globaltk==NULL) {
+                        return s;
+                    }
+                    // printf("%s\n",globaltk->lexeme);
+                }
+            } else {
+                globaltk = nexttk;
+                nexttk = NULL;
+            }
+
             return s;
         } else {
-            printf("Error\n");
-            return NULL;
+            if(invalid_token>0) {
+                // printf("qwertyui\n");
+                invalid_token--;
+                return s;
+            }
+            if(nexttk==NULL) {
+                printf("Line %d: The token %s for lexeme %s  does not match with the expected token %s \n",
+                        globaltk->lineNo,g->terminals[globaltk->token],globaltk->lexeme,g->terminals[(s->tk_info).index]);
+            } else {
+                printf("Line %d: Token missing\n",globaltk->lineNo);
+            }
+            return s;
         }
     } else {
-        printf("-----%s------\n",g->nonterminals[(s->tk_info).index].name);
+        // printf("-----%s------\n",g->nonterminals[(s->tk_info).index].name);
         if(pt[s->tk_info.index][globaltk->token]!=NULL) {
             TK_NODE temp = pt[s->tk_info.index][globaltk->token]->start;
             TREE_NODE tn = initialize(temp->type, s->tk_info.index, temp->info);
@@ -646,6 +687,9 @@ TREE_NODE buildParseTree(TREE_NODE s, FILE* fp, PARSETABLE pt, FirstFollow f, GR
             TREE_NODE prev;
             while(temp!=NULL) {
                 prev = buildParseTree(tn, fp, pt, f, g);
+                if(globaltk==NULL) {
+                    return s;
+                }
                 temp = temp->next;
                 if(temp!=NULL) {
                     tn = initialize(temp->type, s->tk_info.index, temp->info);
@@ -656,11 +700,63 @@ TREE_NODE buildParseTree(TREE_NODE s, FILE* fp, PARSETABLE pt, FirstFollow f, GR
             }
             return s;
         } else if((f->follow)[s->tk_info.index][globaltk->token]==1) {
-            printf("Syn error\n");
+            if(invalid_token>0) {
+                // printf("asdfg\n");
+                invalid_token--;
+                return s;
+            }
+            printf("Line %d: The token %s for lexeme %s does not match with the expected token\n",
+            globaltk->lineNo,g->terminals[globaltk->token],globaltk->lexeme);
             return s;
         } else {
+            if(nexttk==NULL) {
+                nexttk = getNextToken(fp);
+                if(globaltk==NULL) {
+                    return s;
+                }
+                while(check_token(nexttk, g)==0) {
+                    invalid_token++;
+                    nexttk = getNextToken(fp);
+                    if(globaltk==NULL) {
+                        return s;
+                    }
+                    // printf("%s\n",nexttk->lexeme);
+                }
+            }
+            // printf("-------------%s\n",nexttk->lexeme);
+            if(nexttk!=NULL && (pt[s->tk_info.index][nexttk->token]!=NULL)) {
+                printf("Line %d: Extra token %s provided",globaltk->lineNo,globaltk->lexeme);
+                globaltk = nexttk;
+                nexttk=NULL;
+                s = buildParseTree(s, fp, pt, f, g);
+                return s;
+
+            } else if(nexttk!=NULL && ((f->follow)[s->tk_info.index][nexttk->token]==1)) {
+                printf("Line %d: The token %s for lexeme %s does not match with the expected token\n",
+                globaltk->lineNo,g->terminals[globaltk->token],globaltk->lexeme);
+                globaltk = nexttk;
+                nexttk=NULL;
+                s = buildParseTree(s, fp, pt, f, g);
+                return s;
+            } else if(nexttk==NULL) {
+                printf("Line %d: Extra token %s provided",globaltk->lineNo,globaltk->lexeme);
+                return s;
+            } else {
+                return s;
+            }
             printf("Input Error, going to next token");
             globaltk = getNextToken(fp);
+            if(globaltk==NULL) {
+                return s;
+            }
+            while(check_token(globaltk, g)==0) {
+                invalid_token++;
+                globaltk = getNextToken(fp);
+                if(globaltk==NULL) {
+                    return s;
+                }
+                printf("%s\n",globaltk->lexeme);
+            }
             s = buildParseTree(s, fp, pt, f, g);
             return s;
         }
@@ -671,7 +767,7 @@ TREE_NODE buildParseTree(TREE_NODE s, FILE* fp, PARSETABLE pt, FirstFollow f, GR
 
 TREE_NODE parseInputSourceCode(char *testcaseFile, PARSETABLE pt, FirstFollow f, GRAMMAR g) {
 
-    hashInit(15);
+    // hashInit(15);
 
     FILE *fp = fopen(testcaseFile,"r");
     fileEnd = 0;
