@@ -54,7 +54,9 @@ char *tokenMap[] = {
     "TK_GE",
     "TK_NE",
     "TK_RETURN",
-    "TK_ERROR"
+    "TK_ERROR",
+    "TK_ERROR2",
+    "TK_ERROR3"
 };
 
 

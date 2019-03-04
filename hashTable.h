@@ -60,7 +60,9 @@ typedef enum{
     TK_GE,
     TK_NE,
     TK_RETURN,
-    TK_ERROR
+    TK_ERROR,   // For Unknown definition ERROR
+    TK_ERROR2,  // for Length ERROR
+    TK_ERROR3   // for Unkown Symbol error
 }tokenType;
 extern char *tokenMap[];
 

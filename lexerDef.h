@@ -1,10 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-typedef struct tokenInfo * TOKENINFO;
-typedef struct tokenInfo tokenInfo;
 
-#define BUFFER_SIZE 32
+#define BUFFER_SIZE 64
 #define MAX_LEXEME_SIZE 50
 
 #ifndef TOKEN
@@ -63,7 +61,9 @@ typedef enum{
     TK_GE,
     TK_NE,
     TK_RETURN,
-    TK_ERROR
+    TK_ERROR,   // For Unknown definition ERROR
+    TK_ERROR2,  // for Length ERROR
+    TK_ERROR3   // for Unkown Symbol error
 }tokenType;
 extern char *tokenMap[];
 #endif
@@ -74,13 +74,13 @@ typedef union{
     float valF;
 }Value;
 
-struct tokenInfo{
+typedef struct{
     tokenType token;
     char* lexeme;
     Value* val;
     int lineNo;
     int dataType;   // 0 for int, 1 for float, 2 for identifier, 3 for reserved keyword, 4 for erorr
-};
+}tokenInfo;
 
 extern char* bufferCurr;
 extern char* bufferPre;
@@ -89,5 +89,6 @@ extern int currChar;
 extern int fileEnd;
 extern int lineNo;
 
+typedef tokenInfo* TOKENINFO;
 #include "lexer.h"
 #include "hashTable.h"

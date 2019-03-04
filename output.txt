@@ -3,50 +3,35 @@
 
 
 
+_computeFunctionValue input parameter list[int c3, int c4, int c5]
+output parameter  [real c6];
+	type real : d4cbcccccccccccccbbbbbbbbdddd5222222222222633333333333377;
+	type real :                       c4bbb;
+	c6 <--- 5000.7;
+	d4cbcd5677<--- ((c3 +             2*c4-(c5-5))/ 4;
+	c4bbb <--- ((d4cbcd5677- 2.35)*(2345-234*8))+5*c3;
+	if((~(c4bbb == 0)) && (c4bbb > 78.56)) 
+	then
+		c6<--- d4cbcd5677/c4bbb
+	else
+		write(c4bbb);
+	endif
 
-
-_readMarks input parameter list[int b7]
-output parameter list [ record #marks b3c45];
-	read(b3c45.maths);
-	read(b3c45.physics);
-	read(b3c45.chemistry);
-	return [b3c45];
 end
 
 
 
-
-
 _main 
-	record #marks
-		type real : maths; 
-		type real: physics; 
-		type real: chemistry;
-	endrecord;
-	
-
-	type record #marks : d4;
-	
-
-	type int : b5;
+	type int  b5;
 	type int : d5cb34567;
-	type record #marks : b5c6;
-	
-
-	b5 <--- 1;
+	type int :  b3b444 : global;
+	type $real: c3;
+	b5 <-- 1;
 	read(d5cb34567);
-	b5c6.maths <--- 0.00;
-	b5c6.physics <--- 0.00;
-	b5c6.chemistry <---0.00;
-	while(b5<=d5cb34567)
-		[d4] <--- call _readMarks with parameters [b5];
-		b5c6 <--- b5c6 + d4; 
-		
-		b5 <--- b5 +1;
-	endwhile
-	d4 <--- b5c6 / d5cb34567;
-	write(d4.maths);
-	write(d4.physics);
-	write(d4.chemistry);
+	read(45);
+	read(b3b444);
+
+	[c3] <--- call _computeFunctionValue with parameters [b5, d5cb34567, b3b444];
+	write(c3);
 	return;
 end

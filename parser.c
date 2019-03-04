@@ -697,14 +697,17 @@ TREE_NODE initialize(int t, int p_ind, int ind) {
 }
 
 int check_token(TOKENINFO tk, GRAMMAR g) {
-    if(tk->token==g->t_count) {
-        if(strcmp(tk->lexeme, "error")==0) {
-            printf("Line %d: Unknown symbol encountered\n", tk->lineNo);
-        } else {
+        if(tk->token==TK_ERROR) {
+            printf("Line %d: Unknown pattern %s\n", tk->lineNo, tk->lexeme);
+            return 0;
+        } else if(tk->token==TK_ERROR2) {
             printf("Line %d: Identifier is longer than the prescribed length\n", tk->lineNo);
+            return 0;
+        } else if(tk->token==TK_ERROR3) {
+            printf("Line %d: Unknown symbol %s\n", tk->lineNo, tk->lexeme);
+            return 0;
         }
-        return 0;
-    }
+
     return 1;
 }
 TREE_NODE buildParseTree(TREE_NODE s, FILE* fp, PARSETABLE pt, FirstFollow f, GRAMMAR g, Hashtable tb_nt, Hashtable tb_t) {
