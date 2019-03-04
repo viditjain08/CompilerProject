@@ -1,35 +1,104 @@
 #include "parser.h"
+#define HASHSIZE 300
 
 TOKENINFO globaltk;
 TOKENINFO nexttk;
+int max_jump=0;
 int invalid_token=0;
+
+int hashCode(char *name, int size){
+  int len=strlen(name);
+  if(strcmp(name,"eps")==0){
+    return 0;
+  }
+
+  long long hashVal=0;
+  for(int i=0;i<len;i++){
+    hashVal = hashVal + (int)name[i];
+  }
+  hashVal = hashVal%size;
+
+  // int i = hashVal, h=1;
+  // while(n_block.nt_index == -1){
+  //   i = (i + (h*h))%size;
+  // }
+
+  return hashVal;
+}
+
+Hashtable hashTableInit(int size){
+  Hashtable tb = (Hashtable)malloc(sizeof(struct hashT) * size);
+  for(int i=0;i<size;i++){
+    tb[i].name = NULL;
+    tb[i].flag=0;
+  }
+  return tb;
+}
+
+int hashEntry(Hashtable t, char *name, int size, int count){
+  if(strcmp(name,"eps") == 0){
+    t[0].name = (char*)malloc(sizeof(char) * (strlen(name)+1));
+    t[0].flag=1;
+    t[0].index = count;
+    strcpy(t[0].name, name);
+    return 0;
+  }
+  int hashval = hashCode(name, size), h=1;
+  while(t[hashval].flag == 1){
+    hashval = (hashval + (h*h))%size;
+    h++;
+  }
+  t[hashval].name = (char*)malloc(sizeof(char) * (strlen(name)+1));
+  max_jump = (max_jump >= h-1) ? max_jump : h-1;
+  t[hashval].flag=1;
+  t[hashval].index = count;
+  strcpy(t[hashval].name, name);
+  return hashval;
+}
+
 // returns the index of the nonterminal in grammar
-int check_nont(char* token, GRAMMAR g, int nont_count) {
+int check_nont(char* token, GRAMMAR g, int nont_count, Hashtable tb_nt) {
     if(nont_count==0) {
         return -1;
     }
-    for(int i=0;i<nont_count;i++) {
-        if(strcmp((g->nonterminals)[i].name,token)==0) {
-            return i;
+    int hashval = hashCode(token, HASHSIZE), h=1, count=0;
+
+    while(count <= max_jump+1) {
+        if(tb_nt[hashval].flag==0){
+          return -1;
         }
+        if(strcmp(tb_nt[hashval].name,token)==0) {
+            return tb_nt[hashval].index;
+        }
+        hashval = (hashval + (h*h))%HASHSIZE;
+        h++;
+        count++;
     }
     return -1;
 }
 
 // returns the index of the terminal in grammar
-int check_t(char* token, GRAMMAR g, int t_count) {
+int check_t(char* token, int t_count, Hashtable tb_t) {
     if(t_count==0) {
         return -1;
     }
-    for(int i=0;i<t_count;i++) {
-        if(strcmp((g->terminals)[i],token)==0) {
-            return i;
+    int hashval = hashCode(token, HASHSIZE), h=1, count=0;
+
+    while(count <= max_jump+1) {
+        if(tb_t[hashval].flag==0){
+          return -1;
         }
+        if(strcmp(tb_t[hashval].name,token)==0) {
+            return tb_t[hashval].index;
+        }
+        hashval = (hashval + (h*h))%HASHSIZE;
+        h++;
+        count++;
     }
     return -1;
 }
 
-GRAMMAR populateGrammar(char* grammar_file) {
+GRAMMAR populateGrammar(char* grammar_file, Hashtable tb_nt, Hashtable tb_t) {
     FILE* fp = fopen(grammar_file, "r");
     if(fp==NULL){
 		printf("Could not open Grammar file");
@@ -43,11 +112,10 @@ GRAMMAR populateGrammar(char* grammar_file) {
 
     g->nonterminals=(NONT_BLOCK)malloc(sizeof(nont_block)*20);
     g->follow=(FOLLOWDS)malloc(sizeof(followds)*20);
-    g->terminals=(char**)malloc(sizeof(char*)*20);
+    g->terminals=(int*)malloc(sizeof(int)*20);
 
     // Make 1st terminal eps
-    (g->terminals)[0]=(char*)malloc(sizeof(char)*4);
-    strcpy((g->terminals)[0], "eps");
+    (g->terminals)[0]=hashEntry(tb_t, "eps", HASHSIZE, 0);
 
     int nont_count=0,t_count=1,nont_max=20,t_max=20;
     while(1) {
@@ -90,7 +158,7 @@ GRAMMAR populateGrammar(char* grammar_file) {
                     // add token to grammar
                     token[token_ptr]='\0';
                     left=0;
-                    nt_ind = check_nont(token, g, nont_count);
+                    nt_ind = check_nont(token, g, nont_count, tb_nt);
                     if(nt_ind==-1) {
                         // Non Terminal not present in grammar
                         if(nont_count==nont_max) {
@@ -102,8 +170,9 @@ GRAMMAR populateGrammar(char* grammar_file) {
                         NONT_BLOCK cur_non_term = (g->nonterminals)+nont_count;
 
                         // Add token name
-                        cur_non_term->name = (char*)malloc(sizeof(char)*strlen(token)+1);
-                        strcpy(cur_non_term->name,token);
+                        //cur_non_term->name = (char*)malloc(sizeof(char)*strlen(token)+1);
+                        //strcpy(cur_non_term->name,token);
+                        cur_non_term->nt_index = hashEntry(tb_nt, token, HASHSIZE, nont_count);
 
                         // Allocate blank rule
                         cur_non_term->r=(RULE)malloc(sizeof(rule));
@@ -162,15 +231,16 @@ GRAMMAR populateGrammar(char* grammar_file) {
                         token[token_ptr]='\0';
 
                         // check if token exists in grammar's terminals
-                        int t_ind = check_t(token, g,t_count);
+                        int t_ind = check_t(token, t_count, tb_t);
                         if(t_ind==-1) {
                             // token not found
                             if(t_count==t_max) {
                                 t_max+=10;
-                                g->terminals=(char**)realloc(g->terminals,sizeof(char*)*t_max);
+                                g->terminals=(int*)realloc(g->terminals,sizeof(int)*t_max);
                             }
-                            (g->terminals)[t_count] = (char*)malloc(sizeof(char)*strlen(token)+1);
-                            strcpy((g->terminals)[t_count],token);
+                            // (g->terminals)[t_count] = (char*)malloc(sizeof(char)*strlen(token)+1);
+                            // strcpy((g->terminals)[t_count],token);
+                            (g->terminals)[t_count] = hashEntry(tb_t, token, HASHSIZE, t_count);
                             t_ind=t_count;
                             t_count++;
                         }
@@ -222,7 +292,7 @@ GRAMMAR populateGrammar(char* grammar_file) {
                         // save non-terminal
                         token[token_ptr]='\0';
 
-                        nt_ind = check_nont(token, g, nont_count);
+                        nt_ind = check_nont(token, g, nont_count, tb_nt);
                         if(nt_ind==-1) {
 
                             if(nont_count==nont_max) {
@@ -233,9 +303,10 @@ GRAMMAR populateGrammar(char* grammar_file) {
 
                             }
                             // Insert token name to newly added non_terminal
-                            (g->nonterminals)[nont_count].name = (char*)malloc(sizeof(char)*strlen(token)+1);
-                            strcpy((g->nonterminals)[nont_count].name,token);
-                            // (g->nonterminals)[nont_count].r=(RULE)malloc(sizeof(rule));
+                            // (g->nonterminals)[nont_count].name = (char*)malloc(sizeof(char)*strlen(token)+1);
+                            // strcpy((g->nonterminals)[nont_count].name,token);
+                            (g->nonterminals)[nont_count].nt_index = hashEntry(tb_nt, token, HASHSIZE, nont_count);
+                            (g->nonterminals)[nont_count].r=NULL;
                             nt_ind=nont_count;
                             nont_count++;
                         }
@@ -459,7 +530,7 @@ void computeFollow(FirstFollow f, GRAMMAR g, int i, int* global, int* local) {
 }
 
 
-FirstFollow ComputeFirstAndFollowSets(GRAMMAR g) {
+FirstFollow ComputeFirstAndFollowSets(GRAMMAR g, Hashtable tb_nt, Hashtable tb_t) {
 
     // Create a 2d matrix for first and follow sets where 0 indicates absent and values>0 represent present
     FirstFollow f = (FirstFollow)malloc(sizeof(firstfollow));
@@ -499,19 +570,19 @@ FirstFollow ComputeFirstAndFollowSets(GRAMMAR g) {
     }
 // printing first and follow
     for(int x=0;x<g->non_t_count;x++) {
-        printf("\n\n%s",(g->nonterminals)[x].name);
+        printf("\n\n%s",tb_nt[(g->nonterminals)[x].nt_index].name);
         printf("\nFIRST");
         for(int i=0;i<g->t_count;i++) {
             if((f->first)[x][i]>0) {
                 (f->first)[x][i]=1;
-                printf("-%s",(g->terminals)[i]);
+                printf("-%s",tb_t[(g->terminals)[i]].name);
             }
         }
         printf("\nFOLLOW");
         for(int i=0;i<g->t_count;i++) {
             if((f->follow)[x][i]>0) {
                 (f->follow)[x][i]=1;
-                printf("-%s",(g->terminals)[i]);
+                printf("-%s",tb_t[(g->terminals)[i]].name);
             }
         }
     }
@@ -519,7 +590,7 @@ FirstFollow ComputeFirstAndFollowSets(GRAMMAR g) {
     return f;
 }
 
-PARSETABLE createParseTable(FirstFollow F, GRAMMAR G, PARSETABLE PT) {
+PARSETABLE createParseTable(FirstFollow F, GRAMMAR G, PARSETABLE PT, Hashtable tb_nt, Hashtable tb_t) {
     PT = (PARSETABLE)malloc(sizeof(RULE*)*(G->non_t_count));
     // iterate through every rule
     for(int i=0;i<(G->non_t_count);i++) {
@@ -560,7 +631,7 @@ PARSETABLE createParseTable(FirstFollow F, GRAMMAR G, PARSETABLE PT) {
                 TK_NODE t_temp = cur_rule->start;
 
                 if(t_temp->info==0 && t_temp->type==T) {
-                    printf("%d %d %s\n",i,t_temp->info,G->nonterminals[i].name);
+                    printf("%d %d %s\n",i,t_temp->info,tb_nt[G->nonterminals[i].nt_index].name);
                     for(int j=0;j<G->t_count;j++) {
                         if((F->follow)[i][j]==1) {
                             // if(PT[i][j]!=NULL) {
@@ -576,7 +647,7 @@ PARSETABLE createParseTable(FirstFollow F, GRAMMAR G, PARSETABLE PT) {
                     if(t_temp->type==T) {
                         // A->b.... rule will be added for [A,b]
                         if(PT[i][t_temp->info]!=NULL) {
-                            printf("%d %d %s\n",i,t_temp->info,G->nonterminals[i].name);
+                            printf("%d %d %s\n",i,t_temp->info,tb_nt[G->nonterminals[i].nt_index].name);
                         }
                         PT[i][t_temp->info]=cur_rule;
                         break;
@@ -636,8 +707,7 @@ int check_token(TOKENINFO tk, GRAMMAR g) {
     }
     return 1;
 }
-TREE_NODE buildParseTree(TREE_NODE s, FILE* fp, PARSETABLE pt, FirstFollow f, GRAMMAR g) {
-
+TREE_NODE buildParseTree(TREE_NODE s, FILE* fp, PARSETABLE pt, FirstFollow f, GRAMMAR g, Hashtable tb_nt, Hashtable tb_t) {
     if(s->type==T) {
         if((s->tk_info).index==0) {
             return s;
@@ -672,7 +742,7 @@ TREE_NODE buildParseTree(TREE_NODE s, FILE* fp, PARSETABLE pt, FirstFollow f, GR
             }
             if(nexttk==NULL) {
                 printf("Line %d: The token %s for lexeme %s  does not match with the expected token %s \n",
-                        globaltk->lineNo,g->terminals[globaltk->token],globaltk->lexeme,g->terminals[(s->tk_info).index]);
+                        globaltk->lineNo,tb_t[g->terminals[globaltk->token]].name,globaltk->lexeme,tb_t[g->terminals[(s->tk_info).index]].name);
             } else {
                 printf("Line %d: Token missing\n",globaltk->lineNo);
             }
@@ -686,7 +756,7 @@ TREE_NODE buildParseTree(TREE_NODE s, FILE* fp, PARSETABLE pt, FirstFollow f, GR
             s->child = tn;
             TREE_NODE prev;
             while(temp!=NULL) {
-                prev = buildParseTree(tn, fp, pt, f, g);
+                prev = buildParseTree(tn, fp, pt, f, g, tb_nt, tb_t);
                 if(globaltk==NULL) {
                     return s;
                 }
@@ -706,7 +776,7 @@ TREE_NODE buildParseTree(TREE_NODE s, FILE* fp, PARSETABLE pt, FirstFollow f, GR
                 return s;
             }
             printf("Line %d: The token %s for lexeme %s does not match with the expected token\n",
-            globaltk->lineNo,g->terminals[globaltk->token],globaltk->lexeme);
+            globaltk->lineNo,tb_t[g->terminals[globaltk->token]].name,globaltk->lexeme);
             return s;
         } else {
             if(nexttk==NULL) {
@@ -728,15 +798,15 @@ TREE_NODE buildParseTree(TREE_NODE s, FILE* fp, PARSETABLE pt, FirstFollow f, GR
                 printf("Line %d: Extra token %s provided",globaltk->lineNo,globaltk->lexeme);
                 globaltk = nexttk;
                 nexttk=NULL;
-                s = buildParseTree(s, fp, pt, f, g);
+                s = buildParseTree(s, fp, pt, f, g, tb_nt, tb_t);
                 return s;
 
             } else if(nexttk!=NULL && ((f->follow)[s->tk_info.index][nexttk->token]==1)) {
                 printf("Line %d: The token %s for lexeme %s does not match with the expected token\n",
-                globaltk->lineNo,g->terminals[globaltk->token],globaltk->lexeme);
+                globaltk->lineNo,tb_t[g->terminals[globaltk->token]].name,globaltk->lexeme);
                 globaltk = nexttk;
                 nexttk=NULL;
-                s = buildParseTree(s, fp, pt, f, g);
+                s = buildParseTree(s, fp, pt, f, g, tb_nt, tb_t);
                 return s;
             } else if(nexttk==NULL) {
                 printf("Line %d: Extra token %s provided",globaltk->lineNo,globaltk->lexeme);
@@ -757,7 +827,7 @@ TREE_NODE buildParseTree(TREE_NODE s, FILE* fp, PARSETABLE pt, FirstFollow f, GR
                 }
                 printf("%s\n",globaltk->lexeme);
             }
-            s = buildParseTree(s, fp, pt, f, g);
+            s = buildParseTree(s, fp, pt, f, g, tb_nt, tb_t);
             return s;
         }
     }
@@ -765,7 +835,7 @@ TREE_NODE buildParseTree(TREE_NODE s, FILE* fp, PARSETABLE pt, FirstFollow f, GR
 }
 
 
-TREE_NODE parseInputSourceCode(char *testcaseFile, PARSETABLE pt, FirstFollow f, GRAMMAR g) {
+TREE_NODE parseInputSourceCode(char *testcaseFile, PARSETABLE pt, FirstFollow f, GRAMMAR g, Hashtable tb_nt, Hashtable tb_t) {
 
     // hashInit(15);
 
@@ -782,10 +852,9 @@ TREE_NODE parseInputSourceCode(char *testcaseFile, PARSETABLE pt, FirstFollow f,
     getStream(fp);
     currChar = 0;
     lineNo = 1;
-
     TREE_NODE s = initialize(1, -1, 0);
     globaltk = getNextToken(fp);
-    s = buildParseTree(s, fp, pt, f, g);
+    s = buildParseTree(s, fp, pt, f, g, tb_nt, tb_t);
     fflush(fp);
     fclose(fp);
     return NULL;

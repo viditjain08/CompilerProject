@@ -21,6 +21,7 @@ typedef RULE * parsetable;
 typedef parsetable * PARSETABLE;
 typedef struct tree_node * TREE_NODE;
 typedef struct tree_node tree_node;
+typedef struct hashT  *Hashtable;
 
 typedef enum {T, NT} ntt;
 struct tk_node{
@@ -35,7 +36,7 @@ struct rule{
 };
 
 struct nont_block{
-	char* name;
+	int nt_index;
 	RULE r;
 };
 
@@ -52,7 +53,7 @@ struct followds {
 
 struct grammar{
 	FOLLOWDS follow;
-	char** terminals;
+	int* terminals;
 	NONT_BLOCK nonterminals;
 	int non_t_count;
 	int t_count;
@@ -77,4 +78,10 @@ struct tree_node {
 	int parent_index;
 	TREE_NODE child;
 	TREE_NODE next;
+};
+
+struct hashT{
+ char *name;
+ int index;
+ int flag;
 };

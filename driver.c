@@ -1,6 +1,7 @@
 #include "parser.h"
 #include <time.h>
 // #include "lexer.h"
+#define HASHSIZE 300
 
 int main() {
 
@@ -8,15 +9,15 @@ int main() {
   double total_CPU_time, total_CPU_time_in_seconds;
   start_time = clock();
   // //
-	GRAMMAR g = populateGrammar("grammar.txt");
-	// printf("%d\n",((g->follow)[2].size));
+  Hashtable tb_t = hashTableInit(HASHSIZE);
+  Hashtable tb_nt = hashTableInit(HASHSIZE);
+  GRAMMAR g = populateGrammar("grammar.txt", tb_nt, tb_t);	// printf("%d\n",((g->follow)[2].size));
 	// for(int i=0;i<50;i++) {
 	//     printf("%s %d\n",(g->terminals)[i], i);
 	// }
 
-	FirstFollow f = ComputeFirstAndFollowSets(g);
-	PARSETABLE t;
-	t = createParseTable(f, g, t);
+  FirstFollow f = ComputeFirstAndFollowSets(g, tb_nt, tb_t);	PARSETABLE t;
+	t = createParseTable(f, g, t, tb_nt, tb_t);
 
 
 
@@ -34,11 +35,11 @@ int main() {
 	//removeComments(file,outFile);
 
 	printTokens(file);
-    TREE_NODE x = parseInputSourceCode(file, t, f, g);
+  TREE_NODE x = parseInputSourceCode(file, t, f, g, tb_nt, tb_t);
 
 	// int i;
 	// for(i=0;i<g->t_count;i++){
-	// 	printf("%s\n", g->terminals[i]);
+	// 	printf("%s\n", tb_t[g->terminals[i]].name);
 	// }
 
     // for(int i=0;i<g->non_t_count;i++) {
