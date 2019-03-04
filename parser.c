@@ -375,7 +375,7 @@ GRAMMAR populateGrammar(char* grammar_file, Hashtable tb_nt, Hashtable tb_t) {
         }
         // printf("%s\n",token);
         // temp->index
-        printf("%s\n",line);
+        // printf("%s\n",line);
 
         line[0]='\0';
     }
@@ -570,19 +570,19 @@ FirstFollow ComputeFirstAndFollowSets(GRAMMAR g, Hashtable tb_nt, Hashtable tb_t
     }
 // printing first and follow
     for(int x=0;x<g->non_t_count;x++) {
-        printf("\n\n%s",tb_nt[(g->nonterminals)[x].nt_index].name);
-        printf("\nFIRST");
+        // printf("\n\n%s",tb_nt[(g->nonterminals)[x].nt_index].name);
+        // printf("\nFIRST");
         for(int i=0;i<g->t_count;i++) {
             if((f->first)[x][i]>0) {
                 (f->first)[x][i]=1;
-                printf("-%s",tb_t[(g->terminals)[i]].name);
+                // printf("-%s",tb_t[(g->terminals)[i]].name);
             }
         }
-        printf("\nFOLLOW");
+        // printf("\nFOLLOW");
         for(int i=0;i<g->t_count;i++) {
             if((f->follow)[x][i]>0) {
                 (f->follow)[x][i]=1;
-                printf("-%s",tb_t[(g->terminals)[i]].name);
+                // printf("-%s",tb_t[(g->terminals)[i]].name);
             }
         }
     }
@@ -631,7 +631,7 @@ PARSETABLE createParseTable(FirstFollow F, GRAMMAR G, PARSETABLE PT, Hashtable t
                 TK_NODE t_temp = cur_rule->start;
 
                 if(t_temp->info==0 && t_temp->type==T) {
-                    printf("%d %d %s\n",i,t_temp->info,tb_nt[G->nonterminals[i].nt_index].name);
+                    // printf("%d %d %s\n",i,t_temp->info,tb_nt[G->nonterminals[i].nt_index].name);
                     for(int j=0;j<G->t_count;j++) {
                         if((F->follow)[i][j]==1) {
                             // if(PT[i][j]!=NULL) {
@@ -857,5 +857,20 @@ TREE_NODE parseInputSourceCode(char *testcaseFile, PARSETABLE pt, FirstFollow f,
     s = buildParseTree(s, fp, pt, f, g, tb_nt, tb_t);
     fflush(fp);
     fclose(fp);
-    return NULL;
+    return s;
 }
+
+// void traversal(TREE_NODE tree){
+//     if (tree->child != NULL) {
+//         traversal(tree->child);
+//     }
+//     // Do what the hell you want to do
+//     printf("ntt %d, parent index %d, \n",tree->type, tree->parent_index);
+//     if(tree->child != NULL){
+//         NODE tmp = tree->child->next;
+//         while(tmp != NULL){
+//             traversal(tmp);
+//             tmp = tmp->next;
+//         }
+//     }
+// }
