@@ -890,11 +890,11 @@ void traversal(FILE*fp, GRAMMAR g, TREE_NODE tree, Hashtable tb_nt, Hashtable tb
     }
     if(tree->type==T) {
         if(tree->tk_info.tk!=NULL) {
-            fprintf(fp,"%s %d %s ",tree->tk_info.tk->lexeme, tree->tk_info.tk->lineNo, tb_t[g->terminals[tree->tk_info.tk->token]].name);
+            fprintf(fp,"%-30s\t%-3d\t%-20s\t ",tree->tk_info.tk->lexeme, tree->tk_info.tk->lineNo, tb_t[g->terminals[tree->tk_info.tk->token]].name);
             if(tree->tk_info.tk->dataType==0) {
-                fprintf(fp,"%d ",tree->tk_info.tk->val->valI);
+                fprintf(fp,"%-5d ",tree->tk_info.tk->val->valI);
             } else if(tree->tk_info.tk->dataType==1) {
-                fprintf(fp,"%f ",tree->tk_info.tk->val->valF);
+                fprintf(fp,"%-5f ",tree->tk_info.tk->val->valF);
             } else {
                 fprintf(fp,"---- ");
             }
@@ -906,13 +906,13 @@ void traversal(FILE*fp, GRAMMAR g, TREE_NODE tree, Hashtable tb_nt, Hashtable tb
     } else {
         fprintf(fp,"---- ---- ---- ---- ");
         if(tree->parent_index==-1) {
-            fprintf(fp,"ROOT ");
+            fprintf(fp,"ROOT\t");
         } else {
-            fprintf(fp,"%s ",tb_nt[g->nonterminals[tree->parent_index].nt_index].name);
+            fprintf(fp,"%-30s\t",tb_nt[g->nonterminals[tree->parent_index].nt_index].name);
 
         }
-        fprintf(fp,"0 ");
-        fprintf(fp,"%s \n",tb_nt[g->nonterminals[tree->tk_info.index].nt_index].name);
+        fprintf(fp,"0\t");
+        fprintf(fp,"%-20s\t\n",tb_nt[g->nonterminals[tree->tk_info.index].nt_index].name);
     }
 
     // printf("ntt %d, parent index %d, \n",tree->type, tree->parent_index);
