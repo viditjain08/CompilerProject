@@ -5,7 +5,7 @@ TOKENINFO globaltk;
 TOKENINFO nexttk;
 int max_jump=0;
 int invalid_token=0;
-
+int invalid_prog=0;
 int hashCode(char *name, int size){
   int len=strlen(name);
   if(strcmp(name,"eps")==0){
@@ -698,126 +698,56 @@ TREE_NODE initialize(int t, int p_ind, int ind) {
 
 int check_token(TOKENINFO tk, GRAMMAR g) {
         if(tk->token==TK_ERROR) {
+            invalid_prog++;
             printf("Line %d: Unknown pattern %s\n", tk->lineNo, tk->lexeme);
             return 0;
         } else if(tk->token==TK_ERROR2) {
+            invalid_prog++;
             printf("Line %d: Identifier is longer than the prescribed length\n", tk->lineNo);
             return 0;
         } else if(tk->token==TK_ERROR3) {
+            invalid_prog++;
             printf("Line %d: Unknown symbol %s\n", tk->lineNo, tk->lexeme);
             return 0;
         }
 
     return 1;
 }
-TREE_NODE buildParseTree(TREE_NODE s, FILE* fp, PARSETABLE pt, FirstFollow f, GRAMMAR g, Hashtable tb_nt, Hashtable tb_t) {
-    if(s->type==T) {
-        if((s->tk_info).index==0) {
+
+TREE_NODE addRule(RULE r, TREE_NODE s, FILE* fp, PARSETABLE pt, FirstFollow f, GRAMMAR g, Hashtable tb_nt, Hashtable tb_t) {
+
+    // printf("%s \n",tb_nt[g->nonterminals[s->tk_info.index].nt_index].name);
+
+    TK_NODE temp = r->start;
+    TREE_NODE tn = initialize(temp->type, s->tk_info.index, temp->info);
+    s->child = tn;
+    tn = buildParseTree(tn, fp, pt, f, g, tb_nt, tb_t);
+    if(globaltk==NULL) {
+        return s;
+    }
+    TREE_NODE prev=tn;
+    temp=temp->next;
+    while(temp!=NULL) {
+        tn = initialize(temp->type, s->tk_info.index, temp->info);
+        tn = buildParseTree(tn, fp, pt, f, g, tb_nt, tb_t);
+        prev->next = tn;
+        temp=temp->next;
+        prev=prev->next;
+        if(globaltk==NULL) {
             return s;
         }
+    }
+
+    return s;
+}
+
+TREE_NODE buildParseTree(TREE_NODE s, FILE* fp, PARSETABLE pt, FirstFollow f, GRAMMAR g, Hashtable tb_nt, Hashtable tb_t) {
+    if(globaltk==NULL) {
+        return s;
+    }
+    if(s->type==T) {
         if(globaltk->token==(s->tk_info).index) {
             s->tk_info.tk = globaltk;
-            // printf("%s\n",globaltk->lexeme);
-            if(nexttk==NULL) {
-                globaltk = getNextToken(fp);
-                if(globaltk==NULL) {
-                    return s;
-                }
-                while(check_token(globaltk, g)==0) {
-                    invalid_token++;
-                    globaltk = getNextToken(fp);
-                    if(globaltk==NULL) {
-                        return s;
-                    }
-                    // printf("%s\n",globaltk->lexeme);
-                }
-            } else {
-                globaltk = nexttk;
-                nexttk = NULL;
-            }
-
-            return s;
-        } else {
-            if(invalid_token>0) {
-                // printf("qwertyui\n");
-                invalid_token--;
-                return s;
-            }
-            if(nexttk==NULL) {
-                printf("Line %d: The token %s for lexeme %s  does not match with the expected token %s \n",
-                        globaltk->lineNo,tb_t[g->terminals[globaltk->token]].name,globaltk->lexeme,tb_t[g->terminals[(s->tk_info).index]].name);
-            } else {
-                printf("Line %d: Token missing\n",globaltk->lineNo);
-            }
-            return s;
-        }
-    } else {
-        // printf("-----%s------\n",g->nonterminals[(s->tk_info).index].name);
-        if(pt[s->tk_info.index][globaltk->token]!=NULL) {
-            TK_NODE temp = pt[s->tk_info.index][globaltk->token]->start;
-            TREE_NODE tn = initialize(temp->type, s->tk_info.index, temp->info);
-            s->child = tn;
-            TREE_NODE prev;
-            while(temp!=NULL) {
-                prev = buildParseTree(tn, fp, pt, f, g, tb_nt, tb_t);
-                if(globaltk==NULL) {
-                    return s;
-                }
-                temp = temp->next;
-                if(temp!=NULL) {
-                    tn = initialize(temp->type, s->tk_info.index, temp->info);
-                    prev->next = tn;
-                } else {
-                    prev->next = NULL;
-                }
-            }
-            return s;
-        } else if((f->follow)[s->tk_info.index][globaltk->token]==1) {
-            if(invalid_token>0) {
-                // printf("asdfg\n");
-                invalid_token--;
-                return s;
-            }
-            printf("Line %d: The token %s for lexeme %s does not match with the expected token\n",
-            globaltk->lineNo,tb_t[g->terminals[globaltk->token]].name,globaltk->lexeme);
-            return s;
-        } else {
-            if(nexttk==NULL) {
-                nexttk = getNextToken(fp);
-                if(globaltk==NULL) {
-                    return s;
-                }
-                while(check_token(nexttk, g)==0) {
-                    invalid_token++;
-                    nexttk = getNextToken(fp);
-                    if(globaltk==NULL) {
-                        return s;
-                    }
-                    // printf("%s\n",nexttk->lexeme);
-                }
-            }
-            // printf("-------------%s\n",nexttk->lexeme);
-            if(nexttk!=NULL && (pt[s->tk_info.index][nexttk->token]!=NULL)) {
-                printf("Line %d: Extra token %s provided",globaltk->lineNo,globaltk->lexeme);
-                globaltk = nexttk;
-                nexttk=NULL;
-                s = buildParseTree(s, fp, pt, f, g, tb_nt, tb_t);
-                return s;
-
-            } else if(nexttk!=NULL && ((f->follow)[s->tk_info.index][nexttk->token]==1)) {
-                printf("Line %d: The token %s for lexeme %s does not match with the expected token\n",
-                globaltk->lineNo,tb_t[g->terminals[globaltk->token]].name,globaltk->lexeme);
-                globaltk = nexttk;
-                nexttk=NULL;
-                s = buildParseTree(s, fp, pt, f, g, tb_nt, tb_t);
-                return s;
-            } else if(nexttk==NULL) {
-                printf("Line %d: Extra token %s provided",globaltk->lineNo,globaltk->lexeme);
-                return s;
-            } else {
-                return s;
-            }
-            printf("Input Error, going to next token");
             globaltk = getNextToken(fp);
             if(globaltk==NULL) {
                 return s;
@@ -828,14 +758,100 @@ TREE_NODE buildParseTree(TREE_NODE s, FILE* fp, PARSETABLE pt, FirstFollow f, GR
                 if(globaltk==NULL) {
                     return s;
                 }
-                printf("%s\n",globaltk->lexeme);
+                // printf("%s\n",globaltk->lexeme);
             }
-            s = buildParseTree(s, fp, pt, f, g, tb_nt, tb_t);
+            return s;
+        } else if((s->tk_info).index==0) {
+            TOKENINFO tk = (TOKENINFO)malloc(sizeof(tokenInfo));
+            tk->dataType=-1;
+            tk->lexeme = (char*)malloc(sizeof(char)*4);
+            strcpy(tk->lexeme,"eps");
+            tk->lineNo = -1;
+            tk->token = 0;
+            s->tk_info.tk = tk;
+            return s;
+        } else {
+            if(invalid_token>0) {
+                // printf("qwertyui\n");
+                s->tk_info.tk=NULL;
+                invalid_token--;
+                return s;
+            }
+            s->tk_info.tk=NULL;
+            invalid_prog++;
+            printf("Line %d: The token %s for lexeme %s  does not match with the expected token %s \n",
+                    globaltk->lineNo,tb_t[g->terminals[globaltk->token]].name,globaltk->lexeme,tb_t[g->terminals[(s->tk_info).index]].name);
             return s;
         }
+        globaltk = getNextToken(fp);
+        return s;
+    } else {
+        if(pt[s->tk_info.index][globaltk->token]!=NULL) {
+            s = addRule(pt[s->tk_info.index][globaltk->token], s, fp, pt, f, g, tb_nt, tb_t);
+            return s;
+        } else if((f->follow)[s->tk_info.index][globaltk->token]==1) {
+            if(invalid_token>0) {
+                // printf("asdfg\n");
+                invalid_token--;
+                return s;
+            }
+            invalid_prog++;
+            printf("Line %d: The token %s for lexeme %s does not match with the expected token\n",
+            globaltk->lineNo,tb_t[g->terminals[globaltk->token]].name,globaltk->lexeme);
+            return s;
+        } else {
+            if((f->first)[s->tk_info.index][0]==1) {
+                // printf("-%s- \n",tb_nt[g->nonterminals[s->tk_info.index].nt_index].name);
+                RULE r = (g->nonterminals)[s->tk_info.index].r;
+                while(r!=NULL) {
+
+                    TK_NODE tk = r->start;
+
+                    while(tk!=NULL) {
+                        if(tk->type==T && tk->info==0) {
+                            tk=NULL;
+                            break;
+                        }
+
+                        if(tk->type==T) {
+                            break;
+                        } else {
+                            if((f->first)[tk->info][0]==1) {
+
+                                tk=tk->next;
+                            } else {
+
+                                break;
+                            }
+                        }
+                    }
+
+                    if(tk==NULL) {
+                        return addRule(r, s, fp, pt, f, g, tb_nt, tb_t);
+                    }
+                    r=r->next;
+                }
+            } else {
+                invalid_prog++;
+                printf("Line %d: Extra token %s provided\n",globaltk->lineNo,globaltk->lexeme);
+                globaltk = getNextToken(fp);
+                while(check_token(globaltk, g)==0) {
+                    invalid_token++;
+                    globaltk = getNextToken(fp);
+                    if(globaltk==NULL) {
+                        return s;
+                    }
+                }
+                s = buildParseTree(s, fp, pt, f, g, tb_nt, tb_t);
+                return s;
+            }
+        }
     }
-    return NULL;
+
+    return s;
 }
+
+
 
 
 TREE_NODE parseInputSourceCode(char *testcaseFile, PARSETABLE pt, FirstFollow f, GRAMMAR g, Hashtable tb_nt, Hashtable tb_t) {
@@ -858,22 +874,53 @@ TREE_NODE parseInputSourceCode(char *testcaseFile, PARSETABLE pt, FirstFollow f,
     TREE_NODE s = initialize(1, -1, 0);
     globaltk = getNextToken(fp);
     s = buildParseTree(s, fp, pt, f, g, tb_nt, tb_t);
+    while(globaltk!=NULL) {
+        invalid_prog++;
+        printf("Line %d: Extra token %s provided\n",globaltk->lineNo,globaltk->lexeme);
+        globaltk=getNextToken(fp);
+    }
     fflush(fp);
     fclose(fp);
     return s;
 }
 
-// void traversal(TREE_NODE tree){
-//     if (tree->child != NULL) {
-//         traversal(tree->child);
-//     }
-//     // Do what the hell you want to do
-//     printf("ntt %d, parent index %d, \n",tree->type, tree->parent_index);
-//     if(tree->child != NULL){
-//         NODE tmp = tree->child->next;
-//         while(tmp != NULL){
-//             traversal(tmp);
-//             tmp = tmp->next;
-//         }
-//     }
-// }
+void traversal(FILE*fp, GRAMMAR g, TREE_NODE tree, Hashtable tb_nt, Hashtable tb_t){
+    if (tree->child != NULL) {
+        traversal(fp, g, tree->child, tb_nt, tb_t);
+    }
+    if(tree->type==T) {
+        if(tree->tk_info.tk!=NULL) {
+            fprintf(fp,"%s %d %s ",tree->tk_info.tk->lexeme, tree->tk_info.tk->lineNo, tb_t[g->terminals[tree->tk_info.tk->token]].name);
+            if(tree->tk_info.tk->dataType==0) {
+                fprintf(fp,"%d ",tree->tk_info.tk->val->valI);
+            } else if(tree->tk_info.tk->dataType==1) {
+                fprintf(fp,"%f ",tree->tk_info.tk->val->valF);
+            } else {
+                fprintf(fp,"---- ");
+            }
+            fprintf(fp,"%s ",tb_nt[g->nonterminals[tree->parent_index].nt_index].name);
+            fprintf(fp,"%d ",1-tree->type);
+            fprintf(fp,"---- \n");
+        }
+
+    } else {
+        fprintf(fp,"---- ---- ---- ---- ");
+        if(tree->parent_index==-1) {
+            fprintf(fp,"ROOT ");
+        } else {
+            fprintf(fp,"%s ",tb_nt[g->nonterminals[tree->parent_index].nt_index].name);
+
+        }
+        fprintf(fp,"0 ");
+        fprintf(fp,"%s \n",tb_nt[g->nonterminals[tree->tk_info.index].nt_index].name);
+    }
+
+    // printf("ntt %d, parent index %d, \n",tree->type, tree->parent_index);
+    if(tree->child != NULL){
+        TREE_NODE tmp = tree->child->next;
+        while(tmp != NULL){
+            traversal(fp, g, tmp, tb_nt, tb_t);
+            tmp = tmp->next;
+        }
+    }
+}

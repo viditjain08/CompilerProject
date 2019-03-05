@@ -6,6 +6,11 @@
 int main(int argc, char *argv[]) {
 
     char* file = argv[1];
+    char* parsetreefile = argv[2];
+
+    // char* file = "testcases/testcase4.txt";
+    // char* parsetreefile = "parsetreeOutFile.txt";
+    FILE *parsetree = fopen(parsetreefile, "w+");
     clock_t    start_time, end_time;
     double total_CPU_time, total_CPU_time_in_seconds;
   // //
@@ -18,6 +23,8 @@ int main(int argc, char *argv[]) {
 	// for(int i=0;i<50;i++) {
 	//     printf("%s %d\n",(g->terminals)[i], i);
 	// }
+    hashInit(15);
+
     Hashtable tb_nt = hashTableInit(HASHSIZE);
     Hashtable tb_t = hashTableInit(HASHSIZE);
 	GRAMMAR g = populateGrammar("grammar.txt", tb_nt, tb_t);
@@ -25,12 +32,18 @@ int main(int argc, char *argv[]) {
 	PARSETABLE t;
 
 	t = createParseTable(f, g, t, tb_nt, tb_t);
-    // traversal(t);
+    TREE_NODE x = parseInputSourceCode(file, t, f, g, tb_nt, tb_t);
+    if(invalid_prog==0) {
+        printf("Program is syntactically correct\n");
+    }
+    invalid_prog=0;
+    traversal(parsetree, g, x, tb_nt, tb_t);
+
+    fclose(parsetree);
 	// char file[] = "testcases/testcase2.txt";
 	printf("\n\n\n");
 
 
-	hashInit(15);
 while(1)
 {
 

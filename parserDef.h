@@ -85,3 +85,5 @@ struct hashT{
  int index;
  int flag;
 };
+
+extern int invalid_prog;
