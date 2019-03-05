@@ -3,7 +3,7 @@
 
 void getStream(FILE *fp);
 
-void removeComments(const char* testCase, const char* outfile);
+void removeComments(const char* testCase);
 
 tokenInfo* getNextToken(FILE *fp);
 tokenInfo* getTKinfo(int token,char* lexeme,int lineNo);

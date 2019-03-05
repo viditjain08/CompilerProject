@@ -10,19 +10,13 @@ int main(int argc, char *argv[]) {
 
     // char* file = "testcases/testcase4.txt";
     // char* parsetreefile = "parsetreeOutFile.txt";
-    FILE *parsetree = fopen(parsetreefile, "w+");
     clock_t    start_time, end_time;
     double total_CPU_time, total_CPU_time_in_seconds;
-  // //
 
-	printf("-------FIRST AND FOLLOW SET AUTOMATED----------");
-	printf("\n------Both lexical and syntax modules implemented--------");
+	printf("-------FIRST AND FOLLOW SET AUTOMATED----------\n");
+	printf("------Both lexical and syntax modules implemented--------\n");
 
 
-	// printf("%d\n",((g->follow)[2].size));
-	// for(int i=0;i<50;i++) {
-	//     printf("%s %d\n",(g->terminals)[i], i);
-	// }
     hashInit(15);
 
     Hashtable tb_nt = hashTableInit(HASHSIZE);
@@ -32,23 +26,12 @@ int main(int argc, char *argv[]) {
 	PARSETABLE t;
 
 	t = createParseTable(f, g, t, tb_nt, tb_t);
-    TREE_NODE x = parseInputSourceCode(file, t, f, g, tb_nt, tb_t);
-    if(invalid_prog==0) {
-        printf("Program is syntactically correct\n");
-    }
-    invalid_prog=0;
-    traversal(parsetree, g, x, tb_nt, tb_t);
-
-    fclose(parsetree);
-	// char file[] = "testcases/testcase2.txt";
-	printf("\n\n\n");
-
 
 while(1)
 {
 
 	int choice;
-	printf("Enter choice -\n 0-Exit \n 1-Remove comments \n2-Print tokens generated\n 3-Parse \n 4-Time taken\n\n\n");
+	printf("\nEnter choice -\n 0-Exit \n 1-Remove comments \n 2-Print tokens generated\n 3-Parse \n 4-Time taken\n");
 	scanf("%d", &choice);
 	if(choice == 0)
 	{
@@ -60,8 +43,8 @@ while(1)
 
 //	printf("%s\n", tokenMap[lookup("parameters")]);
 
-	char outFile[] = "output.txt";
-	removeComments(file,outFile);
+	removeComments(file);
+    printf("Comments removed\n");
 	}
 	else if (choice == 2)
 	{
@@ -70,14 +53,24 @@ while(1)
 	}
 	else if (choice ==3)
 	{
+
+        FILE *parsetree = fopen(parsetreefile, "w+");
+
 		TREE_NODE x = parseInputSourceCode(file, t, f, g, tb_nt, tb_t);
+
+        if(invalid_prog==0) {
+            printf("Program is syntactically correct\n");
+        }
+        invalid_prog=0;
+        traversal(parsetree, g, x, tb_nt, tb_t);
+        printf("Inorder Traversal printed in %s\n",parsetreefile);
+        fclose(parsetree);
 	}
 	else if(choice ==4)
 	{
 
         start_time = clock();
 
-		printTokens(file);
 		TREE_NODE x = parseInputSourceCode(file, t, f, g, tb_nt, tb_t);
 		end_time = clock();
                 total_CPU_time  =  (double) (end_time - start_time);
@@ -92,29 +85,6 @@ while(1)
 		printf("\n Invalid Choice");
 	}
 
-
-
-	// int i;
-	// for(i=0;i<g->t_count;i++){
-	// 	printf("%s\n", g->terminals[i]);
-	// }
-
-    // for(int i=0;i<g->non_t_count;i++) {
-    //     printf("%s\n",(g->nonterminals)[i].name);
-    //     for(int j=0;j<g->t_count;j++) {
-    //         if(t[i][j]!=NULL) {
-    //             printf("%s ",(g->terminals)[j]);
-    //         }
-    //     }
-    //     printf("\n");
-    //
-    // }
-    // for(int i)
-  /*  for(int i=0;i<g->t_count;i++) {
-        if(t[9][i]!=NULL) {
-            printf("%d\n",i);
-        }
-    }*/
 }
     return 0;
 }

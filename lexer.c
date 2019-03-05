@@ -4,7 +4,7 @@ char* bufferCurr;
 char* bufferPre;
 
 int currChar;
-int fileEnd;
+int fileEnd=0;
 int lineNo;
 
 
@@ -27,10 +27,10 @@ void getStream(FILE *fp){
     //return fp;
 }
 
-void removeComments(const char* testCase, const char* outfile){
+void removeComments(const char* testCase){
     FILE *fin = fopen(testCase,"r");
-    FILE *fout = fopen(outfile,"w+");
-
+    FILE *fout = stdout;
+    fileEnd = 0;
     free(bufferPre);
     free(bufferCurr);
     bufferPre = (char*)malloc(BUFFER_SIZE*sizeof(char));
@@ -68,9 +68,9 @@ void removeComments(const char* testCase, const char* outfile){
             break;
         }
     }
-
+    fileEnd=0;
     fclose(fin);
-    fclose(fout);
+    // fclose(fout);
 
 }
 
