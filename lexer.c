@@ -930,6 +930,85 @@ tokenInfo* getNextToken(FILE *fp){
 
 }
 
+int a_to_i(const char *s)
+{
+	int sum = 0;
+	int sign = 0;
+	int length = 0;
+	while(s[length] != '\0')
+	{
+		length++;
+	}
+	int i = 0;
+	if(s[0] == '-')
+	{
+		sign = -1;
+		i++;
+
+	}
+
+	
+	for(i;i<length;i++)
+	{
+		sum = 10*sum + s[i] - '0';
+	}
+
+	if(sign == -1)
+		return -sum;
+	return sum;
+}
+
+float a_to_f(const char *s)
+{
+	float sum1 = 0.0;
+	float sum2 = 0.0;
+	int sign = 0;
+	int length = 0;
+	int dec = 0;
+	int dec_index = -1;
+	while(s[length] != '\0')
+	{
+		length++;
+	}
+	int i =0;
+	if(s[0] == '-')
+	{
+		sign = -1;
+		i++;
+	}
+	for(i;i<length;i++)
+	{
+		if(s[i] == '.')
+		{
+			dec = 1;
+			dec_index = i;
+			continue;
+		}
+
+		else
+		{
+			if(dec == 0)
+			{
+				sum1 = sum1*10 + s[i] - '0';
+			}
+			else
+			{
+				sum2 = sum2/10.0 + s[length-(i-dec_index)] - '0';
+
+			}
+		}
+
+	}
+	sum2 = sum2/10;
+	if(sign == -1)
+	{
+		return -(sum1 + sum2);
+	}
+	else
+		return (sum1 + sum2);
+
+
+}
 tokenInfo* getTKinfo(int token,char* lexeme,int lineNo){
 	tokenInfo* temp = (tokenInfo*)malloc(sizeof(tokenInfo));
 	temp->token = token;
@@ -949,11 +1028,11 @@ tokenInfo* getTKinfo(int token,char* lexeme,int lineNo){
 		temp->dataType = 4;
 	if(temp->dataType == 0)
 	{	temp->val = (Value*)malloc(sizeof(int));
-		temp->val->valI = atoi(lexeme);
+		temp->val->valI = a_to_i(lexeme);
 	}
 	else if (temp->dataType == 1)
 	{	temp->val = (Value*)malloc(sizeof(float));
-		temp->val->valF = atof(lexeme);
+		temp->val->valF = a_to_f(lexeme);
 	}
 	else
 		temp->val = NULL;
