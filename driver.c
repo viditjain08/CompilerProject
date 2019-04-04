@@ -26,7 +26,6 @@ int main(int argc, char *argv[]) {
 	PARSETABLE t;
 
 	t = createParseTable(f, g, t, tb_nt, tb_t);
-
 while(1)
 {
 

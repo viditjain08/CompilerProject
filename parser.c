@@ -719,6 +719,12 @@ TREE_NODE addRule(RULE r, TREE_NODE s, FILE* fp, PARSETABLE pt, FirstFollow f, G
     // printf("%s \n",tb_nt[g->nonterminals[s->tk_info.index].nt_index].name);
 
     TK_NODE temp = r->start;
+    // TK_NODE x = temp;
+    // while(x!=NULL) {
+    //   printf("%d %d\n",x->type,x->info);
+    //   x=x->next;
+    // }
+    // printf("\n\n\n");
     TREE_NODE tn = initialize(temp->type, s->tk_info.index, temp->info);
     s->child = tn;
     tn = buildParseTree(tn, fp, pt, f, g, tb_nt, tb_t);
@@ -729,6 +735,7 @@ TREE_NODE addRule(RULE r, TREE_NODE s, FILE* fp, PARSETABLE pt, FirstFollow f, G
     temp=temp->next;
     while(temp!=NULL) {
         tn = initialize(temp->type, s->tk_info.index, temp->info);
+        // printf("%d %d\n",invalid_token, (tn->tk_info).index);
         tn = buildParseTree(tn, fp, pt, f, g, tb_nt, tb_t);
         prev->next = tn;
         temp=temp->next;
@@ -771,16 +778,21 @@ TREE_NODE buildParseTree(TREE_NODE s, FILE* fp, PARSETABLE pt, FirstFollow f, GR
             s->tk_info.tk = tk;
             return s;
         } else {
+
             if(invalid_token>0) {
                 // printf("qwertyui\n");
                 s->tk_info.tk=NULL;
                 invalid_token--;
                 return s;
             }
-            s->tk_info.tk=NULL;
+
+
             invalid_prog++;
             printf("Line %d: The token %s for lexeme %s  does not match with the expected token %s \n",
                     globaltk->lineNo,tb_t[g->terminals[globaltk->token]].name,globaltk->lexeme,tb_t[g->terminals[(s->tk_info).index]].name);
+
+            s->tk_info.tk=NULL;
+
             return s;
         }
         globaltk = getNextToken(fp);
