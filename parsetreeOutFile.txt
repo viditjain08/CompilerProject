@@ -448,6 +448,7 @@ eps                           	-1 	eps                 	 ---- more_ids 1 ----
 ---- ---- ---- ---- stmt                          	0	funCallStmt         	
 call                          	34 	TK_CALL             	 ---- funCallStmt 1 ---- 
 _computeFunctionValue         	34 	TK_FUNID            	 ---- funCallStmt 1 ---- 
+with                          	34 	TK_WITH             	 ---- funCallStmt 1 ---- 
 parameters                    	34 	TK_PARAMETERS       	 ---- funCallStmt 1 ---- 
 [                             	34 	TK_SQL              	 ---- inputParameters 1 ---- 
 ---- ---- ---- ---- funCallStmt                   	0	inputParameters     	

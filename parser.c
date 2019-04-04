@@ -754,6 +754,7 @@ TREE_NODE buildParseTree(TREE_NODE s, FILE* fp, PARSETABLE pt, FirstFollow f, GR
     }
     if(s->type==T) {
         if(globaltk->token==(s->tk_info).index) {
+						invalid_token=0;
             s->tk_info.tk = globaltk;
             globaltk = getNextToken(fp);
             if(globaltk==NULL) {
@@ -778,7 +779,6 @@ TREE_NODE buildParseTree(TREE_NODE s, FILE* fp, PARSETABLE pt, FirstFollow f, GR
             s->tk_info.tk = tk;
             return s;
         } else {
-
             if(invalid_token>0) {
                 // printf("qwertyui\n");
                 s->tk_info.tk=NULL;
@@ -799,6 +799,7 @@ TREE_NODE buildParseTree(TREE_NODE s, FILE* fp, PARSETABLE pt, FirstFollow f, GR
         return s;
     } else {
         if(pt[s->tk_info.index][globaltk->token]!=NULL) {
+					invalid_token=0;
             s = addRule(pt[s->tk_info.index][globaltk->token], s, fp, pt, f, g, tb_nt, tb_t);
             return s;
         } else if((f->follow)[s->tk_info.index][globaltk->token]==1) {
