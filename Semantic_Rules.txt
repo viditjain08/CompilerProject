@@ -1,0 +1,191 @@
+Group 1:
+Anupam Aggarwal	2016A7PS0033P
+Piyush Garg		2016A7PS0035P
+Rijul Katiyar	2016A7PS0063P 
+Vidit Jain 		2016A7PS0064P
+
+Grammar:
+1. <program> ===> <otherFunctions> <mainFunction>
+2. <mainFunction>===> TK_MAIN <stmts> TK_END
+3. <otherFunctions>===> <function><otherFunctions1>
+4. <otherFunctions>===> eps
+5. <function>===>TK_FUNID <input_par> <output_par> TK_SEM <stmts> TK_END
+6. <input_par>===>TK_INPUT TK_PARAMETER TK_LIST TK_SQL <parameter_list> TK_SQR
+7. <output_par>===>TK_OUTPUT TK_PARAMETER TK_LIST TK_SQL <parameter_list> TK_SQR
+8. <output_par>===> eps
+9. <parameter_list>===><dataType> TK_ID <remaining_list>
+10. <dataType>===> <primitiveDatatype>
+11. <dataType>===> <constructedDatatype>
+12. <primitiveDatatype>===> TK_INT
+13. <primitiveDatatype>===> TK_REAL
+14. <constructedDatatype>===>TK_RECORD TK_RECORDID
+15. <remaining_list>===>TK_COMMA <parameter_list>
+16. <remaining_list>===> eps
+17. <stmts>===><typeDefinitions> <declarations> <otherStmts> <returnStmt>
+18. <typeDefinitions>===><typeDefinition> <typeDefinitions1>
+19. <typeDefinitions>===>eps
+20. <typeDefinition>===>TK_RECORD TK_RECORDID <fieldDefinitions> TK_ENDRECORD TK_SEM
+21. <fieldDefinitions>===> <fieldDefinition> <fieldDefinition> <moreFields>
+22. <fieldDefinition>===> TK_TYPE <primitiveDatatype> TK_COLON TK_FIELDID TK_SEM
+23. <moreFields>===><fieldDefinition> <moreFields1>
+24. <moreFields>===>eps
+25. <declarations> ===> <declaration> <declarations>
+26. <declarations> ===> eps
+27. <declaration>===> TK_TYPE <dataType> TK_COLON TK_ID <global_or_not> TK_SEM
+28. <global_or_not>===>TK_COLON TK_GLOBAL
+29. <global_or_not>===> eps
+30. <otherStmts>===> <stmt> <otherStmts1>
+31. <otherStmts>===>  eps
+32. <stmt>===> <assignmentStmt>
+33. <stmt>===><iterativeStmt>
+34. <stmt>===><conditionalStmt>
+35. <stmt>===><ioStmt>
+36. <stmt>===><funCallStmt>
+37. <assignmentStmt>===><singleOrRecId> TK_ASSIGNOP <arithmeticExpression> TK_SEM
+38. <singleOrRecId>===> TK_ID <new_24>
+39. <new_24>===> TK_DOT TK_FIELDID
+40. <new_24>===> eps
+41. <funCallStmt>===><outputParameters> TK_CALL TK_FUNID TK_WITH TK_PARAMETERS <inputParameters> TK_SEM
+42. <outputParameters> ==> TK_SQL <idList> TK_SQR TK_ASSIGNOP
+43. <outputParameters> ==> eps
+44. <inputParameters>===> TK_SQL <idList> TK_SQR
+45. <iterativeStmt>===> TK_WHILE TK_OP <booleanExpression> TK_CL <stmt> <otherStmts> TK_ENDWHILE
+46. <conditionalStmt>===> TK_IF TK_OP <booleanExpression> TK_CL TK_THEN <stmt> <otherStmts> <elsePart>
+47. <elsePart>===> TK_ELSE <stmt> <otherStmts> TK_ENDIF
+48. <elsePart>===> TK_ENDIF
+49. <ioStmt>===>TK_READ TK_OP <singleOrRecId> TK_CL TK_SEM
+50. <ioStmt>===>TK_WRITE TK_OP <all> TK_CL TK_SEM
+51. <arithmeticExpression> ===> <term> <expPrime>
+52. <expPrime> ===> <lowPrecedenceOperators> <term> <expPrime1>
+53. <expPrime> ===> eps
+54. <term>===> <factor> <termPrime>
+55. <termPrime> ===> <highPrecedenceOperators> <factor> <termPrime1>
+56. <termPrime> ===> eps
+57. <factor> ===> TK_OP <arithmeticExpression> TK_CL
+58. <factor> ===> <all>
+59. <highPrecedenceOperators>===> TK_MUL
+60. <highPrecedenceOperators>===> TK_DIV
+61. <lowPrecedenceOperators> ===> TK_PLUS
+62. <lowPrecedenceOperators> ===> TK_MINUS
+63. <all>===> TK_NUM
+64. <all>===> TK_RNUM
+65. <all>===> <singleOrRecId>
+66. <booleanExpression>===>TK_OP <booleanExpression1> TK_CL <logicalOp> TK_OP <booleanExpression2> TK_CL
+67. <booleanExpression>===> <all1> <relationalOp> <all2>
+68. <booleanExpression>===> TK_NOT TK_OP <booleanExpression1>TK_CL
+69. <logicalOp>===>TK_AND
+70. <logicalOp>===> TK_OR
+71. <relationalOp>===> TK_LT
+72. <relationalOp>===> TK_LE
+73. <relationalOp>===> TK_EQ
+74. <relationalOp>===> TK_GT
+75. <relationalOp>===> TK_GE
+76. <relationalOp>===> TK_NE
+77. <returnStmt>===>TK_RETURN <optionalReturn> TK_SEM
+78. <optionalReturn>===>TK_SQL <idList> TK_SQR
+79. <optionalReturn>===> eps
+80. <idList>===> TK_ID <more_ids>
+81. <more_ids>===> TK_COMMA <idList>
+82. <more_ids>===> eps
+
+
+Semantic Rules:
+1.if(<otherFunctions>.addr == NULL) then { <program>.addr = <mainFunction>.addr } else { <otherFunctions>.addr.append(mainFunction.addr), <program>.addr = <otherFunctions>.addr }
+2. <mainFunction>.addr = <stmts>.addr
+3. <otherFunctions>.addr = new(ofunc, <function>.addr)
+   <function>.next = <otherFunctions1>.addr
+4. <otherFunctions>.addr = NULL
+5. <function>.addr = new(func, TK_FUNID.addr, <input_par>.addr, <output_par>.addr, <stmts>.addr)
+6. <input_par>.addr = <parameter_list>.addr
+7. <output_par>.addr = <parameter_list>.addr
+8. <output_par>.addr = NULL
+9. <parameter_list>.addr = new(para, <dataType>.addr, TK_ID.addr)
+    <dataType>.next = <remaining_list>.addr
+10. dataType.addr = <primitiveDatatype>.addr
+11. dataType.addr = <constructedDatatype>.addr
+12. <primitiveDatatype>.addr = TK_INT.addr
+13. <primitiveDatatype>.addr = TK_REAL.addr
+14. <constructedDatatype>.addr = new(Rec,TK_RECORD.addr,TK_RECORDID.addr)
+15. <remaining_list>.addr = <parameter_list>.addr
+16. <remaining_list>.addr = NULL
+17. <stmts>.addr = new(Stmts,<typeDefinition>.addr,<declarations>.addr,<otherStmts>.addr,<returnStmt>.addr)
+18. <typeDefinitions>.addr = new(tDef, <typeDefinition>.addr)
+    <typeDefinition>.next = <typeDefinitions1>.addr
+19. <typeDefinitions>.addr = NULL
+20. <typeDefinition>.addr = new(td, TK_RECORDID.addr, <fieldDefinitions>.addr)
+21. <fieldDefinitions>.addr = new(fds, <fieldDefinition>.addr, <fieldDefinition>.addr, <moreFields>.addr)
+22. <fieldDefinition>.addr = new(fd, <primitiveDatatype>.addr, TK_FIELDID.addr)
+23. <moreFields>.addr = <fieldDefinition>.addr
+    <fieldDefinition>.next = <moreFields1>.addr
+24. <moreFields>.addr = NULL
+25. <declarations>.addr = <declaration>.addr
+    <declaration>.next = <declarations>.addr
+26. <declarations>.addr = NULL
+27. <declaration>.addr = new(dec, <dataType>.addr, TK_ID.addr, <global_or_not>.addr)
+28. <global_or_not>.addr = TK_GLOBAL.addr
+29. <global_or_not>.addr = NULL
+30. <otherStmts>.addr = <stmt>.addr
+    <stmt>.next = <otherStmts1>.addr
+31. <otherStmts>.addr = NULL
+32. <stmt>.addr = <assignmentStmt>.addr
+33. <stmt>.addr = <iterativeStmt>.addr
+34. <stmt>.addr = <conditionalStmt>.addr
+35. <stmt>.addr = <ioStmt>.addr
+36. <stmt>.addr = <funCallStmt>.addr
+37. <assignmentStmt>.addr = new(aStmt, <singleOrRecId>.addr, <arithmeticExpression>.addr)
+38. <singleOrRecId>.addr = new(sinRec, TK_ID.addr, <new_24>.addr)
+39. <new_24>.addr = TK_FIELDID.addr
+40. <new_24>.addr = NULL
+41. <funCallStmt>.addr = new(fStmt, <outputParameters>.addr, TK_FUNID.addr, <inputParameters>.addr)
+42. <outputParameters>.addr = <idList>.addr
+43. <outputParameters>.addr = NULL
+44. <inputParameters>.addr = <idList>.addr
+45. <iterativeStmt>.addr = new(iStmt, <booleanExpression>.addr, <stmt>.addr)
+    <stmt>.next = <otherStmts>.addr
+46. <conditionalStmt>.addr = new(cStmt, <booleanExpression>.addr, <stmt>.addr, <elsePart>.addr)
+    <stmt>.next = <otherStmts>.addr
+47. <elsePart>.addr = <stmt>.addr
+    <stmt>.next = <otherStmts>.addr
+48. <elsePart>.addr = NULL
+49. <ioStmt>.addr = new(ioRead, TK_READ.addr, <singleOrRecId>.addr)
+50. <ioStmt>.addr = new(ioWrite, TK_WRITE.addr, <all>.addr)
+51. if(<expPrime>.addr == NULL) { <arithmeticExpression>.addr = <term>.addr }
+    else {<arithmeticExpression>.addr = <expPrime>.addr, <expPrime>.left = <term>.addr}
+52. if(<expPrime1>.addr == NULL) { <expPrime>.addr = new(ePrm_term, NULL, <lowPrecedenceOperators>.addr, <term>.addr)}
+    else {<expPrime>.addr = new(ePrm, NULL, <lowPrecedenceOperators>.addr, <expPrime1>.addr), <expPrime1>.left = <term>.addr}
+53. <expPrime>.addr = NULL
+54. if(<termPrime>.addr == NULL) { <term>.addr = <factor>.addr }
+    else {<term>.addr = <termPrime>.addr, <termPrime>.left = <factor>.addr}
+55. if(<termPrime1>.addr == NULL) { <termPrime>.addr = new(tPrm_term, NULL, <highPrecedenceOperators>.addr, <factor>.addr)}
+    else {<termPrime>.addr = new(tPrm, NULL, <highPrecedenceOperators>.addr, <termPrime1>.addr), <termPrime1>.left = <factor>.addr}
+56. <termPrime>.addr = NULL
+57. <factor>.addr = new(factor, TK_OP.addr, <arithmeticExpression>.addr, TK_CL.addr)
+58. <factor>.addr = <all>.addr
+59. <highPrecedenceOperators>.addr = TK_MUL.addr
+60. <highPrecedenceOperators>.addr = TK_DIV.addr
+61. <lowPrecedenceOperators>.addr = TK_PLUS.addr
+62. <lowPrecedenceOperators>.addr = TK_MINUS.addr
+63. <all>.addr = TK_NUM.addr
+64. <all>.addr = TK_RNUM.addr
+65. <all>.addr = <singleOrRecId>.addr
+66. <booleanExpression>.addr = new(bool1, <booleanExpression1>.addr, <logicalOp>.addr, >booleanExpression2>.addr)
+67. <booleanExpression>.addr = new(bool2, <all1>.addr, <relationalOp>.addr, <all2>.addr)
+68. <booleanExpression>.addr = new(bool3, TK_NOT.addr, <booleanExpression1>.addr)
+69. <logicalOp>.addr = TK_AND.addr
+70. <logicalOp>.addr = TK_OR.addr
+71. <relationalOp>.addr = TK_LT.addr
+72. <relationalOp>.addr = TK_LE.addr
+73. <relationalOp>.addr = TK_EQ.addr
+74. <relationalOp>.addr = TK_GT.addr
+75. <relationalOp>.addr = TK_GE.addr
+76. <relationalOp>.addr = TK_NE.addr
+77. <returnStmt>.addr = <optionalReturn>.addr
+78. <optionalReturn>.addr = <idList>.addr
+79. <optionalReturn>.addr = NULL
+80. <idList>.addr = TK_ID.addr
+    TK_ID.next = <more_ids>.addr
+81. <more_ids>.addr = <idList>.addr
+82. <more_ids>.addr = NULL
+
+
+
