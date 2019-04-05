@@ -6,4 +6,4 @@ rm driver.o
 rm parser.o
 rm lexer.o
 rm hashTable.o
-./program testcases/testcase4.txt parsetreeOutFile.txt
+./program testcases/testcase5.txt parsetreeOutFile.txt
