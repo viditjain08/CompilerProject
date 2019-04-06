@@ -1,7 +1,7 @@
 Group 1:
 Anupam Aggarwal	2016A7PS0033P
 Piyush Garg		2016A7PS0035P
-Rijul Katiyar	2016A7PS0063P 
+Rijul Katiyar	2016A7PS0063P
 Vidit Jain 		2016A7PS0064P
 
 Grammar:
@@ -186,6 +186,3 @@ Semantic Rules:
     TK_ID.next = <more_ids>.addr
 81. <more_ids>.addr = <idList>.addr
 82. <more_ids>.addr = NULL
-
-
-
