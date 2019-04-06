@@ -1,5 +1,5 @@
 _computeFunctionValue         	6  	TK_FUNID            	 ---- function 1 ----
- ---- ---- ---- ---- otherFunctions                	0	function            	
+ ---- ---- ---- ---- otherFunctions                	0	function
 input                         	6  	TK_INPUT            	 ---- input_par 1 ----
 ---- ---- ---- ---- function                      	0	input_par
 parameter                     	6  	TK_PARAMETER        	 ---- input_par 1 ----
@@ -115,10 +115,11 @@ eps                           	-1 	eps                 	 ---- termPrime 1 ----
 ---- ---- ---- ---- expPrime                      	0	expPrime
 (                             	11 	TK_OP               	 ---- factor 1 ----
 ---- ---- ---- ---- term                          	0	factor
-c5                            	11 	TK_ID               	 ---- all 1 ----
+c5                            	11 	TK_ID               	 ---- singleOrRecId 1 ----
+---- ---- ---- ---- all                           	0	singleOrRecId
+eps                           	-1 	eps                 	 ---- new_24 1 ----
+---- ---- ---- ---- singleOrRecId                 	0	new_24
 ---- ---- ---- ---- factor                        	0	all
-eps                           	-1 	eps                 	 ---- temp 1 ----
----- ---- ---- ---- all                           	0	temp
 ---- ---- ---- ---- term                          	0	factor
 ---- ---- ---- ---- arithmeticExpression          	0	term
 eps                           	-1 	eps                 	 ---- termPrime 1 ----
@@ -245,10 +246,11 @@ eps                           	-1 	eps                 	 ---- termPrime 1 ----
 *                             	12 	TK_MUL              	 ---- highPrecedenceOperators 1 ----
 ---- ---- ---- ---- termPrime                     	0	highPrecedenceOperators
 ---- ---- ---- ---- term                          	0	termPrime
-c3                            	12 	TK_ID               	 ---- all 1 ----
+c3                            	12 	TK_ID               	 ---- singleOrRecId 1 ----
+---- ---- ---- ---- all                           	0	singleOrRecId
+eps                           	-1 	eps                 	 ---- new_24 1 ----
+---- ---- ---- ---- singleOrRecId                 	0	new_24
 ---- ---- ---- ---- factor                        	0	all
-eps                           	-1 	eps                 	 ---- temp 1 ----
----- ---- ---- ---- all                           	0	temp
 ---- ---- ---- ---- termPrime                     	0	factor
 eps                           	-1 	eps                 	 ---- termPrime 1 ----
 ---- ---- ---- ---- termPrime                     	0	termPrime
@@ -292,10 +294,11 @@ eps                           	-1 	eps                 	 ---- new_24 1 ----
 ---- ---- ---- ---- singleOrRecId                 	0	new_24
 ---- ---- ---- ---- stmt                          	0	assignmentStmt
 <---                          	15 	TK_ASSIGNOP         	 ---- assignmentStmt 1 ----
-d4cbcd5677                    	15 	TK_ID               	 ---- all 1 ----
+d4cbcd5677                    	15 	TK_ID               	 ---- singleOrRecId 1 ----
+---- ---- ---- ---- all                           	0	singleOrRecId
+eps                           	-1 	eps                 	 ---- new_24 1 ----
+---- ---- ---- ---- singleOrRecId                 	0	new_24
 ---- ---- ---- ---- factor                        	0	all
-eps                           	-1 	eps                 	 ---- temp 1 ----
----- ---- ---- ---- all                           	0	temp
 ---- ---- ---- ---- term                          	0	factor
 ---- ---- ---- ---- arithmeticExpression          	0	term
 /                             	15 	TK_DIV              	 ---- highPrecedenceOperators 1 ----
@@ -319,10 +322,11 @@ else                          	16 	TK_ELSE             	 ---- elsePart 1 ----
 write                         	17 	TK_WRITE            	 ---- ioStmt 1 ----
 ---- ---- ---- ---- stmt                          	0	ioStmt
 (                             	17 	TK_OP               	 ---- ioStmt 1 ----
-c4bbb                         	17 	TK_ID               	 ---- all 1 ----
+c4bbb                         	17 	TK_ID               	 ---- singleOrRecId 1 ----
+---- ---- ---- ---- all                           	0	singleOrRecId
+eps                           	-1 	eps                 	 ---- new_24 1 ----
+---- ---- ---- ---- singleOrRecId                 	0	new_24
 ---- ---- ---- ---- ioStmt                        	0	all
-eps                           	-1 	eps                 	 ---- temp 1 ----
----- ---- ---- ---- all                           	0	temp
 )                             	17 	TK_CL               	 ---- ioStmt 1 ----
 ;                             	17 	TK_SEM              	 ---- ioStmt 1 ----
 ---- ---- ---- ---- elsePart                      	0	stmt
@@ -469,10 +473,11 @@ eps                           	-1 	eps                 	 ---- more_ids 1 ----
 write                         	35 	TK_WRITE            	 ---- ioStmt 1 ----
 ---- ---- ---- ---- stmt                          	0	ioStmt
 (                             	35 	TK_OP               	 ---- ioStmt 1 ----
-c3                            	35 	TK_ID               	 ---- all 1 ----
+c3                            	35 	TK_ID               	 ---- singleOrRecId 1 ----
+---- ---- ---- ---- all                           	0	singleOrRecId
+eps                           	-1 	eps                 	 ---- new_24 1 ----
+---- ---- ---- ---- singleOrRecId                 	0	new_24
 ---- ---- ---- ---- ioStmt                        	0	all
-eps                           	-1 	eps                 	 ---- temp 1 ----
----- ---- ---- ---- all                           	0	temp
 )                             	35 	TK_CL               	 ---- ioStmt 1 ----
 ;                             	35 	TK_SEM              	 ---- ioStmt 1 ----
 ---- ---- ---- ---- otherStmts                    	0	stmt

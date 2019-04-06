@@ -1,43 +1,36 @@
-#include<stdio.h>
-#include<stdlib.h>
-#include<string.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include "lexerDef.h"
 
 typedef struct tk_node * TK_NODE;
-typedef struct rule * RULE;
 typedef struct tk_node tk_node;
-typedef struct rule rule;
 typedef struct grammar * GRAMMAR;
 typedef struct grammar grammar;
-typedef struct nont_block * NONT_BLOCK;
-typedef struct nont_block nont_block;
+typedef struct rule * RULE;
+typedef struct rule rule;
 typedef struct firstfollow * FirstFollow;
 typedef struct firstfollow firstfollow;
 typedef struct followds * FOLLOWDS;
 typedef struct followds followds;
 typedef struct followind * FOLLOWIND;
 typedef struct followind followind;
-typedef RULE * parsetable;
+typedef int * parsetable;
 typedef parsetable * PARSETABLE;
 typedef struct tree_node * TREE_NODE;
 typedef struct tree_node tree_node;
 typedef struct hashT  *Hashtable;
 
 typedef enum {T, NT} ntt;
-struct tk_node{
+struct tk_node {
 	ntt type;
-    int info;
-    TK_NODE next;
-} ;
-
-struct rule{
-    TK_NODE start;
-    RULE next;
+	int info;
+	TK_NODE next;
 };
 
-struct nont_block{
-	int nt_index;
-	RULE r;
+struct rule {
+	int key;
+	TK_NODE start;
 };
 
 
@@ -51,15 +44,16 @@ struct followds {
 	int size;
 };
 
-struct grammar{
+struct grammar {
 	FOLLOWDS follow;
+	RULE nonterminals;
 	int* terminals;
-	NONT_BLOCK nonterminals;
-	int non_t_count;
-	int t_count;
+	int nonterminal_count;
+	int terminal_count;
+	int rules;
 };
 
-struct firstfollow{
+struct firstfollow {
 	// first 0th column eps, rest terminals as in grammar
 	int** first;
 	// follow 0th column $, rest terminals as in grammar
@@ -78,12 +72,13 @@ struct tree_node {
 	int parent_index;
 	TREE_NODE child;
 	TREE_NODE next;
+	int rule_index;
 };
 
-struct hashT{
- char *name;
- int index;
- int flag;
+struct hashT {
+	char *name;
+	int value;
+	int index;
 };
 
 extern int invalid_prog;

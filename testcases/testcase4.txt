@@ -31,7 +31,7 @@ _main
 	read(45);
 	read(b3b444);
 
-	[c3] <--- call _computeFunctionValue with parameters [b5, d5cb34567, b3b444];
+	[c3] <--- call _computeFunctionValue parameters [b5, d5cb34567, b3b444];
 	write(c3);
 	return;
 end
