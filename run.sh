@@ -1,9 +1,9 @@
 #!/bin/bash
 clear
-gcc -g -c driver.c parser.c lexer.c hashTable.c
-gcc driver.o parser.o lexer.o hashTable.o -o program
-rm driver.o
+gcc -g -c main.c parser.c lexer.c hashTable.c ast.c
+gcc main.o parser.o lexer.o hashTable.o ast.o -o program
+rm main.o
 rm parser.o
 rm lexer.o
 rm hashTable.o
-./program testcases/testcase5.txt parsetreeOutFile.txt
+rm ast.o

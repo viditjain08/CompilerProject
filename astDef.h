@@ -19,4 +19,6 @@ struct node_AstTree{
     NODE_AstTree parent;
     NODE_AstTree child;
     NODE_AstTree sibling;
-}
+};
+
+#include "ast.h"

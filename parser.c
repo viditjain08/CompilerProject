@@ -1,4 +1,4 @@
-#include "parser.h"
+#include "parserDef.h"
 #define HASHSIZE 300
 
 TOKENINFO globaltk;
@@ -840,6 +840,7 @@ void traversal(FILE*fp, GRAMMAR g, TREE_NODE tree){
 		}
 
 	} else {
+		fprintf(fp,"%-20d\t\n", tree->rule_index);
 		fprintf(fp,"---- ---- ---- ---- ");
 		if(tree->parent_index==-1) {
 			fprintf(fp,"ROOT\t");

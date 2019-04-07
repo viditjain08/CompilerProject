@@ -1,4 +1,5 @@
-#include "parserDef.h"
+#include<stdio.h>
+#include <stdlib.h>
 
 void hashTableInit(int size);
 GRAMMAR populateGrammar(char* grammar_file);
