@@ -52,6 +52,7 @@ NODE_AstTree applyRule(TREE_NODE root, NODE_AstTree children){
                 return program;
             }else{
                 free(child1);
+                child1->sibling = NULL;
                 return child2;
             }
 
@@ -71,24 +72,19 @@ NODE_AstTree applyRule(TREE_NODE root, NODE_AstTree children){
             NODE_AstTree child1 = children;
             NODE_AstTree child2 = children->sibling;
 
+            NODE_AstTree res = (NODE_AstTree)malloc(sizeof(Node_AstTree));
+            res->sibling = NULL;
+            res->tokens = NULL;
+            res->parent = NULL;
+            res->child = child1;
+
             if(child2->tokens == NULL){
-                NODE_AstTree res = (NODE_AstTree)malloc(sizeof(Node_AstTree));
-                res->sibling = NULL;
-                res->tokens = NULL;
-                res->parent = NULL;
-                res->child = child1;
                 child1->parent = res;
                 child2->parent = res;
                 return res;
             }else{
                 free(child2);
                 child1->sibling = NULL;
-                NODE_AstTree res = (NODE_AstTree)malloc(sizeof(Node_AstTree));
-                res->sibling = NULL;
-                res->tokens = NULL;
-                res->parent = NULL;
-                res->child = child1;
-                res->child->sibling = NULL;
                 child1->parent = res;
                 return res;
             }
@@ -675,7 +671,7 @@ NODE_AstTree applyRule(TREE_NODE root, NODE_AstTree children){
 
         }break;
         case 53:{
-
+            return children;
         }break;
         case 54:{
 
@@ -684,7 +680,7 @@ NODE_AstTree applyRule(TREE_NODE root, NODE_AstTree children){
 
         }break;
         case 56:{
-
+            return children;
         }break;
         case 57:{
 

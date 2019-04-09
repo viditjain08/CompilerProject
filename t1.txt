@@ -12,7 +12,8 @@ output parameter list[int b5d, int d3];
 	endrecord;
 
 	type int :b3;
-	type real :c4bd56;
+	type real :c4bd56 : global;
+	type record #book : b7;
 
 	return [b4d,d3];
 end
