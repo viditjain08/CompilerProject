@@ -604,9 +604,70 @@ NODE_AstTree buildAST(TREE_NODE root){
 
         }break;
         case 46:{
+            // 46. <conditionalStmt>===> TK_IF TK_OP <booleanExpression> TK_CL TK_THEN <stmt> <otherStmts> <elsePart>
+            // NODE_AstTree child1 = buildAST(children);
+            // NODE_AstTree child2 = buildAST(children->next);
+            NODE_AstTree child3 = buildAST(children->next->next);
+            // NODE_AstTree child4 = buildAST(children->next->next->next);
+            // NODE_AstTree child5 = buildAST(children->next->next->next->next);
+            NODE_AstTree child6 = buildAST(children->next->next->next->next->next);
+            NODE_AstTree child7 = buildAST(children->next->next->next->next->next->next);
+            NODE_AstTree child8 = buildAST(children->next->next->next->next->next->next->next);
+
+            if(child7->tokens->tk->token != EPS){// it contains Func Info
+                child6->sibling = child7;
+            }else{ // it contains EPs info
+                free(child7);
+                child6->sibling = NULL;
+            }
+
+            NODE_AstTree tmp = (NODE_AstTree)malloc(sizeof(Node_AstTree));
+            tmp->tokens = NULL;
+            tmp->sibling = NULL;
+            tmp->parent = NULL;
+            tmp->child = child6;
+
+            child6->parent = tmp;
+
+            child3->sibling = tmp;
+            tmp->sibling = child8;
+            child8->sibling = NULL;
+
+            NODE_AstTree res = (NODE_AstTree)malloc(sizeof(Node_AstTree));
+            res->tokens = NULL;
+            res->sibling = NULL;
+            res->parent = NULL;
+            res->child = child3;
+
+            child3->parent = res;
+            tmp->parent = res;
+            child8->parent = res;
+
+            return res;
 
         }break;
         case 47:{
+            //47. <elsePart>===> TK_ELSE <stmt> <otherStmts> TK_ENDIF
+            // NODE_AstTree child1 = buildAST(children);
+            NODE_AstTree child2 = buildAST(children->next);
+            NODE_AstTree child3 = buildAST(children->next->next);
+            // NODE_AstTree child4 = buildAST(children->next->next->next);
+            if(child3->tokens->tk->token != EPS){// it contains Func Info
+                child2->sibling = child3;
+            }else{ // it contains EPs info
+                free(child3);
+                child2->sibling = NULL;
+            }
+
+            NODE_AstTree res = (NODE_AstTree)malloc(sizeof(Node_AstTree));
+            res->tokens = NULL;
+            res->sibling = NULL;
+            res->parent = NULL;
+            res->child = child2;
+
+            child2->parent = res;
+            return res;
+
 
         }break;
         case 48:{
@@ -649,25 +710,103 @@ NODE_AstTree buildAST(TREE_NODE root){
         }break;
 
         case 51:{
+            NODE_AstTree child1 = buildAST(children);
+            NODE_AstTree child2 = buildAST(children->next);
+
+            if (child2->tokens->tk->token == EPS) { // expPrime contains EPS info
+                free(child2);
+                return child1;
+            }else{
+                NODE_AstTree tmp = child2->child;
+                child2->child = child1;
+                child1->parent = child2;
+                child1->sibling = tmp;
+
+                tmp = child2;
+                while(tmp->parent != NULL){
+                    tmp = tmp->parent;
+                }
+                return tmp;
+            }
 
         }break;
         case 52:{
+            NODE_AstTree child1 = buildAST(children);
+            NODE_AstTree child2 = buildAST(children->next);
+            NODE_AstTree child3 = buildAST(children->next->next);
+
+            if (child3->tokens->tk->token == EPS) { // expPrime contains EPS info
+                free(child3);
+                child1->child = child2;
+                child2->parent = child1;
+                child2->sibling = NULL;
+                child1->sibling = NULL;
+                return child1;
+            }else{
+                NODE_AstTree tmp = child3->child;
+                child3->child = child1;
+                child1->child = child2
+                child1->parent = child3;
+                child2->parent = child1;
+                child1->sibling = tmp;
+                return child1;
+            }
 
         }break;
         case 53:{
             return buildAST(children);
         }break;
         case 54:{
+            NODE_AstTree child1 = buildAST(children);
+            NODE_AstTree child2 = buildAST(children->next);
+
+            if (child2->tokens->tk->token == EPS) { // expPrime contains EPS info
+                free(child2);
+                return child1;
+            }else{
+                NODE_AstTree tmp = child2->child;
+                child2->child = child1;
+                child1->parent = child2;
+                child1->sibling = tmp;
+
+                tmp = child2;
+                while(tmp->parent != NULL){
+                    tmp = tmp->parent;
+                }
+                return tmp;
+            }
 
         }break;
         case 55:{
+            NODE_AstTree child1 = buildAST(children);
+            NODE_AstTree child2 = buildAST(children->next);
+            NODE_AstTree child3 = buildAST(children->next->next);
 
+            if (child3->tokens->tk->token == EPS) { // expPrime contains EPS info
+                free(child3);
+                child1->child = child2;
+                child2->parent = child1;
+                child2->sibling = NULL;
+                child1->sibling = NULL;
+                return child1;
+            }else{
+                NODE_AstTree tmp = child3->child;
+                child3->child = child1;
+                child1->child = child2
+                child1->parent = child3;
+                child2->parent = child1;
+                child1->sibling = tmp;
+                return child1;
+            }
         }break;
         case 56:{
             return buildAST(children);
         }break;
         case 57:{
-
+            // NODE_AstTree child1 = buildAST(children);
+            NODE_AstTree child2 = buildAST(children->next);
+            // NODE_AstTree child3 = buildAST(children->next);
+            return child2;
         }break;
         case 58:{
             return buildAST(children);
