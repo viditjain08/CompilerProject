@@ -20,6 +20,15 @@ int main (int argc, char* argv[]){
 	TREE_NODE x = parseInputSourceCode("t1.txt",t,f,g);
 	traversal(parsetree, g, x);
 	fclose(parsetree);
+
 	NODE_AstTree tree = buildAST(x);
+
+	int nAst = countNodesAST(tree);
+	int nPt = countNodesParseTree(x);
+
+	printf("\n");
+	printf("Number of Nodes in Ast: %d\n",nAst);
+	printf("Number of Nodes in parsetree: %d\n",nPt);
+	printf("Compression Ratio: %.2f\n",(1-((float)nAst/nPt))*100 );
 	return 0;
 }

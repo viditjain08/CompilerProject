@@ -1,4 +1,23 @@
-_maintain input parameter list [int c2, int d2cd]
+_maintain input parameter list [record #book c2, int d2cd]
+output parameter list[int b5d, int d3];
+
+	record #book
+		type int : edition;
+		type real : prcie;
+	endrecord;
+	record #koob
+		type int : edition;
+		type real : prcie;
+		type real : hello;
+	endrecord;
+
+	type int :b3;
+	type real :c4bd56 : global;
+	type record #book : b7;
+
+	return [b4d,d3];
+end
+_maintain input parameter list [record #book c2, int d2cd]
 output parameter list[int b5d, int d3];
 
 	record #book

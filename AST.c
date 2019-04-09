@@ -22,8 +22,8 @@ NODE_AstTree buildAST(TREE_NODE root){
 
         case 1:{
 
-            NODE_AstTree child1 = buildAST(root->child);
-            NODE_AstTree child2 = buildAST(root->child->next);
+            NODE_AstTree child1 = buildAST(children);
+            NODE_AstTree child2 = buildAST(children->next);
 
             NODE_AstTree program = (NODE_AstTree)malloc(sizeof(Node_AstTree));
             program->sibling = NULL;
@@ -40,11 +40,12 @@ NODE_AstTree buildAST(TREE_NODE root){
                 child2->parent = NULL;
                 program->child = otherFunc;
             }else{ // it contains EPS info
-                program->child = child1;
-                child1->sibling = child2;
-                child1->parent = program;
-                child2->parent = program;
-                child2->sibling = NULL;
+                // program->child = child1;
+                // child1->sibling = child2;
+                // child1->parent = program;
+                // child2->parent = program;
+                // child2->sibling = NULL;
+                return child2;
             }
             return program;
         }break;
@@ -130,7 +131,7 @@ NODE_AstTree buildAST(TREE_NODE root){
             NODE_AstTree child5 = buildAST(children->next->next->next->next);
             // NODE_AstTree child6 = buildAST(children->next->next->next->next->next);
 
-            if(child5->tokens == NULL){ // it contains parameters info
+            if(child5->tokens->tk->token != EPS){ // it contains parameters info
                 NODE_AstTree res = (NODE_AstTree)malloc(sizeof(Node_AstTree));
                 res->tokens = NULL;
                 res->parent = NULL;
@@ -162,7 +163,7 @@ NODE_AstTree buildAST(TREE_NODE root){
                 free(child2);
             }
 
-            if(child3->tokens == NULL){ // it contains parameter Info
+            if(child3->tokens->tk->token != EPS){ // it contains parameter Info
                 child1->sibling = child3;
             }else{  // it contains EPS info
                 child1->sibling = NULL;
@@ -229,17 +230,17 @@ NODE_AstTree buildAST(TREE_NODE root){
             }
 
             NODE_AstTree temp2;
-            if(child2->tokens == NULL){// it contains some typedefs
+            if(child2->tokens->tk->token != EPS){// it contains some declarations
                 temp2 = (NODE_AstTree)malloc(sizeof(Node_AstTree));
                 temp2->parent = NULL;
                 temp2->tokens = NULL;
                 temp2->sibling = NULL;
-                temp2->child = child1;
+                temp2->child = child2;
             }else{
                 temp2 = child2;
             }
             NODE_AstTree temp3;
-            if(child3->tokens == NULL){// it contains some typedefs
+            if(child3->tokens->tk->token != EPS){// it contains some stmts
                 temp3 = (NODE_AstTree)malloc(sizeof(Node_AstTree));
                 temp3->parent = NULL;
                 temp3->tokens = NULL;
@@ -272,7 +273,7 @@ NODE_AstTree buildAST(TREE_NODE root){
             NODE_AstTree child1 = buildAST(children);
             NODE_AstTree child2 = buildAST(children->next);
 
-            if(child2->tokens == NULL){// it contains Func Info
+            if(child2->tokens == NULL){// it contains typedef Info
                 child1->sibling = child2;
                 return child1;
             }else{ // it contains EPs info
@@ -318,12 +319,15 @@ NODE_AstTree buildAST(TREE_NODE root){
             res->parent = NULL;
             res->child = child1;
 
-            if(child3->tokens == NULL){
+            if(child3->tokens->tk->token !=  EPS){
                 child1->parent = res;
+                child1->sibling = child2;
                 child2->parent = res;
+                child2->sibling = child3;
                 child3->parent = res;
                 child3->sibling = NULL;
             }else{
+                child1->sibling = child2;
                 child2->sibling = NULL;
                 free(child3);
                 child1->parent = res;
@@ -353,7 +357,7 @@ NODE_AstTree buildAST(TREE_NODE root){
             NODE_AstTree child1 = buildAST(children);
             NODE_AstTree child2 = buildAST(children->next);
 
-            if(child2->tokens == NULL){
+            if(child2->tokens->tk->token != EPS){
                 child1->sibling = child2;
             }else{
                 child1->sibling =  NULL;
@@ -368,7 +372,7 @@ NODE_AstTree buildAST(TREE_NODE root){
             NODE_AstTree child1 = buildAST(children);
             NODE_AstTree child2 = buildAST(children->next);
 
-            if(child2->tokens == NULL){// it contains Func Info
+            if(child2->tokens->tk->token != EPS){// it contains declarations Info
                 child1->sibling = child2;
                 return child1;
             }else{ // it contains EPs info
@@ -745,7 +749,7 @@ NODE_AstTree buildAST(TREE_NODE root){
             }else{
                 NODE_AstTree tmp = child3->child;
                 child3->child = child1;
-                child1->child = child2
+                child1->child = child2;
                 child1->parent = child3;
                 child2->parent = child1;
                 child1->sibling = tmp;
@@ -792,7 +796,7 @@ NODE_AstTree buildAST(TREE_NODE root){
             }else{
                 NODE_AstTree tmp = child3->child;
                 child3->child = child1;
-                child1->child = child2
+                child1->child = child2;
                 child1->parent = child3;
                 child2->parent = child1;
                 child1->sibling = tmp;
@@ -924,7 +928,7 @@ NODE_AstTree buildAST(TREE_NODE root){
         case 80:{
             NODE_AstTree child1 = buildAST(children);
             NODE_AstTree child2 = buildAST(children->next);
-            if(child2->tokens == NULL){
+            if(child2->tokens->tk->token != EPS){
                 child1->sibling = child2;
                 return child1;
             }else{
@@ -958,4 +962,28 @@ NODE_AstTree buildAST(TREE_NODE root){
 
 
 
+}
+
+int countNodesAST(NODE_AstTree root){
+    NODE_AstTree temp = root->child;
+    int sum = 0;
+    int t;
+    while(temp != NULL){
+        t = countNodesAST(temp);
+        sum += t;
+        temp = temp->sibling;
+    }
+
+    return sum +1;
+}
+int countNodesParseTree(TREE_NODE root){
+    TREE_NODE temp = root->child;
+    int sum = 0;
+
+    while(temp != NULL){
+        sum += countNodesParseTree(temp);
+        temp = temp->next;
+    }
+
+    return sum +1;
 }

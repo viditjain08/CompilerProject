@@ -843,3 +843,26 @@ NODE_AstTree applyRule(TREE_NODE root, NODE_AstTree children){
 
     }
 }
+int countNodesAST(NODE_AstTree root){
+    NODE_AstTree temp = root->child;
+    int sum = 0;
+    int t;
+    while(temp != NULL){
+        t = countNodesAST(temp);
+        sum += t;
+        temp = temp->sibling;
+    }
+
+    return sum +1;
+}
+int countNodesParseTree(TREE_NODE root){
+    TREE_NODE temp = root->child;
+    int sum = 0;
+
+    while(temp != NULL){
+        sum += countNodesParseTree(temp);
+        temp = temp->next;
+    }
+
+    return sum +1;
+}
