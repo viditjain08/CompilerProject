@@ -31,21 +31,16 @@ NODE_AstTree buildAST(TREE_NODE root){
             program->parent = NULL;
 
             if(child1->tokens == NULL){ // it does not go to eps
-                NODE_AstTree otherFunc = (NODE_AstTree)malloc(sizeof(Node_AstTree));
-                otherFunc->tokens = NULL;
-                otherFunc->sibling = child2;
-                otherFunc->child = child1;
-                otherFunc->parent = program;
-                child2->sibling = NULL;
+                child2->sibling=child1;
                 child2->parent = NULL;
-                program->child = otherFunc;
+                program->child = child2;
             }else{ // it contains EPS info
                 // program->child = child1;
                 // child1->sibling = child2;
                 // child1->parent = program;
                 // child2->parent = program;
                 // child2->sibling = NULL;
-                return child2;
+                program->child = child2;
             }
             return program;
         }break;
@@ -87,6 +82,7 @@ NODE_AstTree buildAST(TREE_NODE root){
             NODE_AstTree child5 = buildAST(children->next->next->next->next);
             // NODE_AstTree child6 = buildAST(children->next->next->next->next->next);
 
+            // printf("%s ",child2->child->sibling->tokens->next->tk->lexeme);
             NODE_AstTree res = (NODE_AstTree)malloc(sizeof(Node_AstTree));
             res->tokens = NULL;
             res->parent = NULL;
@@ -156,6 +152,9 @@ NODE_AstTree buildAST(TREE_NODE root){
             if(child1->tokens->tk->token == TK_RECORD){
                 child1->tokens->next->next = (LIST_TokenInfo)malloc(sizeof(List_TokenInfo));
                 child1->tokens->next->next->tk = child2->tokens->tk;
+                LIST_TokenInfo temp = child1->tokens->next;
+                free(child1->tokens);
+                child1->tokens = temp;
                 free(child2);
             }else{
                 child1->tokens->next = (LIST_TokenInfo)malloc(sizeof(List_TokenInfo));
@@ -210,7 +209,7 @@ NODE_AstTree buildAST(TREE_NODE root){
         }break;
 
         case 16:{
-            return buildAST(children);
+             return buildAST(children);
         }break;
         case 17:{
             NODE_AstTree child1 = buildAST(children);
@@ -313,27 +312,27 @@ NODE_AstTree buildAST(TREE_NODE root){
             NODE_AstTree child2 = buildAST(children->next);
             NODE_AstTree child3 = buildAST(children->next->next);
 
-            NODE_AstTree res = (NODE_AstTree)malloc(sizeof(Node_AstTree));
-            res->tokens = NULL;
-            res->sibling = NULL;
-            res->parent = NULL;
-            res->child = child1;
+            // NODE_AstTree res = (NODE_AstTree)malloc(sizeof(Node_AstTree));
+            // res->tokens = NULL;
+            // res->sibling = NULL;
+            // res->parent = NULL;
+            // res->child = child1;
 
             if(child3->tokens->tk->token !=  EPS){
-                child1->parent = res;
+                child1->parent = NULL;
                 child1->sibling = child2;
-                child2->parent = res;
+                child2->parent = NULL;
                 child2->sibling = child3;
-                child3->parent = res;
-                child3->sibling = NULL;
+                child3->parent = NULL;
+                // child3->sibling = NULL;
             }else{
                 child1->sibling = child2;
                 child2->sibling = NULL;
                 free(child3);
-                child1->parent = res;
-                child2->parent = res;
+                child1->parent = NULL;
+                child2->parent = NULL;
             }
-            return res;
+            return child1;
         }break;
         case 22:{
             // NODE_AstTree child1 = buildAST(children);
@@ -395,8 +394,13 @@ NODE_AstTree buildAST(TREE_NODE root){
 
             child2->tokens->next = (LIST_TokenInfo)malloc(sizeof(List_TokenInfo));
             child2->tokens->next->tk = child4->tokens->tk;
-            child2->tokens->next->next = (LIST_TokenInfo)malloc(sizeof(List_TokenInfo));
-            child2->tokens->next->next->tk = child5->tokens->tk;
+            if(child5->tokens->tk->token != EPS) {
+                child2->tokens->next->next = (LIST_TokenInfo)malloc(sizeof(List_TokenInfo));
+                child2->tokens->next->next->tk = child5->tokens->tk;
+            } else {
+                child2->tokens->next->next = NULL;
+            }
+
             // free(child1);
             // free(child3);
             free(child4);
@@ -406,7 +410,7 @@ NODE_AstTree buildAST(TREE_NODE root){
         }break;
         case 28:{
             // NODE_AstTree child1 = buildAST(children);;
-            NODE_AstTree child2 = buildAST(children->next);;
+            NODE_AstTree child2 = buildAST(children->next);
             // free(child1);
             child2->sibling = NULL;
             return child2;

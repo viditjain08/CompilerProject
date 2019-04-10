@@ -7,7 +7,6 @@ extern Hashtable non_terminals;
 extern Hashtable terminals;
 
 int main(int argc, char *argv[]) {
-
 	char *file = argv[1];
 	char *parsetreefile = argv[2];
 
@@ -27,6 +26,7 @@ int main(int argc, char *argv[]) {
 	PARSETABLE t;
 
 	t = createParseTable(f, g, t);
+	printf("Size-%ld\n",sizeof(unsigned long long int));
 
     // for(int i=0;i<g->terminal_count;i++) {
     //     printf("%s-",terminals[g->terminals[i]].name);

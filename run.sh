@@ -7,3 +7,4 @@ rm parser.o
 rm lexer.o
 rm hashTable.o
 rm AST.o
+./program
