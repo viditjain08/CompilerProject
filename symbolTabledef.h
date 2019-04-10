@@ -1,3 +1,8 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include "astDef.h"
+
 typedef enum {INT, REAL} dataType;
 typedef struct field field;
 typedef struct field* FIELD;
@@ -47,3 +52,5 @@ struct hashsymbol {
     FIELD field_ptr;
 	int flag;
 };
+
+#include "symbolTable.h"

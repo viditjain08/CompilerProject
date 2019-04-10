@@ -1,4 +1,4 @@
-#include "symbolTabledef.h"
+#include <stdio.h>
+#include <stdlib.h>
 
-HASHSYMBOL hashSymbolInit(int size);
-int computeHash(char* function, char* id, char* fieldid, int size);
+HASHSYMBOL populateSymbolTable(NODE_AstTree ast);

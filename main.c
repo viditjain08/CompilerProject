@@ -1,4 +1,5 @@
-#include"astDef.h"
+// #include"astDef.h"
+#include"symbolTabledef.h"
 // #include "parserDef.h"
 
 #define HASHSIZE 300
@@ -30,5 +31,7 @@ int main (int argc, char* argv[]){
 	printf("Number of Nodes in Ast: %d\n",nAst);
 	printf("Number of Nodes in parsetree: %d\n",nPt);
 	printf("Compression Ratio: %.2f\n",(1-((float)nAst/nPt))*100 );
+
+	HASHSYMBOL h = populateSymbolTable(tree);
 	return 0;
 }

@@ -172,7 +172,7 @@ GRAMMAR populateGrammar(char* grammar_file) {
 		(g->nonterminals)[nont_count].key = hash_value;
 		(g->nonterminals)[nont_count].start = NULL;
 
-		printf("%d %s\n",hash_value,token);
+		// printf("%d %s\n",hash_value,token);
 
 		while(line[i]!='>') {
 			i++;
@@ -233,7 +233,7 @@ GRAMMAR populateGrammar(char* grammar_file) {
 				follow_temp->f[follow_temp->size].index=nont_count;
 				follow_temp->size++;
 
-				printf("%s\n",token);
+				// printf("%s\n",token);
 			} else {
 				token_ptr=0;
 				token[token_ptr]=line[i];
@@ -260,7 +260,7 @@ GRAMMAR populateGrammar(char* grammar_file) {
 				temp->type = T;
 				temp->info = hashtemp;
 				if((g->nonterminals)[nont_count].start==NULL) {
-					printf("%d\n",hashtemp);
+					// printf("%d\n",hashtemp);
 
 					(g->nonterminals)[nont_count].start = temp;
 					prev = temp;
@@ -268,7 +268,7 @@ GRAMMAR populateGrammar(char* grammar_file) {
 					prev->next = temp;
 					prev = temp;
 				}
-				printf("%s\n",token);
+				// printf("%s\n",token);
 
 			}
 		}
@@ -493,19 +493,19 @@ FirstFollow ComputeFirstAndFollowSets(GRAMMAR g) {
 	for(int x=0; x<g->rules; x++) {
 		if(key!=(g->nonterminals)[x].key) {
 			key=(g->nonterminals)[x].key;
-			printf("\n\n%s",non_terminals[key].name);
-			printf("\nFIRST");
+			// printf("\n\n%s",non_terminals[key].name);
+			// printf("\nFIRST");
 			for(int i=0; i<g->terminal_count; i++) {
 				if((f->first)[non_terminals[key].index][i]>0) {
 					(f->first)[non_terminals[key].index][i]=1;
-					printf("-%s",terminals[(g->terminals)[i]].name);
+					// printf("-%s",terminals[(g->terminals)[i]].name);
 				}
 			}
-			printf("\nFOLLOW");
+			// printf("\nFOLLOW");
 			for(int i=0; i<g->terminal_count; i++) {
 				if((f->follow)[non_terminals[key].index][i]>0) {
 					(f->follow)[non_terminals[key].index][i]=1;
-					printf("-%s",terminals[(g->terminals)[i]].name);
+					// printf("-%s",terminals[(g->terminals)[i]].name);
 				}
 
 			}
@@ -513,7 +513,7 @@ FirstFollow ComputeFirstAndFollowSets(GRAMMAR g) {
 
 
 	}
-	printf("\n");
+	// printf("\n");
 	return f;
 }
 
