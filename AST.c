@@ -52,6 +52,8 @@ NODE_AstTree buildAST(TREE_NODE root){
             child2->sibling = NULL;
             // free(child1);
             // free(child3);
+            child2->tokens = (LIST_TokenInfo)malloc(sizeof(List_TokenInfo));
+            child2->tokens->tk = children->tk_info.tk;
             return child2;
         }break;
 
@@ -149,18 +151,11 @@ NODE_AstTree buildAST(TREE_NODE root){
             NODE_AstTree child2 = buildAST(children->next);
             NODE_AstTree child3 = buildAST(children->next->next);
 
-            if(child1->tokens->tk->token == TK_RECORD){
-                child1->tokens->next->next = (LIST_TokenInfo)malloc(sizeof(List_TokenInfo));
-                child1->tokens->next->next->tk = child2->tokens->tk;
-                LIST_TokenInfo temp = child1->tokens->next;
-                free(child1->tokens);
-                child1->tokens = temp;
-                free(child2);
-            }else{
-                child1->tokens->next = (LIST_TokenInfo)malloc(sizeof(List_TokenInfo));
-                child1->tokens->next->tk = child2->tokens->tk;
-                free(child2);
-            }
+
+            child1->tokens->next = (LIST_TokenInfo)malloc(sizeof(List_TokenInfo));
+            child1->tokens->next->tk = child2->tokens->tk;
+            free(child2);
+
 
             if(child3->tokens->tk->token != EPS){ // it contains parameter Info
                 child1->sibling = child3;
@@ -190,8 +185,8 @@ NODE_AstTree buildAST(TREE_NODE root){
             NODE_AstTree child1 = buildAST(children);
             NODE_AstTree child2 = buildAST(children->next);
 
-            child1->tokens->next = (LIST_TokenInfo)malloc(sizeof(List_TokenInfo));
-            child1->tokens->next->tk = child2->tokens->tk;
+            // child1->tokens->next = (LIST_TokenInfo)malloc(sizeof(List_TokenInfo));
+            child1->tokens->tk = child2->tokens->tk;
             child1->sibling = NULL;
             child1->parent = NULL;
             child1->child = NULL;
@@ -394,6 +389,7 @@ NODE_AstTree buildAST(TREE_NODE root){
 
             child2->tokens->next = (LIST_TokenInfo)malloc(sizeof(List_TokenInfo));
             child2->tokens->next->tk = child4->tokens->tk;
+            child2->tokens = child2->tokens;
             if(child5->tokens->tk->token != EPS) {
                 child2->tokens->next->next = (LIST_TokenInfo)malloc(sizeof(List_TokenInfo));
                 child2->tokens->next->next->tk = child5->tokens->tk;

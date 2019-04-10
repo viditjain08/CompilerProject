@@ -9,11 +9,12 @@ output parameter list[int b5d, int d3];
 		type int : edition;
 		type real : prcie;
 		type real : hello;
+		type int : x;
 	endrecord;
 
 	type int :b3;
 	type real :c4bd56 : global;
-	type record #book : b7;
+	type record #book : b7 : global;
 
 	return [b4d,d3];
 end
@@ -32,7 +33,7 @@ output parameter list[int b5d, int d3];
 
 	type int :b3;
 	type real :c4bd56 : global;
-	type record #book : b7;
+	type record #book : b7 : global;
 
 	return [b4d,d3];
 end
@@ -50,7 +51,7 @@ _main
 	endrecord;
 
 	type int :b3;
-	type real :c4bd56;
+	type real :c4bd56 : global;
 
 	return;
 end

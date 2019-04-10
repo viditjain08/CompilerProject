@@ -29,6 +29,7 @@ struct field {
 struct symbolentry {
     int width;
     int offset;
+	char* record_name;
     char* id;
     int int_no;
 	int real_no;

@@ -11,6 +11,8 @@ int invalid_prog=0;
 Hashtable terminals;
 Hashtable non_terminals;
 
+extern int no_of_lines;
+
 void hashTableInit(int size){
 	terminals = (Hashtable)malloc(sizeof(struct hashT) * size);
 	for(int i=0; i<size; i++) {
@@ -656,12 +658,18 @@ TREE_NODE buildParseTree(TREE_NODE s, FILE* fp, PARSETABLE pt, FirstFollow f, GR
 			invalid_token=0;
 			s->tk_info.tk = globaltk;
 			globaltk = getNextToken(fp);
+			if(globaltk!=NULL) {
+				no_of_lines = (no_of_lines>globaltk->lineNo)?no_of_lines:globaltk->lineNo;
+			}
 			if(globaltk==NULL) {
 				return s;
 			}
 			while(check_token(globaltk, g)==0) {
 				invalid_token++;
 				globaltk = getNextToken(fp);
+				if(globaltk!=NULL) {
+					no_of_lines = (no_of_lines>globaltk->lineNo)?no_of_lines:globaltk->lineNo;
+				}
 				if(globaltk==NULL) {
 					return s;
 				}
@@ -696,6 +704,9 @@ TREE_NODE buildParseTree(TREE_NODE s, FILE* fp, PARSETABLE pt, FirstFollow f, GR
 			return s;
 		}
 		globaltk = getNextToken(fp);
+		if(globaltk!=NULL) {
+			no_of_lines = (no_of_lines>globaltk->lineNo)?no_of_lines:globaltk->lineNo;
+		}
 		return s;
 	} else {
 
@@ -771,9 +782,15 @@ TREE_NODE buildParseTree(TREE_NODE s, FILE* fp, PARSETABLE pt, FirstFollow f, GR
                 prevtk = globaltk;
                 prev_invalid = 1;
 				globaltk = getNextToken(fp);
+				if(globaltk!=NULL) {
+					no_of_lines = (no_of_lines>globaltk->lineNo)?no_of_lines:globaltk->lineNo;
+				}
 				while(check_token(globaltk, g)==0) {
 					invalid_token++;
 					globaltk = getNextToken(fp);
+					if(globaltk!=NULL) {
+						no_of_lines = (no_of_lines>globaltk->lineNo)?no_of_lines:globaltk->lineNo;
+					}
 					if(globaltk==NULL) {
 						return s;
 					}
@@ -809,11 +826,19 @@ TREE_NODE parseInputSourceCode(char *testcaseFile, PARSETABLE pt, FirstFollow f,
 	lineNo = 1;
 	TREE_NODE s = initialize(1, -1, get_hash(non_terminals, "program"));
 	globaltk = getNextToken(fp);
+
+	if(globaltk!=NULL) {
+		no_of_lines = (no_of_lines>globaltk->lineNo)?no_of_lines:globaltk->lineNo;
+	}
+
 	s = buildParseTree(s, fp, pt, f, g);
 	while(globaltk!=NULL) {
 		invalid_prog++;
 		printf("Line %d: Extra token %s provided\n",globaltk->lineNo,globaltk->lexeme);
 		globaltk=getNextToken(fp);
+		if(globaltk!=NULL) {
+			no_of_lines = (no_of_lines>globaltk->lineNo)?no_of_lines:globaltk->lineNo;
+		}
 	}
 	fflush(fp);
 	fclose(fp);

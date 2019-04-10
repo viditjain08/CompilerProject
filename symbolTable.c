@@ -3,6 +3,59 @@
 
 int hash_jump=0;
 
+char** functionsInit(int size) {
+	char** x;
+	x = (char**)malloc(sizeof(char*)*size);
+	for(int i=0;i<size;i++) {
+		x[i]=NULL;
+	}
+	return x;
+}
+
+int enterFunction(char** x, char* function, int size) {
+	int i=0;
+	long long hashVal=0;
+	while(function[i]!='\0') {
+		hashVal = hashVal + 7*(int)function[i];
+		i++;
+	}
+	hashVal = hashVal%size;
+	for(int h=1;h<=10;h++) {
+		if(x[hashVal]==NULL) {
+			x[hashVal] = (char*)malloc(sizeof(char)*(strlen(function)+1));
+			strcpy(x[hashVal],function);
+			return hashVal;
+		}
+		hashVal += (h*h);
+		hashVal = hashVal%size;
+
+
+	}
+	return -1;
+}
+
+int getFunction(char** x, char* function, int size) {
+	int i=0;
+	long long hashVal=0;
+	while(function[i]!='\0') {
+		hashVal = hashVal + 7*(int)function[i];
+		i++;
+	}
+	hashVal = hashVal%size;
+	for(int h=1;h<=10;h++) {
+		if(x[hashVal]==NULL) {
+			return -1;
+		}
+		if(strcmp(x[hashVal], function)==0) {
+			return hashVal;
+		}
+		hashVal += (h*h);
+		hashVal = hashVal%size;
+
+	}
+	return -1;
+}
+
 HASHSYMBOL hashSymbolInit(int size) {
 	HASHSYMBOL h = (HASHSYMBOL)malloc(sizeof(hashsymbol) * size);
 	for(int i=0; i<size; i++) {
@@ -37,6 +90,7 @@ SYMBOLENTRY symbolEntryinit(int width, int offset, char* lexeme, int int_no, int
 	s->record = record;
 	s->next = NULL;
 	s->init = 0;
+	s->record_name = NULL;
 	return s;
 }
 
@@ -72,6 +126,7 @@ int computeHash(char* function, char* id, char* fieldid, int size) {
 	if(fieldid!=NULL) {
 		while(fieldid[i]!='\0') {
 			hashVal = hashVal + 37*(int)fieldid[i];
+			i++;
 		}
 		hashVal = hashVal%size;
 	}
@@ -348,129 +403,260 @@ void printSymbolTable(SYMBOLTABLE s) {
 	}
 }
 
-HASHSYMBOL populateSymbolTable(NODE_AstTree ast) {
+int deallocate(NODE_AstTree x) {
+	NODE_AstTree child = x->child;
+	int y=0;
+	while(child!=NULL) {
+		NODE_AstTree next = child->sibling;
+		int z = deallocate(child);
+		y = (y>z)?y:z;
+		child = next;
+	}
+	if(x->tokens!=NULL) {
+		y = (y>x->tokens->tk->lineNo)?y:x->tokens->tk->lineNo;
+	}
+	free(x);
+	return y;
+}
+HASHSYMBOL semanticAnalyzer(NODE_AstTree ast, char** errors) {
 	int hash_size = 500;
 	HASHSYMBOL h = hashSymbolInit(hash_size);
 	NODE_AstTree main_node = ast->child;
-	NODE_AstTree record_temp = main_node->sibling;
+	NODE_AstTree record_temp = main_node, prev_record = main_node;
 	NODE_AstTree function = main_node->sibling;
 
 	SYMBOLTABLE record_table = symbolTableinit("record");
 	SYMBOLTABLE global_table = symbolTableinit("global");
 	// printSymbolTable(global_table);
+	char** functions = functionsInit(200);
 
 	SYMBOLENTRY x,y;
-	for(; record_temp!=NULL; record_temp=record_temp->sibling) {
-		printf("Function %s for records\n",record_temp->child->tokens->tk->lexeme);
-	//  NODE_AstTree stmts = record_temp->child->sibling->sibling->sibling;
-	//  NODE_AstTree records = stmts->child->child;
-	//  NODE_AstTree decls = stmts->child->sibling->child;
-	//
-	//  for(; records!=NULL; records=records->sibling) {
-	     // NODE_AstTree record_def = records->child;
-	     // SYMBOLENTRY s = symbolEntryinit(0, -1, record_def->tokens->next->tk->lexeme, 0, 0, NULL);
-	     // int hval = duplicateLookup(h, record_table, s, NULL, "record", s->id, NULL, hash_size, "Duplicate record\n");
-		 // printf("%d ",hval);
-	     // if(record_table->head==NULL) {
-	     //     record_table->head = s;
-	     //     x = s;
-	     // } else {
-	     //     x->next=s;
-	     //     x=s;
-	     // }
-	     // record_table->no_entries++;
-	     // record_def=record_def->sibling;
-	     // FIELD temp_field;
-	     // int i=0,r=0;
-	     // for(; record_def!=NULL; record_def=record_def->sibling) {
-	     //     VAL v;
-	     //     v.ival = -1;
-	     //     FIELD f = fieldinit(record_def->tokens->tk->dataType, v, record_def->tokens->next->tk->lexeme);
-	     //     if(s->record==NULL) {
-	     //         s->record = f;
-	     //         temp_field = f;
-	     //     } else {
-	     //         temp_field->next = f;
-	     //         temp_field = f;
-	     //     }
-	     //     if(f->dType==INT) {
-	     //         i++;
-	     //     } else {
-	     //         r++;
-	     //     }
-	     //     hashval = duplicateLookup(h, record_table, s, f, "record", s->id, f->fieldname, hash_size, "Duplicate Record Field\n");
-		 //
-	     // }
-	     // s->int_no = i;
-	     // s->real_no = r;
-	     // s->offset = 2*i + 4*r;
-	 // }
+	for(; record_temp!=NULL; prev_record=record_temp,record_temp=record_temp->sibling) {
+		NODE_AstTree stmts;
+		if(record_temp==main_node) {
+			int temp = enterFunction(functions, "_main", 200);
+			printf("Function _main for records\n");
+			stmts = record_temp;
+		} else {
+			if(getFunction(functions, record_temp->child->tokens->tk->lexeme, 200)!=-1) {
+				prev_record->sibling = record_temp->sibling;
+				char* name = record_temp->child->tokens->tk->lexeme;
+				int startLine = record_temp->child->tokens->tk->lineNo;
+				int endLine = deallocate(record_temp)+1;
+				char e[200];
+				sprintf(e, "Line %d-%d: Function %s defined more than once\n", startLine,endLine, name);
+				printf("%s",e);
+				errors[startLine] = (char*)malloc(sizeof(char)*(strlen(e)+1));
+				strcpy(errors[startLine],e);
+				record_temp = prev_record;
+				continue;
+			}
 
-	 // for(; decls!=NULL; decls=decls->sibling) {
-	 //     if(decls->tokens->next->next->tk->token==TK_GLOBAL) {
-	 //
-	 //         SYMBOLENTRY s = symbolEntryinit(0, -1, decls->tokens->next->tk->lexeme, 0, 0, NULL);
-	 //         if(global_table->head==NULL) {
-	 //             global_table->head = s;
-	 //             y = s;
-	 //         } else {
-	 //             y->next=s;
-	 //             y=s;
-	 //         }
-	 //         global_table->no_entries++;
-	 //         FIELD temp_field;
-	 //         if(decls->tokens->tk->token==TK_INT) {
-	 //             s->int_no = 1;
-	 //             VAL v;
-	 //             v.ival = -1;
-	 //             temp_field = fieldinit(INT, v, decls->tokens->next->tk->lexeme);
-	 //             s->record = temp_field;
-	 //             int hashval = lookupEntry(h, "global", s->id, f->fieldname, hash_size);
-	 //             hashval = duplicateLookup(h, global_table, s, temp_field, "global", s->id, f->fieldname, hash_size, "Duplicate Integer\n");
-	 //
-	 //
-	 //         } else if(decls->tokens->tk->token==TK_REAL) {
-	 //             s->real_no = 1;
-	 //             VAL v;
-	 //             v.rval = -1;
-	 //             temp_field = fieldinit(REAL, v, decls->tokens->next->tk->lexeme);
-	 //             s->record = temp_field;
-	 //             hashval = duplicateLookup(h, global_table, s, temp_field, "global", s->id, f->fieldname, hash_size, "Duplicate Real\n");
-	 //
-	 //         } else {
-	 //             int hashval = lookupEntry(h, "record", s->id, NULL, hash_size);
-	 //             if(hashval==-1) {
-	 //                 printf("Error: Record undefined");
-	 //             } else {
-	 //                 FIELD f = h[hashval].entry_ptr->record;
-	 //                 int i=0,r=0;
-	 //                 while(f!=NULL) {
-	 //                     VAL v;
-	 //                     v.ival = -1;
-	 //                     FIELD temp = fieldinit(f->dType, v, f->fieldname);
-	 //                     if(s->record==NULL) {
-	 //                         s->record = temp;
-	 //                         temp_field = temp;
-	 //                     } else {
-	 //                         temp_field->next = temp;
-	 //                         temp_field = temp;
-	 //                     }
-	 //                     if(temp->dType==INT) {
-	 //                         i++;
-	 //                     } else {
-	 //                         r++;
-	 //                     }
-	 //                     hashval = duplicateLookup(h, global_table, s, temp, "global", s->id, temp->fieldname, hash_size, "Duplicate Global Record");
-	 //                     f=f->next;
-	 //                 }
-	 //             }
-	 //             s->int_no = i;
-	 //             s->real_no = r;
-	 //         }
-	 //         s->offset = 2*s->int_no + 4*s->real_no;
-	 //     }
-	 // }
+			int temp = enterFunction(functions, record_temp->child->tokens->tk->lexeme, 200);
+			printf("Function %s for records\n",record_temp->child->tokens->tk->lexeme);
+			stmts = record_temp->child->sibling->sibling->sibling;
+		}
+		NODE_AstTree records = stmts->child->child;
+		NODE_AstTree decls = stmts->child->sibling->child;
+		NODE_AstTree prev = NULL;
+
+		for(; records!=NULL; prev=records,records=records->sibling) {
+			printf("%s\n",records->child->tokens->next->tk->lexeme);
+			NODE_AstTree record_def = records->child;
+			int hval = lookupEntry(h, "record", records->child->tokens->next->tk->lexeme, NULL, hash_size);
+
+			if(hval!=-1) {
+				if(prev==NULL) {
+					stmts->child->child=records->sibling;
+				} else {
+					prev->sibling = records->sibling;
+				}
+				records->sibling=NULL;
+				char* name = records->child->tokens->next->tk->lexeme;
+				int startLine = records->child->tokens->tk->lineNo;
+				int endLine = deallocate(records)+1;
+				char e[200];
+				sprintf(e, "Line %d-%d: Record %s already defined\n", startLine,endLine, name);
+				printf("%s",e);
+				errors[startLine] = (char*)malloc(sizeof(char)*(strlen(e)+1));
+				strcpy(errors[startLine],e);
+				if(prev==NULL) {
+					records = stmts->child->child;
+				} else {
+					records = prev;
+				}
+				continue;
+			}
+			SYMBOLENTRY s = symbolEntryinit(0, -1, record_def->tokens->next->tk->lexeme, 0, 0, NULL);
+			s->record_name = (char*)malloc(sizeof(char)*(strlen(record_def->tokens->next->tk->lexeme)+1));
+			strcpy(s->record_name,record_def->tokens->next->tk->lexeme);
+			hval = hashSymbolEntry(h, record_table, s, NULL, "record", s->id, NULL, hash_size);
+			printf("%d \n",hval);
+			if(record_table->head==NULL) {
+				record_table->head = s;
+				x = s;
+				printf("Added to record table\n");
+			} else {
+				x->next=s;
+				x=s;
+				printf("Added to previous record entry\n");
+			}
+			record_table->no_entries++;
+			record_def=record_def->sibling;
+			FIELD temp_field;
+			int i=0,r=0;
+			for(; record_def!=NULL; record_def=record_def->sibling) {
+				printf("%s \n",record_def->tokens->next->tk->lexeme);
+				VAL v;
+				v.ival = -1;
+				FIELD f = fieldinit(record_def->tokens->tk->dataType, v, record_def->tokens->next->tk->lexeme);
+				if(s->record==NULL) {
+					s->record = f;
+					temp_field = f;
+					printf("Added field to record entry\n");
+				} else {
+					temp_field->next = f;
+					temp_field = f;
+					printf("Added field to previous record field\n");
+				}
+				if(f->dType==INT) {
+					i++;
+				} else {
+					r++;
+				}
+				int hashval = hashSymbolEntry(h, record_table, s, f, "record", s->id, f->fieldname, hash_size);
+			}
+			s->int_no = i;
+			s->real_no = r;
+			s->offset = 2*i + 4*r;
+		}
+		prev=NULL;
+		for(; decls!=NULL; prev=decls, decls=decls->sibling) {
+		    if(decls->tokens->next->next!=NULL) {
+				printf("----------%s--------\n",decls->tokens->next->tk->lexeme);
+
+				int hval = lookupEntry(h, "global", decls->tokens->next->tk->lexeme, decls->tokens->next->tk->lexeme, hash_size);
+
+				if(hval!=-1) {
+					if(prev==NULL) {
+						stmts->child->sibling->child=decls->sibling;
+					} else {
+						prev->sibling = decls->sibling;
+					}
+					decls->sibling=NULL;
+					char* name = decls->tokens->next->tk->lexeme;
+					int Line = decls->tokens->tk->lineNo;
+					int temp = deallocate(decls);
+					char e[200];
+					sprintf(e, "Line %d: Variable %s being a global variable, cannot be declared more than once.\n", Line, name);
+					printf("%s",e);
+					errors[Line] = (char*)malloc(sizeof(char)*(strlen(e)+1));
+					strcpy(errors[Line],e);
+					if(prev==NULL) {
+						decls = stmts->child->sibling->child;
+					} else {
+						decls = prev;
+					}
+					continue;
+				}
+
+
+		        SYMBOLENTRY s = symbolEntryinit(0, -1, decls->tokens->next->tk->lexeme, 0, 0, NULL);
+
+		        FIELD temp_field;
+		        if(decls->tokens->tk->token==TK_INT) {
+		            s->int_no = 1;
+		            VAL v;
+		            v.ival = -1;
+		            temp_field = fieldinit(INT, v, decls->tokens->next->tk->lexeme);
+		            s->record = temp_field;
+		            int hashval = lookupEntry(h, "global", s->id, temp_field->fieldname, hash_size);
+		            hashval = hashSymbolEntry(h, global_table, s, temp_field, "global", s->id, temp_field->fieldname, hash_size);
+
+
+		        } else if(decls->tokens->tk->token==TK_REAL) {
+		            s->real_no = 1;
+		            VAL v;
+		            v.rval = -1;
+		            temp_field = fieldinit(REAL, v, decls->tokens->next->tk->lexeme);
+		            s->record = temp_field;
+		            int hashval = lookupEntry(h, "global", s->id, temp_field->fieldname, hash_size);
+					hashval = hashSymbolEntry(h, global_table, s, temp_field, "global", s->id, temp_field->fieldname, hash_size);
+
+		        } else {
+					s->record_name = (char*)malloc(sizeof(char)*(strlen(decls->tokens->tk->lexeme)+1));
+					strcpy(s->record_name,decls->tokens->tk->lexeme);
+					printf("Record-%s \n",decls->tokens->tk->lexeme);
+		            int hashval = lookupEntry(h, "record", decls->tokens->tk->lexeme, NULL, hash_size);
+					if(hashval==-1) {
+						if(prev==NULL) {
+							stmts->child->sibling->child=decls->sibling;
+						} else {
+							prev->sibling = decls->sibling;
+						}
+						decls->sibling=NULL;
+						char* name = decls->tokens->tk->lexeme;
+						int Line = decls->tokens->tk->lineNo;
+						int temp = deallocate(decls);
+						char e[200];
+						sprintf(e, "Line %d: No record %s found.\n", Line, name);
+						printf("%s",e);
+						errors[Line] = (char*)malloc(sizeof(char)*(strlen(e)+1));
+						strcpy(errors[Line],e);
+						if(prev==NULL) {
+							decls = stmts->child->sibling->child;
+						} else {
+							decls = prev;
+						}
+						free(s);
+						continue;
+		            }
+
+	                FIELD f = h[hashval].entry_ptr->record;
+	                int i=0,r=0;
+	                while(f!=NULL) {
+	                    VAL v;
+	                    v.ival = -1;
+	                    FIELD temp = fieldinit(f->dType, v, f->fieldname);
+	                    if(s->record==NULL) {
+	                        s->record = temp;
+	                        temp_field = temp;
+	                    } else {
+	                        temp_field->next = temp;
+	                        temp_field = temp;
+	                    }
+	                    if(temp->dType==INT) {
+	                        i++;
+	                    } else {
+	                        r++;
+	                    }
+	                    int hashval = hashSymbolEntry(h, global_table, s, temp, "global", s->id, temp->fieldname, hash_size);
+	                    f=f->next;
+	                }
+					s->int_no = i;
+		            s->real_no = r;
+
+
+
+		        }
+		        s->offset = 2*s->int_no + 4*s->real_no;
+
+				if(global_table->head==NULL) {
+					global_table->head = s;
+					y = s;
+					printf("Added to global table\n");
+				} else {
+					y->next=s;
+					y=s;
+					printf("Added to previous global entry\n");
+				}
+				global_table->no_entries++;
+		    }
+		}
 	}
+	printSymbolTable(record_table);
+
+	printSymbolTable(global_table);
 	// NODE_AstTree f_temp = main_node;
 	// while(f_temp!=NULL) {
 	//  functionSymbolTable(f_temp, h, hash_size, global_table);
