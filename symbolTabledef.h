@@ -61,6 +61,7 @@ struct hashsymbol {
 struct fn_entry{
 	char* function_name;
 	int index;
+	SYMBOLTABLE st;
 	NODE_AstTree ptr;
 };
 
