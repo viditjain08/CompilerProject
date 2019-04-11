@@ -12,6 +12,10 @@ typedef struct symboltable symboltable;
 typedef struct symboltable* SYMBOLTABLE;
 typedef struct hashsymbol hashsymbol;
 typedef struct hashsymbol* HASHSYMBOL;
+typedef struct fn_entry fn_entry;
+typedef struct fn_entry* FN_ENTRY;
+typedef struct fn_stack fn_stack;
+typedef struct fn_stack* FN_STACK;
 
 typedef union {
 	int ival;
@@ -54,4 +58,15 @@ struct hashsymbol {
 	int flag;
 };
 
+struct fn_entry{
+	char* function_name;
+	int index;
+	NODE_AstTree ptr;
+};
+
+struct fn_stack {
+	char* function_name;
+	SYMBOLTABLE symboltable;
+	FN_STACK next;
+};
 #include "symbolTable.h"
