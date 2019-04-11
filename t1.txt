@@ -35,6 +35,6 @@ _main
 	type int :b3;
 	type real :c4bd56 : global;
 	type record #book : b7 : global;
-	type record #booking: b3b444 : global;
+	type record #booking : b3b444 : global;
 	return;
 end

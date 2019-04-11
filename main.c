@@ -35,7 +35,7 @@ int main (int argc, char* argv[]){
 	printf("Number of Nodes in Ast: %d\n",nAst);
 	printf("Number of Nodes in parsetree: %d\n",nPt);
 	printf("Compression Ratio: %.2f\n",(1-((float)nAst/nPt))*100 );
-	HASHSYMBOL h = semanticAnalyzer(tree);
+	HASHSYMBOL h = populateSymbolTable(tree);
 
 	nAst = countNodesAST(tree);
 	printf("Number of Nodes in Ast: %d\n",nAst);
