@@ -588,6 +588,24 @@ global                        	55 	TK_GLOBAL           	 ---- global_or_not 1 --
 ;                             	55 	TK_SEM              	 ---- declaration 1 ---- 
 24                  	
 ---- ---- ---- ---- declarations                  	0	declarations        	
+type                          	56 	TK_TYPE             	 ---- declaration 1 ---- 
+26                  	
+---- ---- ---- ---- declarations                  	0	declaration         	
+record                        	56 	TK_RECORD           	 ---- constructedDatatype 1 ---- 
+13                  	
+---- ---- ---- ---- dataType                      	0	constructedDatatype 	
+#booking                      	56 	TK_RECORDID         	 ---- constructedDatatype 1 ---- 
+10                  	
+---- ---- ---- ---- declaration                   	0	dataType            	
+:                             	56 	TK_COLON            	 ---- declaration 1 ---- 
+b3b444                        	56 	TK_ID               	 ---- declaration 1 ---- 
+:                             	56 	TK_COLON            	 ---- global_or_not 1 ---- 
+27                  	
+---- ---- ---- ---- declaration                   	0	global_or_not       	
+global                        	56 	TK_GLOBAL           	 ---- global_or_not 1 ---- 
+;                             	56 	TK_SEM              	 ---- declaration 1 ---- 
+24                  	
+---- ---- ---- ---- declarations                  	0	declarations        	
 eps                           	-1 	eps                 	 ---- declarations 1 ---- 
 25                  	
 ---- ---- ---- ---- declarations                  	0	declarations        	

@@ -517,7 +517,6 @@ HASHSYMBOL semanticAnalyzer(NODE_AstTree ast, char** errors) {
 			stmts = record_temp->child->sibling->sibling->sibling;
 		}
 		NODE_AstTree records = stmts->child->child;
-		NODE_AstTree decls = stmts->child->sibling->child;
 		NODE_AstTree prev = NULL;
 
 		for(; records!=NULL;) {
@@ -595,12 +594,22 @@ HASHSYMBOL semanticAnalyzer(NODE_AstTree ast, char** errors) {
 			prev=records;
 			records=records->sibling;
 		}
-		prev=NULL;
+	}
+	prev_record = NULL;
+	for(record_temp=main_node; record_temp!=NULL; prev_record=record_temp,record_temp=record_temp->sibling) {
+		NODE_AstTree stmts;
+		if(record_temp==main_node) {
+			stmts = main_node;
+		} else {
+			stmts = record_temp->child->sibling->sibling->sibling;
+		}
+		NODE_AstTree decls = stmts->child->sibling->child;
+		NODE_AstTree prev = NULL;
 		for(; decls!=NULL;) {
 			if(decls->tokens->next->next!=NULL) {
 				printf("----------%s--------\n",decls->tokens->next->tk->lexeme);
 
-				int hval = lookupEntry(h, "global", decls->tokens->next->tk->lexeme, decls->tokens->next->tk->lexeme, hash_size);
+				int hval = lookupEntry(h, "global", decls->tokens->next->tk->lexeme, NULL, hash_size);
 
 				if(hval!=-1) {
 					if(prev==NULL) {
@@ -636,8 +645,8 @@ HASHSYMBOL semanticAnalyzer(NODE_AstTree ast, char** errors) {
 					v.ival = -1;
 					temp_field = fieldinit(INT, v, decls->tokens->next->tk->lexeme);
 					s->record = temp_field;
-					int hashval = lookupEntry(h, "global", s->id, temp_field->fieldname, hash_size);
-					hashval = hashSymbolEntry(h, global_table, s, temp_field, "global", s->id, temp_field->fieldname, hash_size);
+					// int hashval = lookupEntry(h, "global", s->id, temp_field->fieldname, hash_size);
+					int hashval = hashSymbolEntry(h, global_table, s, NULL, "global", s->id, NULL, hash_size);
 
 
 				} else if(decls->tokens->tk->token==TK_REAL) {
@@ -646,14 +655,14 @@ HASHSYMBOL semanticAnalyzer(NODE_AstTree ast, char** errors) {
 					v.rval = -1;
 					temp_field = fieldinit(REAL, v, decls->tokens->next->tk->lexeme);
 					s->record = temp_field;
-					int hashval = lookupEntry(h, "global", s->id, temp_field->fieldname, hash_size);
-					hashval = hashSymbolEntry(h, global_table, s, temp_field, "global", s->id, temp_field->fieldname, hash_size);
+					// int hashval = lookupEntry(h, "global", s->id, temp_field->fieldname, hash_size);
+					int hashval = hashSymbolEntry(h, global_table, s, NULL, "global", s->id, NULL, hash_size);
 
 				} else {
 					s->record_name = (char*)malloc(sizeof(char)*(strlen(decls->tokens->tk->lexeme)+1));
 					strcpy(s->record_name,decls->tokens->tk->lexeme);
 					printf("Record-%s \n",decls->tokens->tk->lexeme);
-					int hashval = lookupEntry(h, "record", decls->tokens->tk->lexeme, NULL, hash_size);
+					int hashval = lookupRecord(h, decls->tokens->tk->lexeme, hash_size);
 					if(hashval==-1) {
 						if(prev==NULL) {
 							stmts->child->sibling->child=decls->sibling;
@@ -671,12 +680,14 @@ HASHSYMBOL semanticAnalyzer(NODE_AstTree ast, char** errors) {
 						strcpy(errors[Line],e);
 						if(prev==NULL) {
 							decls = stmts->child->sibling->child;
+							prev = NULL;
 						} else {
-							decls = prev;
+							decls = prev->sibling;
 						}
 						free(s);
 						continue;
 					}
+					int val = hashSymbolEntry(h, global_table, s, NULL, "global", s->id, NULL, hash_size);
 
 					FIELD f = h[hashval].entry_ptr->record;
 					int i=0,r=0;
