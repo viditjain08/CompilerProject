@@ -7,6 +7,7 @@
 extern Hashtable non_termainals;
 extern Hashtable terminals;
 int no_of_lines=0;
+char** errors;
 
 int main (int argc, char* argv[]){
 	// char *file = argv[1];
@@ -27,14 +28,13 @@ int main (int argc, char* argv[]){
 
 	int nAst = countNodesAST(tree);
 	int nPt = countNodesParseTree(x);
-
+	errors = (char**)malloc(sizeof(char*)*no_of_lines);
 	printf("\n");
 	printf("Number of Nodes in Ast: %d\n",nAst);
 	printf("Number of Nodes in parsetree: %d\n",nPt);
 	printf("Compression Ratio: %.2f\n",(1-((float)nAst/nPt))*100 );
-	char* errors[no_of_lines];
-	HASHSYMBOL h = semanticAnalyzer(tree, errors);
-	
+	HASHSYMBOL h = semanticAnalyzer(tree);
+
 	nAst = countNodesAST(tree);
 	printf("Number of Nodes in Ast: %d\n",nAst);
 	printf("Number of Nodes in parsetree: %d\n",nPt);

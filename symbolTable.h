@@ -2,4 +2,4 @@
 #include <stdlib.h>
 
 SYMBOLTABLE symbolTableinit(char* name);
-HASHSYMBOL semanticAnalyzer(NODE_AstTree ast, char** errors);
+HASHSYMBOL semanticAnalyzer(NODE_AstTree ast);
