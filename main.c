@@ -10,6 +10,8 @@ int no_of_lines=0;
 char** errors;
 HASHSYMBOL h;
 int hash_size;
+FN_ENTRY functions;
+int fn_size;
 
 int main (int argc, char* argv[]){
 	// char *file = argv[1];

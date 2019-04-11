@@ -7,6 +7,8 @@ SYMBOLTABLE global_table;
 extern char** errors;
 extern HASHSYMBOL h;
 extern int hash_size;
+extern FN_ENTRY functions;
+extern int fn_size;
 
 FN_STACK stack_init(char* name, SYMBOLTABLE s) {
 	FN_STACK f = (FN_STACK)malloc(sizeof(fn_stack));
@@ -35,58 +37,56 @@ FN_STACK pop(FN_STACK f) {
 	return temp;
 }
 
-FN_ENTRY functionsInit(int size) {
-	FN_ENTRY x;
-	x = (FN_ENTRY)malloc(sizeof(fn_entry)*size);
-	for(int i=0; i<size; i++) {
-		x[i].function_name = NULL;
-		x[i].ptr = NULL;
+void functionsInit() {
+	functions = (FN_ENTRY)malloc(sizeof(fn_entry)*fn_size);
+	for(int i=0; i<fn_size; i++) {
+		functions[i].function_name = NULL;
+		functions[i].ptr = NULL;
 	}
-	return x;
 }
 
-int enterFunction(FN_ENTRY x, char* function, int index, SYMBOLTABLE st, NODE_AstTree fn_node, int size) {
+int enterFunction(char* function, int index, SYMBOLTABLE st, NODE_AstTree fn_node) {
 	int i=0;
 	long long hashVal=0;
 	while(function[i]!='\0') {
-		hashVal = hashVal + 7*(int)function[i];
+		hashVal = (hashVal + 7*(int)function[i])%fn_size;
 		i++;
 	}
-	hashVal = hashVal%size;
-	for(int h=1; h<=10; h++) {
-		if(x[hashVal].ptr==NULL) {
-			x[hashVal].function_name = (char*)malloc(sizeof(char)*(strlen(function)+1));
-			strcpy(x[hashVal].function_name,function);
-			x[hashVal].ptr = fn_node;
-			x[hashVal].index = index;
-			x[hashVal].st = st;
+	hashVal = hashVal%fn_size;
+	for(int hv=1; hv<=10; hv++) {
+		if(functions[hashVal].ptr==NULL) {
+			functions[hashVal].function_name = (char*)malloc(sizeof(char)*(strlen(function)+1));
+			strcpy(functions[hashVal].function_name,function);
+			functions[hashVal].ptr = fn_node;
+			functions[hashVal].index = index;
+			functions[hashVal].st = st;
 			return hashVal;
 		}
-		hashVal += (h*h);
-		hashVal = hashVal%size;
+		hashVal += (hv*hv);
+		hashVal = hashVal%fn_size;
 
 
 	}
 	return -1;
 }
 
-int getFunction(FN_ENTRY x, char* function, int size) {
+int getFunction(char* function) {
 	int i=0;
 	long long hashVal=0;
 	while(function[i]!='\0') {
-		hashVal = hashVal + 7*(int)function[i];
+		hashVal = (hashVal + 7*(int)function[i])%fn_size;
 		i++;
 	}
-	hashVal = hashVal%size;
-	for(int h=1; h<=10; h++) {
-		if(x[hashVal].ptr==NULL) {
+	hashVal = hashVal%fn_size;
+	for(int hv=1; hv<=10; hv++) {
+		if(functions[hashVal].ptr==NULL) {
 			return -1;
 		}
-		if(strcmp(x[hashVal].function_name, function)==0) {
+		if(strcmp(functions[hashVal].function_name, function)==0) {
 			return hashVal;
 		}
-		hashVal += (h*h);
-		hashVal = hashVal%size;
+		hashVal += (hv*hv);
+		hashVal = hashVal%fn_size;
 
 	}
 	return -1;
@@ -458,6 +458,7 @@ void functionSymbolTable(NODE_AstTree function, SYMBOLTABLE st) {
 
 HASHSYMBOL populateSymbolTable(NODE_AstTree ast) {
 	hash_size = 500;
+	fn_size = 200;
 	hashSymbolInit();
 	NODE_AstTree main_node = ast->child;
 	NODE_AstTree record_temp = main_node->sibling, prev_record = main_node;
@@ -466,7 +467,7 @@ HASHSYMBOL populateSymbolTable(NODE_AstTree ast) {
 	global_table = symbolTableinit("global");
 	int index=0;
 	// printSymbolTable(global_table);
-	FN_ENTRY functions = functionsInit(200);
+	functionsInit();
 
 	SYMBOLENTRY x,y;
 	int flag=0;
@@ -474,12 +475,12 @@ HASHSYMBOL populateSymbolTable(NODE_AstTree ast) {
 		NODE_AstTree stmts;
 		if(record_temp==main_node) {
 			SYMBOLTABLE sym = symbolTableinit("_main");
-			int temp = enterFunction(functions, "_main", index, sym, record_temp, 200);
+			int temp = enterFunction("_main", index, sym, record_temp);
 			index++;
 			printf("Function _main for records\n");
 			stmts = record_temp;
 		} else {
-			if(getFunction(functions, record_temp->child->tokens->tk->lexeme, 200)!=-1) {
+			if(getFunction(record_temp->child->tokens->tk->lexeme)!=-1) {
 				prev_record->sibling = record_temp->sibling;
 				char* name = record_temp->child->tokens->tk->lexeme;
 				int startLine = record_temp->child->tokens->tk->lineNo;
@@ -493,7 +494,7 @@ HASHSYMBOL populateSymbolTable(NODE_AstTree ast) {
 				continue;
 			}
 			SYMBOLTABLE sym = symbolTableinit(record_temp->child->tokens->tk->lexeme);
-			int temp = enterFunction(functions, record_temp->child->tokens->tk->lexeme, index, sym, record_temp, 200);
+			int temp = enterFunction(record_temp->child->tokens->tk->lexeme, index, sym, record_temp);
 			index++;
 			printf("Function %s for records\n",record_temp->child->tokens->tk->lexeme);
 			stmts = record_temp->child->sibling->sibling->sibling;
@@ -628,7 +629,7 @@ HASHSYMBOL populateSymbolTable(NODE_AstTree ast) {
 			name = (char*)malloc(sizeof(char)*(strlen(record_temp->child->tokens->tk->lexeme)+1));
 			strcpy(name,record_temp->child->tokens->tk->lexeme);
 		}
-		int xyz = getFunction(functions, name, 200);
+		int xyz = getFunction(name);
 		SYMBOLTABLE sym = functions[xyz].st;
 		functionSymbolTable(fn, sym);
 		f_temp = f_temp->sibling;
