@@ -52,6 +52,7 @@ _main
 
 	type int :b3;
 	type real :c4bd56 : global;
+	type record #book : b7 : global;
 
 	return;
 end

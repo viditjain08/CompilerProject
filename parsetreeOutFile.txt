@@ -570,17 +570,35 @@ global                        	54 	TK_GLOBAL           	 ---- global_or_not 1 --
 ;                             	54 	TK_SEM              	 ---- declaration 1 ---- 
 24                  	
 ---- ---- ---- ---- declarations                  	0	declarations        	
+type                          	55 	TK_TYPE             	 ---- declaration 1 ---- 
+26                  	
+---- ---- ---- ---- declarations                  	0	declaration         	
+record                        	55 	TK_RECORD           	 ---- constructedDatatype 1 ---- 
+13                  	
+---- ---- ---- ---- dataType                      	0	constructedDatatype 	
+#book                         	55 	TK_RECORDID         	 ---- constructedDatatype 1 ---- 
+10                  	
+---- ---- ---- ---- declaration                   	0	dataType            	
+:                             	55 	TK_COLON            	 ---- declaration 1 ---- 
+b7                            	55 	TK_ID               	 ---- declaration 1 ---- 
+:                             	55 	TK_COLON            	 ---- global_or_not 1 ---- 
+27                  	
+---- ---- ---- ---- declaration                   	0	global_or_not       	
+global                        	55 	TK_GLOBAL           	 ---- global_or_not 1 ---- 
+;                             	55 	TK_SEM              	 ---- declaration 1 ---- 
+24                  	
+---- ---- ---- ---- declarations                  	0	declarations        	
 eps                           	-1 	eps                 	 ---- declarations 1 ---- 
 25                  	
 ---- ---- ---- ---- declarations                  	0	declarations        	
 eps                           	-1 	eps                 	 ---- otherStmts 1 ---- 
 30                  	
 ---- ---- ---- ---- stmts                         	0	otherStmts          	
-return                        	56 	TK_RETURN           	 ---- returnStmt 1 ---- 
+return                        	57 	TK_RETURN           	 ---- returnStmt 1 ---- 
 76                  	
 ---- ---- ---- ---- stmts                         	0	returnStmt          	
 eps                           	-1 	eps                 	 ---- optionalReturn 1 ---- 
 78                  	
 ---- ---- ---- ---- returnStmt                    	0	optionalReturn      	
-;                             	56 	TK_SEM              	 ---- returnStmt 1 ---- 
-end                           	57 	TK_END              	 ---- mainFunction 1 ---- 
+;                             	57 	TK_SEM              	 ---- returnStmt 1 ---- 
+end                           	58 	TK_END              	 ---- mainFunction 1 ---- 
