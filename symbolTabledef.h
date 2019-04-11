@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include "astDef.h"
 
-typedef enum {INT, REAL, BOOL} dataType;
+typedef enum {INT, REAL, BOOL, RECORD, ERROR} dataType;
 typedef struct field field;
 typedef struct field* FIELD;
 typedef struct symbolentry symbolentry;
