@@ -285,7 +285,8 @@ SYMBOLENTRY addDeclarations(NODE_AstTree parent, SYMBOLTABLE st, int offset, SYM
 	NODE_AstTree prev = NULL;
 	while(input_par!=NULL) {
 		if((flag==0 && input_par->tokens->next->next!=NULL)||(flag==1 && input_par->tokens->next->next==NULL)) {
-			// printf("%s \n",input_par->tokens->next->tk->lexeme);
+			printf("%s \n",input_par->tokens->next->tk->lexeme);
+
 			prev = input_par;
 			input_par = input_par->sibling;
 			continue;
@@ -311,9 +312,10 @@ SYMBOLENTRY addDeclarations(NODE_AstTree parent, SYMBOLTABLE st, int offset, SYM
 				input_par = parent->child;
 				prev = NULL;
 			} else {
-				printf("%s \n",prev->sibling->tokens->next->tk->lexeme);
+				// printf("%s \n",prev->sibling->tokens->next->tk->lexeme);
 				input_par = prev->sibling;
 			}
+
 			continue;
 		}
 
