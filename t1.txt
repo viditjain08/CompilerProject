@@ -16,6 +16,8 @@ output parameter list[int b5d, int d3];
 	type real :c4bd56 : global;
 	type record #book : b7 : global;
 
+	b3 <--- 5.52;
+
 	return [b4d,d3];
 end
 

@@ -1,5 +1,5 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include "symbolTable.h"
+#include "symbolTabledef.h"
 
 #include "typeChecker.h"

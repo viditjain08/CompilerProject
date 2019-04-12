@@ -204,30 +204,59 @@ global                        	17 	TK_GLOBAL           	 ---- global_or_not 1 --
 eps                           	-1 	eps                 	 ---- declarations 1 ---- 
 25                  	
 ---- ---- ---- ---- declarations                  	0	declarations        	
+b3                            	19 	TK_ID               	 ---- singleOrRecId 1 ---- 
+37                  	
+---- ---- ---- ---- assignmentStmt                	0	singleOrRecId       	
+eps                           	-1 	eps                 	 ---- new_24 1 ---- 
+39                  	
+---- ---- ---- ---- singleOrRecId                 	0	new_24              	
+36                  	
+---- ---- ---- ---- stmt                          	0	assignmentStmt      	
+<---                          	19 	TK_ASSIGNOP         	 ---- assignmentStmt 1 ---- 
+5.52                          	19 	TK_RNUM             	 5.520000 all 1 ---- 
+63                  	
+---- ---- ---- ---- factor                        	0	all                 	
+57                  	
+---- ---- ---- ---- term                          	0	factor              	
+53                  	
+---- ---- ---- ---- arithmeticExpression          	0	term                	
+eps                           	-1 	eps                 	 ---- termPrime 1 ---- 
+55                  	
+---- ---- ---- ---- term                          	0	termPrime           	
+50                  	
+---- ---- ---- ---- assignmentStmt                	0	arithmeticExpression	
+eps                           	-1 	eps                 	 ---- expPrime 1 ---- 
+52                  	
+---- ---- ---- ---- arithmeticExpression          	0	expPrime            	
+;                             	19 	TK_SEM              	 ---- assignmentStmt 1 ---- 
+31                  	
+---- ---- ---- ---- otherStmts                    	0	stmt                	
+29                  	
+---- ---- ---- ---- stmts                         	0	otherStmts          	
 eps                           	-1 	eps                 	 ---- otherStmts 1 ---- 
 30                  	
----- ---- ---- ---- stmts                         	0	otherStmts          	
-return                        	19 	TK_RETURN           	 ---- returnStmt 1 ---- 
+---- ---- ---- ---- otherStmts                    	0	otherStmts          	
+return                        	21 	TK_RETURN           	 ---- returnStmt 1 ---- 
 76                  	
 ---- ---- ---- ---- stmts                         	0	returnStmt          	
-[                             	19 	TK_SQL              	 ---- optionalReturn 1 ---- 
+[                             	21 	TK_SQL              	 ---- optionalReturn 1 ---- 
 77                  	
 ---- ---- ---- ---- returnStmt                    	0	optionalReturn      	
-b4d                           	19 	TK_ID               	 ---- idList 1 ---- 
+b4d                           	21 	TK_ID               	 ---- idList 1 ---- 
 79                  	
 ---- ---- ---- ---- optionalReturn                	0	idList              	
-,                             	19 	TK_COMMA            	 ---- more_ids 1 ---- 
+,                             	21 	TK_COMMA            	 ---- more_ids 1 ---- 
 80                  	
 ---- ---- ---- ---- idList                        	0	more_ids            	
-d3                            	19 	TK_ID               	 ---- idList 1 ---- 
+d3                            	21 	TK_ID               	 ---- idList 1 ---- 
 79                  	
 ---- ---- ---- ---- more_ids                      	0	idList              	
 eps                           	-1 	eps                 	 ---- more_ids 1 ---- 
 81                  	
 ---- ---- ---- ---- idList                        	0	more_ids            	
-]                             	19 	TK_SQR              	 ---- optionalReturn 1 ---- 
-;                             	19 	TK_SEM              	 ---- returnStmt 1 ---- 
-end                           	20 	TK_END              	 ---- function 1 ---- 
+]                             	21 	TK_SQR              	 ---- optionalReturn 1 ---- 
+;                             	21 	TK_SEM              	 ---- returnStmt 1 ---- 
+end                           	22 	TK_END              	 ---- function 1 ---- 
 2                   	
 ---- ---- ---- ---- program                       	0	otherFunctions      	
 eps                           	-1 	eps                 	 ---- otherFunctions 1 ---- 
@@ -235,80 +264,80 @@ eps                           	-1 	eps                 	 ---- otherFunctions 1 -
 ---- ---- ---- ---- otherFunctions                	0	otherFunctions      	
 0                   	
 ---- ---- ---- ---- ROOT	0	program             	
-_main                         	23 	TK_MAIN             	 ---- mainFunction 1 ---- 
+_main                         	25 	TK_MAIN             	 ---- mainFunction 1 ---- 
 1                   	
 ---- ---- ---- ---- program                       	0	mainFunction        	
-record                        	25 	TK_RECORD           	 ---- typeDefinition 1 ---- 
+record                        	27 	TK_RECORD           	 ---- typeDefinition 1 ---- 
 19                  	
 ---- ---- ---- ---- typeDefinitions               	0	typeDefinition      	
-#book                         	25 	TK_RECORDID         	 ---- typeDefinition 1 ---- 
-type                          	26 	TK_TYPE             	 ---- fieldDefinition 1 ---- 
+#book                         	27 	TK_RECORDID         	 ---- typeDefinition 1 ---- 
+type                          	28 	TK_TYPE             	 ---- fieldDefinition 1 ---- 
 21                  	
 ---- ---- ---- ---- fieldDefinitions              	0	fieldDefinition     	
-int                           	26 	TK_INT              	 ---- primitiveDatatype 1 ---- 
+int                           	28 	TK_INT              	 ---- primitiveDatatype 1 ---- 
 11                  	
 ---- ---- ---- ---- fieldDefinition               	0	primitiveDatatype   	
-:                             	26 	TK_COLON            	 ---- fieldDefinition 1 ---- 
-edition                       	26 	TK_FIELDID          	 ---- fieldDefinition 1 ---- 
-;                             	26 	TK_SEM              	 ---- fieldDefinition 1 ---- 
+:                             	28 	TK_COLON            	 ---- fieldDefinition 1 ---- 
+edition                       	28 	TK_FIELDID          	 ---- fieldDefinition 1 ---- 
+;                             	28 	TK_SEM              	 ---- fieldDefinition 1 ---- 
 20                  	
 ---- ---- ---- ---- typeDefinition                	0	fieldDefinitions    	
-type                          	27 	TK_TYPE             	 ---- fieldDefinition 1 ---- 
+type                          	29 	TK_TYPE             	 ---- fieldDefinition 1 ---- 
 21                  	
 ---- ---- ---- ---- fieldDefinitions              	0	fieldDefinition     	
-real                          	27 	TK_REAL             	 ---- primitiveDatatype 1 ---- 
+real                          	29 	TK_REAL             	 ---- primitiveDatatype 1 ---- 
 12                  	
 ---- ---- ---- ---- fieldDefinition               	0	primitiveDatatype   	
-:                             	27 	TK_COLON            	 ---- fieldDefinition 1 ---- 
-prcie                         	27 	TK_FIELDID          	 ---- fieldDefinition 1 ---- 
-;                             	27 	TK_SEM              	 ---- fieldDefinition 1 ---- 
+:                             	29 	TK_COLON            	 ---- fieldDefinition 1 ---- 
+prcie                         	29 	TK_FIELDID          	 ---- fieldDefinition 1 ---- 
+;                             	29 	TK_SEM              	 ---- fieldDefinition 1 ---- 
 eps                           	-1 	eps                 	 ---- moreFields 1 ---- 
 23                  	
 ---- ---- ---- ---- fieldDefinitions              	0	moreFields          	
-endrecord                     	28 	TK_ENDRECORD        	 ---- typeDefinition 1 ---- 
-;                             	28 	TK_SEM              	 ---- typeDefinition 1 ---- 
+endrecord                     	30 	TK_ENDRECORD        	 ---- typeDefinition 1 ---- 
+;                             	30 	TK_SEM              	 ---- typeDefinition 1 ---- 
 17                  	
 ---- ---- ---- ---- stmts                         	0	typeDefinitions     	
-record                        	29 	TK_RECORD           	 ---- typeDefinition 1 ---- 
+record                        	31 	TK_RECORD           	 ---- typeDefinition 1 ---- 
 19                  	
 ---- ---- ---- ---- typeDefinitions               	0	typeDefinition      	
-#koob                         	29 	TK_RECORDID         	 ---- typeDefinition 1 ---- 
-type                          	30 	TK_TYPE             	 ---- fieldDefinition 1 ---- 
-21                  	
----- ---- ---- ---- fieldDefinitions              	0	fieldDefinition     	
-int                           	30 	TK_INT              	 ---- primitiveDatatype 1 ---- 
-11                  	
----- ---- ---- ---- fieldDefinition               	0	primitiveDatatype   	
-:                             	30 	TK_COLON            	 ---- fieldDefinition 1 ---- 
-edition                       	30 	TK_FIELDID          	 ---- fieldDefinition 1 ---- 
-;                             	30 	TK_SEM              	 ---- fieldDefinition 1 ---- 
-20                  	
----- ---- ---- ---- typeDefinition                	0	fieldDefinitions    	
-type                          	31 	TK_TYPE             	 ---- fieldDefinition 1 ---- 
-21                  	
----- ---- ---- ---- fieldDefinitions              	0	fieldDefinition     	
-real                          	31 	TK_REAL             	 ---- primitiveDatatype 1 ---- 
-12                  	
----- ---- ---- ---- fieldDefinition               	0	primitiveDatatype   	
-:                             	31 	TK_COLON            	 ---- fieldDefinition 1 ---- 
-prcie                         	31 	TK_FIELDID          	 ---- fieldDefinition 1 ---- 
-;                             	31 	TK_SEM              	 ---- fieldDefinition 1 ---- 
+#koob                         	31 	TK_RECORDID         	 ---- typeDefinition 1 ---- 
 type                          	32 	TK_TYPE             	 ---- fieldDefinition 1 ---- 
 21                  	
----- ---- ---- ---- moreFields                    	0	fieldDefinition     	
-real                          	32 	TK_REAL             	 ---- primitiveDatatype 1 ---- 
-12                  	
+---- ---- ---- ---- fieldDefinitions              	0	fieldDefinition     	
+int                           	32 	TK_INT              	 ---- primitiveDatatype 1 ---- 
+11                  	
 ---- ---- ---- ---- fieldDefinition               	0	primitiveDatatype   	
 :                             	32 	TK_COLON            	 ---- fieldDefinition 1 ---- 
-hello                         	32 	TK_FIELDID          	 ---- fieldDefinition 1 ---- 
+edition                       	32 	TK_FIELDID          	 ---- fieldDefinition 1 ---- 
 ;                             	32 	TK_SEM              	 ---- fieldDefinition 1 ---- 
+20                  	
+---- ---- ---- ---- typeDefinition                	0	fieldDefinitions    	
+type                          	33 	TK_TYPE             	 ---- fieldDefinition 1 ---- 
+21                  	
+---- ---- ---- ---- fieldDefinitions              	0	fieldDefinition     	
+real                          	33 	TK_REAL             	 ---- primitiveDatatype 1 ---- 
+12                  	
+---- ---- ---- ---- fieldDefinition               	0	primitiveDatatype   	
+:                             	33 	TK_COLON            	 ---- fieldDefinition 1 ---- 
+prcie                         	33 	TK_FIELDID          	 ---- fieldDefinition 1 ---- 
+;                             	33 	TK_SEM              	 ---- fieldDefinition 1 ---- 
+type                          	34 	TK_TYPE             	 ---- fieldDefinition 1 ---- 
+21                  	
+---- ---- ---- ---- moreFields                    	0	fieldDefinition     	
+real                          	34 	TK_REAL             	 ---- primitiveDatatype 1 ---- 
+12                  	
+---- ---- ---- ---- fieldDefinition               	0	primitiveDatatype   	
+:                             	34 	TK_COLON            	 ---- fieldDefinition 1 ---- 
+hello                         	34 	TK_FIELDID          	 ---- fieldDefinition 1 ---- 
+;                             	34 	TK_SEM              	 ---- fieldDefinition 1 ---- 
 22                  	
 ---- ---- ---- ---- fieldDefinitions              	0	moreFields          	
 eps                           	-1 	eps                 	 ---- moreFields 1 ---- 
 23                  	
 ---- ---- ---- ---- moreFields                    	0	moreFields          	
-endrecord                     	33 	TK_ENDRECORD        	 ---- typeDefinition 1 ---- 
-;                             	33 	TK_SEM              	 ---- typeDefinition 1 ---- 
+endrecord                     	35 	TK_ENDRECORD        	 ---- typeDefinition 1 ---- 
+;                             	35 	TK_SEM              	 ---- typeDefinition 1 ---- 
 17                  	
 ---- ---- ---- ---- typeDefinitions               	0	typeDefinitions     	
 eps                           	-1 	eps                 	 ---- typeDefinitions 1 ---- 
@@ -316,73 +345,73 @@ eps                           	-1 	eps                 	 ---- typeDefinitions 1 
 ---- ---- ---- ---- typeDefinitions               	0	typeDefinitions     	
 16                  	
 ---- ---- ---- ---- mainFunction                  	0	stmts               	
-type                          	35 	TK_TYPE             	 ---- declaration 1 ---- 
+type                          	37 	TK_TYPE             	 ---- declaration 1 ---- 
 26                  	
 ---- ---- ---- ---- declarations                  	0	declaration         	
-int                           	35 	TK_INT              	 ---- primitiveDatatype 1 ---- 
+int                           	37 	TK_INT              	 ---- primitiveDatatype 1 ---- 
 11                  	
 ---- ---- ---- ---- dataType                      	0	primitiveDatatype   	
 9                   	
 ---- ---- ---- ---- declaration                   	0	dataType            	
-:                             	35 	TK_COLON            	 ---- declaration 1 ---- 
-b3                            	35 	TK_ID               	 ---- declaration 1 ---- 
+:                             	37 	TK_COLON            	 ---- declaration 1 ---- 
+b3                            	37 	TK_ID               	 ---- declaration 1 ---- 
 eps                           	-1 	eps                 	 ---- global_or_not 1 ---- 
 28                  	
 ---- ---- ---- ---- declaration                   	0	global_or_not       	
-;                             	35 	TK_SEM              	 ---- declaration 1 ---- 
+;                             	37 	TK_SEM              	 ---- declaration 1 ---- 
 24                  	
 ---- ---- ---- ---- stmts                         	0	declarations        	
-type                          	36 	TK_TYPE             	 ---- declaration 1 ---- 
+type                          	38 	TK_TYPE             	 ---- declaration 1 ---- 
 26                  	
 ---- ---- ---- ---- declarations                  	0	declaration         	
-real                          	36 	TK_REAL             	 ---- primitiveDatatype 1 ---- 
+real                          	38 	TK_REAL             	 ---- primitiveDatatype 1 ---- 
 12                  	
 ---- ---- ---- ---- dataType                      	0	primitiveDatatype   	
 9                   	
 ---- ---- ---- ---- declaration                   	0	dataType            	
-:                             	36 	TK_COLON            	 ---- declaration 1 ---- 
-c4bd56                        	36 	TK_ID               	 ---- declaration 1 ---- 
-:                             	36 	TK_COLON            	 ---- global_or_not 1 ---- 
-27                  	
----- ---- ---- ---- declaration                   	0	global_or_not       	
-global                        	36 	TK_GLOBAL           	 ---- global_or_not 1 ---- 
-;                             	36 	TK_SEM              	 ---- declaration 1 ---- 
-24                  	
----- ---- ---- ---- declarations                  	0	declarations        	
-type                          	37 	TK_TYPE             	 ---- declaration 1 ---- 
-26                  	
----- ---- ---- ---- declarations                  	0	declaration         	
-record                        	37 	TK_RECORD           	 ---- constructedDatatype 1 ---- 
-13                  	
----- ---- ---- ---- dataType                      	0	constructedDatatype 	
-#book                         	37 	TK_RECORDID         	 ---- constructedDatatype 1 ---- 
-10                  	
----- ---- ---- ---- declaration                   	0	dataType            	
-:                             	37 	TK_COLON            	 ---- declaration 1 ---- 
-b7                            	37 	TK_ID               	 ---- declaration 1 ---- 
-:                             	37 	TK_COLON            	 ---- global_or_not 1 ---- 
-27                  	
----- ---- ---- ---- declaration                   	0	global_or_not       	
-global                        	37 	TK_GLOBAL           	 ---- global_or_not 1 ---- 
-;                             	37 	TK_SEM              	 ---- declaration 1 ---- 
-24                  	
----- ---- ---- ---- declarations                  	0	declarations        	
-type                          	38 	TK_TYPE             	 ---- declaration 1 ---- 
-26                  	
----- ---- ---- ---- declarations                  	0	declaration         	
-record                        	38 	TK_RECORD           	 ---- constructedDatatype 1 ---- 
-13                  	
----- ---- ---- ---- dataType                      	0	constructedDatatype 	
-#booking                      	38 	TK_RECORDID         	 ---- constructedDatatype 1 ---- 
-10                  	
----- ---- ---- ---- declaration                   	0	dataType            	
 :                             	38 	TK_COLON            	 ---- declaration 1 ---- 
-b3b444                        	38 	TK_ID               	 ---- declaration 1 ---- 
+c4bd56                        	38 	TK_ID               	 ---- declaration 1 ---- 
 :                             	38 	TK_COLON            	 ---- global_or_not 1 ---- 
 27                  	
 ---- ---- ---- ---- declaration                   	0	global_or_not       	
 global                        	38 	TK_GLOBAL           	 ---- global_or_not 1 ---- 
 ;                             	38 	TK_SEM              	 ---- declaration 1 ---- 
+24                  	
+---- ---- ---- ---- declarations                  	0	declarations        	
+type                          	39 	TK_TYPE             	 ---- declaration 1 ---- 
+26                  	
+---- ---- ---- ---- declarations                  	0	declaration         	
+record                        	39 	TK_RECORD           	 ---- constructedDatatype 1 ---- 
+13                  	
+---- ---- ---- ---- dataType                      	0	constructedDatatype 	
+#book                         	39 	TK_RECORDID         	 ---- constructedDatatype 1 ---- 
+10                  	
+---- ---- ---- ---- declaration                   	0	dataType            	
+:                             	39 	TK_COLON            	 ---- declaration 1 ---- 
+b7                            	39 	TK_ID               	 ---- declaration 1 ---- 
+:                             	39 	TK_COLON            	 ---- global_or_not 1 ---- 
+27                  	
+---- ---- ---- ---- declaration                   	0	global_or_not       	
+global                        	39 	TK_GLOBAL           	 ---- global_or_not 1 ---- 
+;                             	39 	TK_SEM              	 ---- declaration 1 ---- 
+24                  	
+---- ---- ---- ---- declarations                  	0	declarations        	
+type                          	40 	TK_TYPE             	 ---- declaration 1 ---- 
+26                  	
+---- ---- ---- ---- declarations                  	0	declaration         	
+record                        	40 	TK_RECORD           	 ---- constructedDatatype 1 ---- 
+13                  	
+---- ---- ---- ---- dataType                      	0	constructedDatatype 	
+#booking                      	40 	TK_RECORDID         	 ---- constructedDatatype 1 ---- 
+10                  	
+---- ---- ---- ---- declaration                   	0	dataType            	
+:                             	40 	TK_COLON            	 ---- declaration 1 ---- 
+b3b444                        	40 	TK_ID               	 ---- declaration 1 ---- 
+:                             	40 	TK_COLON            	 ---- global_or_not 1 ---- 
+27                  	
+---- ---- ---- ---- declaration                   	0	global_or_not       	
+global                        	40 	TK_GLOBAL           	 ---- global_or_not 1 ---- 
+;                             	40 	TK_SEM              	 ---- declaration 1 ---- 
 24                  	
 ---- ---- ---- ---- declarations                  	0	declarations        	
 eps                           	-1 	eps                 	 ---- declarations 1 ---- 
@@ -391,11 +420,11 @@ eps                           	-1 	eps                 	 ---- declarations 1 ---
 eps                           	-1 	eps                 	 ---- otherStmts 1 ---- 
 30                  	
 ---- ---- ---- ---- stmts                         	0	otherStmts          	
-return                        	39 	TK_RETURN           	 ---- returnStmt 1 ---- 
+return                        	41 	TK_RETURN           	 ---- returnStmt 1 ---- 
 76                  	
 ---- ---- ---- ---- stmts                         	0	returnStmt          	
 eps                           	-1 	eps                 	 ---- optionalReturn 1 ---- 
 78                  	
 ---- ---- ---- ---- returnStmt                    	0	optionalReturn      	
-;                             	39 	TK_SEM              	 ---- returnStmt 1 ---- 
-end                           	40 	TK_END              	 ---- mainFunction 1 ---- 
+;                             	41 	TK_SEM              	 ---- returnStmt 1 ---- 
+end                           	42 	TK_END              	 ---- mainFunction 1 ---- 

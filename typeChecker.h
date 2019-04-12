@@ -1,5 +1,7 @@
-void checkType(NODE_AstTree root,HASHSYMBOL hTable, FN_STACK st);
-void checkStmtType(NODE_AstTree root,HASHSYMBOL hTable, FN_STACK st);
-dataType getIdentifierDtype(NODE_AstTree var, HASHSYMBOL hTable, FN_STACK st);
-dataType getExpressionDtype(NODE_AstTree root, HASHSYMBOL hTable, FN_STACK st);
-dataType matchRecordType(NODE_AstTree child1, NODE_AstTree child2, HASHSYMBOL hTable, FN_STACK st);
+void checkType(NODE_AstTree root);
+void checkStmtsType(NODE_AstTree root, int funcHashVal);
+void checkStmtType(NODE_AstTree root, int funcHashVal);
+dataType getIdentifierDtype(NODE_AstTree var, int funcHashVal);
+dataType getExpressionDtype(NODE_AstTree root, int funcHashVal);
+dataType matchRecordType(NODE_AstTree child1, NODE_AstTree child2, int funcHashVal);
+void checkFunctionInvoke(NODE_AstTree stmt, int funcHashVal);

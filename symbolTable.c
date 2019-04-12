@@ -4,11 +4,7 @@
 int hash_jump=0;
 SYMBOLTABLE record_table;
 SYMBOLTABLE global_table;
-extern char** errors;
-extern HASHSYMBOL h;
-extern int hash_size;
-extern FN_ENTRY functions;
-extern int fn_size;
+
 
 FN_STACK stack_init(char* name, SYMBOLTABLE s) {
 	FN_STACK f = (FN_STACK)malloc(sizeof(fn_stack));

@@ -70,4 +70,11 @@ struct fn_stack {
 	SYMBOLTABLE symboltable;
 	FN_STACK next;
 };
+
+extern char** errors;
+extern HASHSYMBOL h;
+extern int hash_size;
+extern FN_ENTRY functions;
+extern int fn_size;
+
 #include "symbolTable.h"
