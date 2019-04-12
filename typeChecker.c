@@ -25,17 +25,19 @@ void checkStmtType(NODE_AstTree root, int funcHashVal){
                 }else{
                     // there is no type error, HURRAY!
                 }
-            }else{
+            }else if(dtVar != ERROR && dtArExpr != ERROR){
                 // stmt for error
+                printf("Line:%d ==> Types of LHS and RHS of assignment stmt don't match\n", var->tokens->tk->lineNo);
             }
         }break;
         case TK_WHILE :{
             NODE_AstTree boolExpr = root->child;
             NODE_AstTree stmts = root->child->sibling;
             if(getExpressionDtype(boolExpr,funcHashVal)==BOOL){
-                checkStmtType(stmts,funcHashVal);
+                checkStmtsType(stmts,funcHashVal);
             }else{
                 // stmt for error;
+                printf("Line:%d ==> Data type of booleanExpression is not bool\n",boolExpr->tokens->tk->lineNo );
             }
 
         }break;
@@ -45,10 +47,11 @@ void checkStmtType(NODE_AstTree root, int funcHashVal){
             NODE_AstTree elsePart = root->child->sibling->sibling;
 
             if(getExpressionDtype(boolExpr,funcHashVal)==BOOL){
-                checkStmtType(stmts,funcHashVal);
-                checkStmtType(elsePart,funcHashVal);
+                checkStmtsType(stmts,funcHashVal);
+                checkStmtsType(elsePart,funcHashVal);
             }else{
                 // stmt for error;
+                printf("Line:%d ==> Data type of booleanExpression is not bool\n",boolExpr->tokens->tk->lineNo );
             }
 
         }break;
@@ -58,6 +61,7 @@ void checkStmtType(NODE_AstTree root, int funcHashVal){
             if(var->tokens->tk->token == TK_ID){
                 if(dtVar == RECORD || dtVar == ERROR){
                     // stmt for error
+                    printf("Line:%d ==> Data type of %s is not valid for reading input\n",var->tokens->tk->lineNo,var->tokens->tk->lexeme );
                 }else{
                     // there is no type error, HURRAY!
                 }
@@ -76,6 +80,7 @@ void checkStmtType(NODE_AstTree root, int funcHashVal){
                 dataType dtVar = getIdentifierDtype(var,funcHashVal);
                 if(dtVar == RECORD || dtVar == ERROR){
                     // stmt for error
+                    printf("Line:%d ==> Data type of %s is not valid for reading input\n",var->tokens->tk->lineNo,var->tokens->tk->lexeme );
                 }else{
                     // there is no type error, HURRAY!
                 }
@@ -96,9 +101,9 @@ void checkStmtType(NODE_AstTree root, int funcHashVal){
             int flag = 1;
             while(tmp1 != NULL && tmp2 != NULL){
                 dataType dt1 ;
-                if(strcmp(tmp1->tokens->next->tk->lexeme,"int")==0){
+                if(strcmp(tmp1->tokens->tk->lexeme,"int")==0){
                     dt1 = INT;
-                }else if(strcmp(tmp1->tokens->next->tk->lexeme,"real")==0){
+                }else if(strcmp(tmp1->tokens->tk->lexeme,"real")==0){
                     dt1 = REAL;
                 }else{
                     dt1 = RECORD;
@@ -106,16 +111,22 @@ void checkStmtType(NODE_AstTree root, int funcHashVal){
                 dataType dt2 = getIdentifierDtype(tmp2,funcHashVal);
                 if(dt1 != dt2){// ERROR
                     // stmt for error
+                    // printf("Line:%d,%d Output type and return type don't match\n", 1,2);
                     flag = 0;
                     break;
                 }else if(dt1 == RECORD){
                     // we have to match record name
-                    int ind = lookupEntry(functions[funcHashVal].function_name,tmp2->tokens->tk->lexeme,tmp2->tokens->tk->lexeme);
-                    if(ind < 0){
+                    int index = lookupEntry("global",tmp2->tokens->tk->lexeme,NULL);
+                    if(index < 0){
                         // error, var not defined
-                        return;
+                        index = lookupEntry(functions[funcHashVal].function_name,tmp2->tokens->tk->lexeme,NULL);
+                        if(index < 0){
+                            // error, var not defined
+
+                        }
                     }
-                    char *str = h[ind].entry_ptr->record_name;
+
+                    char *str = h[index].entry_ptr->record_name;
                     if(strcmp(tmp1->tokens->tk->lexeme,str)!=0){
                         // stmt for error
                         flag = 0;
@@ -153,12 +164,16 @@ void checkStmtType(NODE_AstTree root, int funcHashVal){
                         break;
                     }else if(dt1 == RECORD){
                         // we have to match record name
-                        int ind = lookupEntry(functions[funcHashVal].function_name,tmp2->tokens->tk->lexeme,tmp2->tokens->tk->lexeme);
-                        if(ind < 0){
+                        int index = lookupEntry("global",tmp2->tokens->tk->lexeme,NULL);
+                        if(index < 0){
                             // error, var not defined
-                            return;
+                            index = lookupEntry(functions[funcHashVal].function_name,tmp2->tokens->tk->lexeme,NULL);
+                            if(index < 0){
+                                // error, var not defined
+
+                            }
                         }
-                        char *str = h[ind].entry_ptr->record_name;
+                        char *str = h[index].entry_ptr->record_name;
                         if(strcmp(tmp1->tokens->tk->lexeme,str)!=0){
                             // stmt for error
                             break;
@@ -193,12 +208,16 @@ void checkStmtType(NODE_AstTree root, int funcHashVal){
                     break;
                 }else if(dt1 == RECORD){
                     // we have to match record name
-                    int ind = lookupEntry(functions[funcHashVal].function_name,tmp2->tokens->tk->lexeme,tmp2->tokens->tk->lexeme);
-                    if(ind < 0){
+                    int index = lookupEntry("global",tmp2->tokens->tk->lexeme,NULL);
+                    if(index < 0){
                         // error, var not defined
-                        return;
+                        index = lookupEntry(functions[funcHashVal].function_name,tmp2->tokens->tk->lexeme,NULL);
+                        if(index < 0){
+                            // error, var not defined
+
+                        }
                     }
-                    char *str = h[ind].entry_ptr->record_name;
+                    char *str = h[index].entry_ptr->record_name;
                     if(strcmp(tmp1->tokens->tk->lexeme,str)!=0){
                         // stmt for error
                         break;
@@ -212,6 +231,8 @@ void checkStmtType(NODE_AstTree root, int funcHashVal){
             }else{
                 // HURRAY! No error of number of parameters
             }
+            // Now we will check if the function can invoke the called function
+            checkFunctionInvoke(root,funcHashVal);
 
         }break;
         default : {
@@ -230,11 +251,18 @@ dataType getIdentifierDtype(NODE_AstTree var, int funcHashVal){
         return REAL;
     }
     if(var->tokens->next == NULL){// single identifier is there
-        index = lookupEntry(functions[funcHashVal].function_name,var->tokens->tk->lexeme,var->tokens->tk->lexeme);
+        index = lookupEntry("global",var->tokens->tk->lexeme,NULL);
         if(index < 0){
             // error, var not defined
-            return ERROR;
+            index = lookupEntry(functions[funcHashVal].function_name,var->tokens->tk->lexeme,NULL);
+            if(index < 0){
+                // error, var not defined
+                printf("Line:%d ==> %s variable not defined\n",var->tokens->tk->lineNo,var->tokens->tk->lexeme );
+                return ERROR;
+            }
         }
+
+
         hashsymbol hVar = h[index];
 
         if(hVar.entry_ptr->int_no == 1 && hVar.entry_ptr->real_no == 0){ //it is an integer
@@ -247,10 +275,15 @@ dataType getIdentifierDtype(NODE_AstTree var, int funcHashVal){
             return ERROR;
         }
     }else{// identifier with field id is there
-        index = lookupEntry(functions[funcHashVal].function_name,var->tokens->tk->lexeme,var->tokens->next->tk->lexeme);
+        index = lookupEntry("global",var->tokens->tk->lexeme,NULL);
         if(index < 0){
             // error, var not defined
-            return ERROR;
+            index = lookupEntry(functions[funcHashVal].function_name,var->tokens->tk->lexeme,var->tokens->next->tk->lexeme);
+            if(index < 0){
+                // error, var not defined
+                printf("Line:%d ==> %s variable not defined\n",var->tokens->tk->lineNo,var->tokens->tk->lexeme );
+                return ERROR;
+            }
         }
         hashsymbol hVar = h[index];
 
@@ -294,11 +327,13 @@ dataType getExpressionDtype(NODE_AstTree root, int funcHashVal){
 
                 if(dtChild1 == dtChild2){
                     if(dtChild1 == RECORD){
+                        printf("Line:%d ==> Mul/Div Operation is not valid records %s and %s \n",child1->tokens->tk->lineNo,child1->tokens->tk->lexeme,child2->tokens->tk->lexeme);
                         return ERROR;
                     }else{
                         return dtChild1;
                     }
                 }else{
+                    printf("Line:%d ==> Data type of %s and %s don't match\n", child1->tokens->tk->lineNo,child1->tokens->tk->lexeme,child2->tokens->tk->lexeme);
                     return ERROR;
                 }
             }
@@ -307,7 +342,10 @@ dataType getExpressionDtype(NODE_AstTree root, int funcHashVal){
             case TK_NOT:{
 
                 NODE_AstTree child1 = root->child;
-                return getExpressionDtype(child1,funcHashVal);
+                dataType dt = getExpressionDtype(child1,funcHashVal);
+                if (dt != BOOL) {
+                    printf("Line:%d ==> Operation is not valid on %s\n",child1->tokens->tk->lineNo,child1->tokens->tk->lexeme );
+                }
             }
             break;
 
@@ -323,9 +361,11 @@ dataType getExpressionDtype(NODE_AstTree root, int funcHashVal){
                     if(dtChild1 == BOOL){
                         return BOOL;
                     }else{
+                        printf("Line:%d ==> Operation is not valid between %s and %s\n", child1->tokens->tk->lineNo,child1->tokens->tk->lexeme,child2->tokens->tk->lexeme);
                         return ERROR;
                     }
                 }else{
+                    printf("Line:%d ==> Data type of %s and %s don't match\n", child1->tokens->tk->lineNo,child1->tokens->tk->lexeme,child2->tokens->tk->lexeme);
                     return ERROR;
                 }
             }
@@ -345,11 +385,13 @@ dataType getExpressionDtype(NODE_AstTree root, int funcHashVal){
 
                 if(dtChild1 == dtChild2){
                     if(dtChild1 == INT || dtChild1 == REAL){
-                        return dtChild1;
+                        return BOOL;
                     }else{
+                        printf("Line:%d ==> Operation is not valid between %s and %s\n", child1->tokens->tk->lineNo,child1->tokens->tk->lexeme,child2->tokens->tk->lexeme);
                         return ERROR;
                     }
                 }else{
+                    printf("Line:%d ==> Data type of %s and %s don't match\n", child1->tokens->tk->lineNo,child1->tokens->tk->lexeme,child2->tokens->tk->lexeme);
                     return ERROR;
                 }
             }
@@ -361,22 +403,32 @@ dataType getExpressionDtype(NODE_AstTree root, int funcHashVal){
 dataType matchRecordType(NODE_AstTree child1, NODE_AstTree child2,int funcHashVal){
     // go to leaf node of both and check their recordID
     NODE_AstTree tmp1 = child1;
-    while (tmp1->child == NULL) {
+    while (tmp1->child != NULL) {
         tmp1 = tmp1->child;
     }
     NODE_AstTree tmp2 = child2;
-    while (tmp2->child == NULL) {
+    while (tmp2->child != NULL) {
         tmp2 = tmp2->child;
     }
-    int ind1 = lookupEntry(functions[funcHashVal].function_name,tmp1->tokens->tk->lexeme,tmp1->tokens->tk->lexeme);
+    int ind1 = lookupEntry("global",tmp1->tokens->tk->lexeme,NULL);
     if(ind1 < 0){
-        // error, var not defined
-        return ERROR;
+        ind1 = lookupEntry(functions[funcHashVal].function_name,tmp1->tokens->tk->lexeme,NULL);
+        if(ind1 < 0){
+            // error, var not defined
+            printf("Line:%d ==> %s variable is not defined\n",child1->tokens->tk->lineNo,child1->tokens->tk->lexeme );
+            return ERROR;
+        }
     }
-    int ind2 = lookupEntry(functions[funcHashVal].function_name,tmp2->tokens->tk->lexeme,tmp2->tokens->tk->lexeme);
+
+    int ind2 = lookupEntry("global",tmp2->tokens->tk->lexeme,NULL);
     if(ind2 < 0){
         // error, var not defined
-        return ERROR;
+        ind1 = lookupEntry(functions[funcHashVal].function_name,tmp2->tokens->tk->lexeme,NULL);
+        if(ind2 < 0){
+            // error, var not defined
+            printf("Line:%d ==> %s variable is not defined\n",child2->tokens->tk->lineNo,child2->tokens->tk->lexeme );
+            return ERROR;
+        }
     }
     hashsymbol h1 = h[ind1];
     hashsymbol h2 = h[ind2];
@@ -386,6 +438,7 @@ dataType matchRecordType(NODE_AstTree child1, NODE_AstTree child2,int funcHashVa
         return RECORD;
     }else{
         return ERROR;
+        printf("Line:%d ==> %s and %s record types don't match\n",child1->tokens->tk->lineNo,child1->tokens->tk->lexeme,child2->tokens->tk->lexeme );
     }
 
 }
@@ -394,6 +447,7 @@ void checkFunctionInvoke(NODE_AstTree stmt, int funcHashVal) {
     int index = getFunction(stmt->tokens->tk->lexeme);
     if(index < 0){
         // error, function not defined
+        printf("Line:%d ==> Function %s not defined\n",stmt->tokens->tk->lineNo,stmt->tokens->tk->lexeme );
         return ;
     }
     int newFuncInd = functions[index].index;
@@ -401,6 +455,7 @@ void checkFunctionInvoke(NODE_AstTree stmt, int funcHashVal) {
 
     if(oldFuncInd <= newFuncInd){
         // stmt for error, old does not know the signature of new function
+        printf("Line:%d ==> %s does not know the signature of %s\n", stmt->tokens->tk->lineNo,functions[funcHashVal].function_name,functions[index].function_name);
     }
 
 }

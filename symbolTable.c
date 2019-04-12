@@ -370,7 +370,8 @@ SYMBOLENTRY addDeclarations(NODE_AstTree parent, SYMBOLTABLE st, int offset, SYM
 				continue;
 			}
 			int val = hashSymbolEntry(st, s, NULL, st->name, s->id, NULL);
-
+			s->record_name = (char*)malloc(sizeof(char)*(strlen(input_par->tokens->tk->lexeme)+1));
+			strcpy(s->record_name,input_par->tokens->tk->lexeme);
 
 			FIELD f = h[hval].entry_ptr->record;
 			int i=0,r=0;

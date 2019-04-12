@@ -50,7 +50,7 @@ int main (int argc, char* argv[]){
 	printf("\n" );
 	printf("\n" );
 
-	printf("----------Type Errors---------\n" );
+	printf("----------Semantic Errors---------\n" );
 	checkType(tree);
 
 	return 0;
