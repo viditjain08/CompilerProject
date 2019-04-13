@@ -1,5 +1,5 @@
 // #include"astDef.h"
-#include"typeCheckerDef.h"
+#include"codeGenDef.h"
 // #include "parserDef.h"
 
 #define HASHSIZE 300
@@ -12,6 +12,8 @@ HASHSYMBOL h;
 int hash_size;
 FN_ENTRY functions;
 int fn_size;
+SYMBOLTABLE record_table;
+SYMBOLTABLE global_table;
 
 int main (int argc, char* argv[]){
 	// char *file = argv[1];
@@ -24,7 +26,7 @@ int main (int argc, char* argv[]){
 	PARSETABLE t = createParseTable(f,g,t);
 
 	FILE *parsetree = fopen("parsetreeOutFile.txt","w+");
-	TREE_NODE x = parseInputSourceCode("semantic/testcase1.txt",t,f,g);
+	TREE_NODE x = parseInputSourceCode("CodeGenTest/main4.txt",t,f,g);
 	traversal(parsetree, g, x);
 	fclose(parsetree);
 
@@ -52,6 +54,6 @@ int main (int argc, char* argv[]){
 
 	printf("----------Semantic Errors---------\n" );
 	checkType(tree);
-
+	codeGeneration(tree);
 	return 0;
 }

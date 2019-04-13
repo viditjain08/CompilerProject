@@ -2,8 +2,8 @@
 // #include "astDef.h"
 
 int hash_jump=0;
-SYMBOLTABLE record_table;
-SYMBOLTABLE global_table;
+extern SYMBOLTABLE record_table;
+extern SYMBOLTABLE global_table;
 
 
 FN_STACK stack_init(char* name, SYMBOLTABLE s) {
@@ -274,6 +274,9 @@ void printSymbolTable(SYMBOLTABLE s) {
 	SYMBOLENTRY temp = s->head;
 	printf("Printing SYMBOLTABLE for %s with entries %d\n",s->name, s->no_entries);
 	while(temp!=NULL) {
+		// if(temp->record_name!=NULL){
+		// 	printf("%s",temp->record_name);
+		// }
 		printf("%s %s %d\n",temp->id, s->name, temp->offset);
 		temp=temp->next;
 	}
@@ -470,6 +473,10 @@ HASHSYMBOL populateSymbolTable(NODE_AstTree ast) {
 
 	SYMBOLENTRY x,y;
 	int flag=0;
+	if(record_temp==NULL){
+		flag=1;
+		record_temp = main_node;
+	}
 	while(record_temp!=NULL) {
 		NODE_AstTree stmts;
 		if(record_temp==main_node) {
@@ -589,7 +596,12 @@ HASHSYMBOL populateSymbolTable(NODE_AstTree ast) {
 	}
 	prev_record = NULL;
 	flag = 0;
-	for(record_temp=main_node->sibling; record_temp!=NULL;) {
+	record_temp = main_node->sibling;
+	if(record_temp==NULL){
+		flag=1;
+		record_temp = main_node;
+	}
+	while(record_temp!=NULL) {
 		NODE_AstTree stmts;
 		if(record_temp==main_node) {
 			stmts = main_node;
