@@ -10,3 +10,4 @@ rm AST.o
 rm symbolTable.o
 rm typeChecker.o
 rm semanticAnalyzer.o
+./program

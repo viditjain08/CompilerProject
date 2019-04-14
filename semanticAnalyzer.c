@@ -45,6 +45,15 @@ void ifInit(NODE_AstTree var, int funcHashVal){
         }
 
     }else{// identifier with field id is there
+        hashsymbol hash = h[lookupEntry(functions[funcHashVal].function_name,var->tokens->tk->lexeme,NULL)];
+        if (hash.entry_ptr->init == 1) {
+            FIELD tmp = hash.entry_ptr->record;
+            while (tmp != NULL) {
+                tmp->set = 1;
+                tmp = tmp->next;
+            }
+        }
+
         int index = getHashIndex(var,funcHashVal);
         if(index < 0){
             return ;
@@ -58,24 +67,7 @@ void ifInit(NODE_AstTree var, int funcHashVal){
     }
 }
 
-int checkFunctionInvoke(NODE_AstTree stmt, int funcHashVal) {
-    int index = getFunction(stmt->tokens->tk->lexeme);
-    if(index < 0){
-        // error, function not defined
-        printf("Line:%d ==> Function %s not defined\n",stmt->tokens->tk->lineNo,stmt->tokens->tk->lexeme );
-        return -1;
-    }
-    int newFuncInd = functions[index].index;
-    int oldFuncInd = functions[funcHashVal].index;
 
-    if(oldFuncInd <= newFuncInd){
-        // stmt for error, old does not know the signature of new function
-        printf("Line:%d ==> %s does not know the signature of %s\n", stmt->tokens->tk->lineNo,functions[funcHashVal].function_name,functions[index].function_name);
-    }
-
-    return oldFuncInd-newFuncInd;
-
-}
 
 int getHashIndex(NODE_AstTree var, int funcHashVal){
     int index;
@@ -113,8 +105,8 @@ void semStmts(NODE_AstTree root, int funcHashVal){
         switch (tok) {
             case TK_ASSIGNOP:{
                 //
-                if(assignStmtSemantics(stmt,funcHashVal) == ERROR){
-                    stmt = stmt->sibling;
+                if(assignStmtSemantics(stmt,funcHashVal) == 0){
+                    printf("Line:%d ==> Data Types don't match in assignment statement\n",stmt->child->tokens->tk->lineNo );
                     break;
                 }
                 checkInitialisations(stmt->child->sibling,funcHashVal);
@@ -130,10 +122,10 @@ void semStmts(NODE_AstTree root, int funcHashVal){
             case TK_WHILE:{
                 NODE_AstTree boolExpr = stmt->child;
                 NODE_AstTree stmts = stmt->child->sibling;
-                dataType dt = getExpressionDtype(boolExpr,funcHashVal);
-                if(dt == BOOL){ // no type errors in boolExpr
+                char* dt = getExpressionDtype(boolExpr,funcHashVal);
+                if(!(strcmp(dt,"bool"))){ // no type errors in boolExpr
                     checkInitialisations(boolExpr,funcHashVal);
-                }else if(dt != ERROR){
+                }else if(strcmp(dt,"error")){
                     // don't check Initialisations
                     printf("Line:%d ==> Data type of booleanExpression is not bool\n",boolExpr->tokens->tk->lineNo );
                 }
@@ -147,10 +139,11 @@ void semStmts(NODE_AstTree root, int funcHashVal){
                 NODE_AstTree stmts = stmt->child->sibling;
                 NODE_AstTree elsePart = stmt->child->sibling->sibling;
 
-                if(getExpressionDtype(boolExpr,funcHashVal)==BOOL){
+                char* dt = getExpressionDtype(boolExpr,funcHashVal);
+                if(!(strcmp(dt,"bool"))){ // no type errors in boolExpr
                     checkInitialisations(boolExpr,funcHashVal);
-                }else{
-                    // stmt for error;
+                }else if(strcmp(dt,"error")){
+                    // don't check Initialisations
                     printf("Line:%d ==> Data type of booleanExpression is not bool\n",boolExpr->tokens->tk->lineNo );
                 }
                 semStmts(stmts,funcHashVal);
@@ -159,7 +152,8 @@ void semStmts(NODE_AstTree root, int funcHashVal){
             break;
 
             case TK_READ:{
-                if(getIdentifierDtype(stmt->child,funcHashVal) == RECORD){
+                char *dt = getIdentifierDtype(stmt->child,funcHashVal);
+                if(strcmp(dt,"int") && strcmp(dt,"real") && strcmp(dt,"error")){
                     printf("Line:%d ==> Data type of %s is not valid for reading input\n",stmt->child->tokens->tk->lineNo,stmt->child->tokens->tk->lexeme );
                     break;
                 }
@@ -170,12 +164,14 @@ void semStmts(NODE_AstTree root, int funcHashVal){
             break;
 
             case TK_WRITE:{
-                dataType dtVar = getIdentifierDtype(stmt->child,funcHashVal);
-                if (stmt->child->tokens->tk->token == TK_ID && dtVar == RECORD) {
-                    printf("Line:%d ==> Data type of %s is not valid for reading input\n",stmt->child->tokens->tk->lineNo,stmt->child->tokens->tk->lexeme );
-                }else if(stmt->child->tokens->tk->token == TK_ID && dtVar != RECORD){
+                char* dtVar = getIdentifierDtype(stmt->child,funcHashVal);
+                if (stmt->child->tokens->tk->token == TK_ID && strcmp(dtVar,"int") && strcmp(dtVar,"real") && strcmp(dtVar,"error")) {
+                    printf("Line:%d ==> Data type of %s is not valid for writing output\n",stmt->child->tokens->tk->lineNo,stmt->child->tokens->tk->lexeme );
+                    break;
+                }else if(strcmp(dtVar,"error")){
                     checkInitialisations(stmt->child,funcHashVal);
                 }
+
             }
             break;
 
@@ -186,40 +182,50 @@ void semStmts(NODE_AstTree root, int funcHashVal){
                 NODE_AstTree outputParList = stmt->child;
                 NODE_AstTree inputParList = stmt->child->sibling;
 
-                NODE_AstTree func = functions[funcHashVal].ptr;
+                NODE_AstTree func = functions[getFunction(stmt->tokens->tk->lexeme)].ptr;
                 NODE_AstTree inputParSignature = func->child->sibling;
                 NODE_AstTree outputParSignature = func->child->sibling->sibling;
 
-                int ifInit = 1;
+                int init = 1;
                 switch (checkFunctionSignature(inputParList,inputParSignature,funcHashVal)) {
                     case 1:{ // types don't match
-                        ifInit = 0;
+                        init = 0;
+                        printf("Line:%d ==> types of input parameters of call function %s don't match with function signature\n",stmt->tokens->tk->lineNo,stmt->tokens->tk->lexeme );
                     }break;
 
                     case 2:{ // numbers don't match
-                        ifInit = 0;
+                        init = 0;
+                        printf("Line:%d ==> number of input parameters of call function %s don't match with function signature\n",stmt->tokens->tk->lineNo,stmt->tokens->tk->lexeme );
+
                     }break;
 
                     case 3:{ // both types and numbers don't match
-                        ifInit = 0;
+                        init = 0;
+                        printf("Line:%d ==> number and types of input parameters of call function %s don't match with function signature\n",stmt->tokens->tk->lineNo,stmt->tokens->tk->lexeme );
+
                     }break;
                 }
 
                 switch (checkFunctionSignature(outputParList,outputParSignature,funcHashVal)) {
                     case 1:{ // types don't match
-                        ifInit = 0;
+                        init = 0;
+                        printf("Line:%d ==> types of output parameters of call function %s don't match with function signature\n",stmt->tokens->tk->lineNo,stmt->tokens->tk->lexeme );
                     }break;
 
                     case 2:{ // numbers don't match
-                        ifInit = 0;
+                        init = 0;
+                        printf("Line:%d ==> number of output parameters of call function %s don't match with function signature\n",stmt->tokens->tk->lineNo,stmt->tokens->tk->lexeme );
+
                     }break;
 
                     case 3:{ // both types and numbers don't match
-                        ifInit = 0;
+                        init = 0;
+                        printf("Line:%d ==> number and types of output parameters of call function %s don't match with function signature\n",stmt->tokens->tk->lineNo,stmt->tokens->tk->lexeme );
+
                     }break;
                 }
 
-                if ((checkFunctionInvoke(stmt, funcHashVal)) > 0 && (ifInit == 1)) {
+                if ((checkFunctionInvoke(stmt, funcHashVal)) > 0 && (init == 1)) {
                     // initialise all the variables in outputParList
                     NODE_AstTree tmp = outputParList->child;
                     while (tmp!= NULL) {
@@ -240,27 +246,67 @@ int assignStmtSemantics(NODE_AstTree root, int funcHashVal){
     NODE_AstTree var = root->child;
     NODE_AstTree arExpr = root->child->sibling;
 
-    dataType dtVar = getIdentifierDtype(var, funcHashVal);
-    dataType dtArExpr = getExpressionDtype(arExpr, funcHashVal);
-    if(dtVar == dtArExpr){
-        if(dtVar == RECORD){// we have to matchRecordType
-            return (matchRecordType(var,arExpr,funcHashVal) == RECORD) ? 1 : 0;
-        }else{
-            // there is no type error, HURRAY!
-            return 1;
-        }
-    }else if(dtVar != ERROR && dtArExpr != ERROR){
+    char* dtVar = getIdentifierDtype(var, funcHashVal);
+    char* dtArExpr = getExpressionDtype(arExpr, funcHashVal);
+    if(!strcmp(dtVar,dtArExpr) && strcmp(dtVar,"error") && strcmp(dtArExpr,"error")){
+        return 1;
+    }else{//else if(strcmp(dtVar,"error") && strcmp(dtArExpr,"error")){
         // stmt for error, they are valid but types don't match
-        printf("Line:%d ==> Types of LHS and RHS of assignment stmt don't match\n", var->tokens->tk->lineNo);
+        // printf("Line:%d ==> Types of LHS and RHS of assignment stmt don't match\n", var->tokens->tk->lineNo);
         return 0;
     }
 }
 
 void returnStmtSemantics(NODE_AstTree stmt, int funcHashVal) {
-
+    NODE_AstTree outputSignature = functions[funcHashVal].ptr->child->sibling->sibling;
+    // first check type errors
+    int flag = 1;
+    switch (checkFunctionSignature(stmt,outputSignature,funcHashVal)) {
+        case 1:{
+            printf("Line:%d ==> types of return parameters of function %s don't match with function signature\n",stmt->child->tokens->tk->lineNo,functions[funcHashVal].function_name );
+            flag = 0;
+        }break;
+        case 2:{
+            printf("Line:%d ==> number of return parameters of function %s don't match with function signature\n",stmt->child->tokens->tk->lineNo,functions[funcHashVal].function_name );
+            flag = 0;
+        }break;
+        case 3:{
+            printf("Line:%d ==> types and number of return parameters of function %s don't match with function signature\n",stmt->child->tokens->tk->lineNo,functions[funcHashVal].function_name );
+            flag = 0;
+        }break;
+    }
+    if (flag) { //if no type error then see if every parameter is assigned vaue is not
+        NODE_AstTree val = stmt->child;
+        while(val!=NULL){
+            if(h[getHashIndex(val,funcHashVal)].entry_ptr->init != 1){
+                printf("Line:%d ==> %s parameter is not assigned any value\n",val->tokens->tk->lineNo,val->tokens->tk->lexeme );
+                return ;
+            }
+            val = val->sibling;
+        }
+    }
 }
 
 void whileLoopSemantic(NODE_AstTree stmt, int funcHashVal){
+
+}
+
+int checkFunctionInvoke(NODE_AstTree stmt, int funcHashVal) {
+    int index = getFunction(stmt->tokens->tk->lexeme);
+    if(index < 0){
+        // error, function not defined
+        printf("Line:%d ==> Function %s not defined\n",stmt->tokens->tk->lineNo,stmt->tokens->tk->lexeme );
+        return -1;
+    }
+    int newFuncInd = functions[index].index;
+    int oldFuncInd = functions[funcHashVal].index;
+
+    if(oldFuncInd <= newFuncInd){
+        // stmt for error, old does not know the signature of new function
+        printf("Line:%d ==> %s does not know the signature of %s\n", stmt->tokens->tk->lineNo,functions[funcHashVal].function_name,functions[index].function_name);
+    }
+
+    return oldFuncInd-newFuncInd;
 
 }
 
@@ -271,24 +317,15 @@ int checkFunctionSignature(NODE_AstTree par_list, NODE_AstTree par_signature, in
     NODE_AstTree tmp2 = par_signature->child;
     int res = 0;
     while(tmp1 != NULL && tmp2 != NULL){
-        dataType dt2 ;
-        if(strcmp(tmp2->tokens->tk->lexeme,"int")==0){
-            dt2 = INT;
-        }else if(strcmp(tmp2->tokens->tk->lexeme,"real")==0){
-            dt2 = REAL;
-        }else{
-            dt2 = RECORD;
-        }
-        dataType dt1 = getIdentifierDtype(tmp1,funcHashVal);
-        if (dt1 != dt2) {
+        char *dt2 = tmp2->tokens->tk->lexeme;
+
+        char *dt1 = getIdentifierDtype(tmp1,funcHashVal);
+        if (strcmp(dt1,dt2)) {
             res = 1;
             break;
-        }else if(dt1 == RECORD){
-            if (strcmp(h[getHashIndex(tmp1,funcHashVal)].entry_ptr->record_name,tmp2->tokens->tk->lexeme) != 0) {
-                res= 1;
-                break;
-            }
         }
+        tmp1 = tmp1->sibling;
+        tmp2 = tmp2->sibling;
     }
 
     if(tmp1 == NULL && tmp2 != NULL){
@@ -305,6 +342,7 @@ int checkFunctionSignature(NODE_AstTree par_list, NODE_AstTree par_signature, in
 }
 
 void semAnalyze(NODE_AstTree root){
+    initInputParameters(root);
     NODE_AstTree tmp = root->child->sibling;
     while(tmp!=NULL){
         int funcHashVal = getFunction(tmp->child->tokens->tk->lexeme);
@@ -313,6 +351,23 @@ void semAnalyze(NODE_AstTree root){
         returnStmtSemantics(node->sibling,funcHashVal);
         tmp = tmp->sibling;
     }
-    semStmts(root->child->child->sibling->sibling,getFunction("_main"));
+    int n = getFunction("_main");
+    semStmts(root->child->child->sibling->sibling,n);
+
+}
+
+void initInputParameters(NODE_AstTree root) {
+    NODE_AstTree tmp = root->child->sibling;
+
+    while (tmp!=NULL) {
+        NODE_AstTree inp = tmp->child->sibling->child;
+
+        while (inp!= NULL) {
+            h[lookupEntry(tmp->child->tokens->tk->lexeme,inp->tokens->next->tk->lexeme,NULL)].entry_ptr->init = 1;
+            inp = inp->sibling;
+        }
+        tmp =tmp->sibling;
+
+    }
 
 }

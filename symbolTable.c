@@ -616,23 +616,25 @@ HASHSYMBOL populateSymbolTable(NODE_AstTree ast) {
 	// SYMBOLTABLE main_table = symbolTableinit("_main");
 	// FN_STACK stack= stack_init("_main", main_table);
 	// printf("%s \n",stack->function_name);
+
 	while(f_temp!=NULL) {
-		NODE_AstTree fn;
-		char* name;
-		if(f_temp==main_node) {
-			fn = main_node;
-			name = (char*)malloc(sizeof(char)*6);
-			strcpy(name,"_main");
-		} else {
-			fn = record_temp;
-			name = (char*)malloc(sizeof(char)*(strlen(record_temp->child->tokens->tk->lexeme)+1));
-			strcpy(name,record_temp->child->tokens->tk->lexeme);
-		}
-		int xyz = getFunction(name);
-		SYMBOLTABLE sym = functions[xyz].st;
-		functionSymbolTable(fn, sym);
-		f_temp = f_temp->sibling;
-	}
+	   NODE_AstTree fn;
+	   char* name;
+	   if(f_temp==main_node) {
+		   fn = main_node;
+		   name = (char*)malloc(sizeof(char)*6);
+		   strcpy(name,"_main");
+	   } else {
+		   fn = f_temp;
+		   name = (char*)malloc(sizeof(char)*(strlen(f_temp->child->tokens->tk->lexeme)+1));
+		   strcpy(name,f_temp->child->tokens->tk->lexeme);
+	   }
+	   int xyz = getFunction(name);
+	   SYMBOLTABLE sym = functions[xyz].st;
+	   functionSymbolTable(fn, sym);
+	   f_temp = f_temp->sibling;
+
+   }
 
 	// functionSymbolTable(main_node, h, hash_size, SYMBOLTABLE global_table)
 }

@@ -6,6 +6,6 @@
 #include "symbolTabledef.h"
 
 
-dataType getIdentifierDtype(NODE_AstTree var, int funcHashVal);
-dataType getExpressionDtype(NODE_AstTree root, int funcHashVal);
+char* getIdentifierDtype(NODE_AstTree var, int funcHashVal);
+char* getExpressionDtype(NODE_AstTree root, int funcHashVal);
 dataType matchRecordType(NODE_AstTree child1, NODE_AstTree child2, int funcHashVal);

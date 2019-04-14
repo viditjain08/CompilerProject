@@ -1,11 +1,11 @@
 #include "typeChecker.h"
 
-dataType getIdentifierDtype(NODE_AstTree var, int funcHashVal){
+char *getIdentifierDtype(NODE_AstTree var, int funcHashVal){
     int index ;
     if(var->tokens->tk->token == TK_NUM){
-        return INT;
+        return "int";
     }else if(var->tokens->tk->token == TK_RNUM){
-        return REAL;
+        return "real";
     }
     if(var->tokens->next == NULL){// single identifier is there
         index = lookupEntry("global",var->tokens->tk->lexeme,NULL);
@@ -14,8 +14,8 @@ dataType getIdentifierDtype(NODE_AstTree var, int funcHashVal){
             index = lookupEntry(functions[funcHashVal].function_name,var->tokens->tk->lexeme,NULL);
             if(index < 0){
                 // error, var not defined
-                printf("Line:%d ==> %s variable not defined\n",var->tokens->tk->lineNo,var->tokens->tk->lexeme );
-                return ERROR;
+                printf("Line:%d ==> %s variable not declared\n",var->tokens->tk->lineNo,var->tokens->tk->lexeme );
+                return "error";
             }
         }
 
@@ -23,13 +23,13 @@ dataType getIdentifierDtype(NODE_AstTree var, int funcHashVal){
         hashsymbol hVar = h[index];
 
         if(hVar.entry_ptr->int_no == 1 && hVar.entry_ptr->real_no == 0){ //it is an integer
-            return INT;
+            return "int";
         }else if(hVar.entry_ptr->int_no == 0 && hVar.entry_ptr->real_no == 1){ // it is a real No
-            return REAL;
+            return "real";
         }else if ((hVar.entry_ptr->int_no + hVar.entry_ptr->real_no) > 1){ // it is a record type
-            return RECORD;
+            return hVar.entry_ptr->record_name;
         }else{
-            return ERROR;
+            return "error";
         }
     }else{// identifier with field id is there
         index = lookupEntry("global",var->tokens->tk->lexeme,var->tokens->next->tk->lexeme);
@@ -38,17 +38,17 @@ dataType getIdentifierDtype(NODE_AstTree var, int funcHashVal){
             index = lookupEntry(functions[funcHashVal].function_name,var->tokens->tk->lexeme,var->tokens->next->tk->lexeme);
             if(index < 0){
                 // error, var not defined
-                printf("Line:%d ==> %s variable not defined\n",var->tokens->tk->lineNo,var->tokens->tk->lexeme);
-                return ERROR;
+                printf("Line:%d ==> %s variable not declared\n",var->tokens->tk->lineNo,var->tokens->tk->lexeme);
+                return "error";
             }
         }
         hashsymbol hVar = h[index];
 
-        return hVar.field_ptr->dType;
+        return (hVar.field_ptr->dType==INT) ? "int" : "real";
     }
 }
 
-dataType getExpressionDtype(NODE_AstTree root, int funcHashVal){
+char* getExpressionDtype(NODE_AstTree root, int funcHashVal){
     if (root->child == NULL) { // it is an identifier, a leafNode
         return getIdentifierDtype(root,funcHashVal);
     }else{  // it has 2 children, and is itself a operator node
@@ -59,17 +59,13 @@ dataType getExpressionDtype(NODE_AstTree root, int funcHashVal){
                 NODE_AstTree child1 = root->child;
                 NODE_AstTree child2 = root->child->sibling;
 
-                dataType dtChild1 = getExpressionDtype(child1,funcHashVal);
-                dataType dtChild2 = getExpressionDtype(child2,funcHashVal);
+                char* dtChild1 = getExpressionDtype(child1,funcHashVal);
+                char* dtChild2 = getExpressionDtype(child2,funcHashVal);
 
-                if(dtChild1 == dtChild2){
-                    if(dtChild1 == RECORD){
-                        return matchRecordType(child1,child2,funcHashVal);
-                    }else{
-                        return dtChild1;
-                    }
+                if(!strcmp(dtChild1,dtChild2)){
+                    return dtChild1;
                 }else{
-                    return ERROR;
+                    return "error";
                 }
             }
             break;
@@ -79,19 +75,21 @@ dataType getExpressionDtype(NODE_AstTree root, int funcHashVal){
                 NODE_AstTree child1 = root->child;
                 NODE_AstTree child2 = root->child->sibling;
 
-                dataType dtChild1 = getExpressionDtype(child1,funcHashVal);
-                dataType dtChild2 = getExpressionDtype(child2,funcHashVal);
+                char* dtChild1 = getExpressionDtype(child1,funcHashVal);
+                char* dtChild2 = getExpressionDtype(child2,funcHashVal);
 
-                if(dtChild1 == dtChild2){
-                    if(dtChild1 == RECORD){
-                        printf("Line:%d ==> Mul/Div Operation is not valid records %s and %s \n",child1->tokens->tk->lineNo,child1->tokens->tk->lexeme,child2->tokens->tk->lexeme);
-                        return ERROR;
-                    }else{
-                        return dtChild1;
-                    }
+                if (!strcmp(dtChild1,dtChild2)) {
+                    return dtChild1;
+                }else if(!strcmp(dtChild1,"int") && ((strcmp("real",dtChild2) && strcmp("error",dtChild2)))){
+                    return dtChild2;
+                }else if(!strcmp(dtChild1,"real") && ((strcmp("int",dtChild2) && strcmp("error",dtChild2)))){
+                    return dtChild2;
+                }else if(!strcmp(dtChild2,"int") && ((strcmp("real",dtChild1) && strcmp("error",dtChild1)))){
+                    return dtChild1;
+                }else if(!strcmp(dtChild2,"real") && ((strcmp("int",dtChild1) && strcmp("error",dtChild1)))){
+                    return dtChild1;
                 }else{
-                    printf("Line:%d ==> Data type of %s and %s don't match\n", child1->tokens->tk->lineNo,child1->tokens->tk->lexeme,child2->tokens->tk->lexeme);
-                    return ERROR;
+                    return "error";
                 }
             }
             break;
@@ -99,9 +97,10 @@ dataType getExpressionDtype(NODE_AstTree root, int funcHashVal){
             case TK_NOT:{
 
                 NODE_AstTree child1 = root->child;
-                dataType dt = getExpressionDtype(child1,funcHashVal);
-                if (dt != BOOL) {
-                    printf("Line:%d ==> Operation is not valid on %s\n",child1->tokens->tk->lineNo,child1->tokens->tk->lexeme );
+                char* dt = getExpressionDtype(child1,funcHashVal);
+                if (!strcmp(dt,"bool")) {
+                    // printf("Line:%d ==> Operation is not valid on %s\n",child1->tokens->tk->lineNo,child1->tokens->tk->lexeme );
+                    return "error";
                 }
             }
             break;
@@ -111,19 +110,19 @@ dataType getExpressionDtype(NODE_AstTree root, int funcHashVal){
                 NODE_AstTree child1 = root->child;
                 NODE_AstTree child2 = root->child->sibling;
 
-                dataType dtChild1 = getExpressionDtype(child1,funcHashVal);
-                dataType dtChild2 = getExpressionDtype(child2,funcHashVal);
+                char* dtChild1 = getExpressionDtype(child1,funcHashVal);
+                char* dtChild2 = getExpressionDtype(child2,funcHashVal);
 
-                if(dtChild1 == dtChild2){
-                    if(dtChild1 == BOOL){
-                        return BOOL;
+                if(!strcmp(dtChild1,dtChild2)){
+                    if(!strcmp(dtChild1,"bool")){
+                        return "bool";
                     }else{
-                        printf("Line:%d ==> Operation is not valid between %s and %s\n", child1->tokens->tk->lineNo,child1->tokens->tk->lexeme,child2->tokens->tk->lexeme);
-                        return ERROR;
+                        // printf("Line:%d ==> Operation is not valid between %s and %s\n", child1->tokens->tk->lineNo,child1->tokens->tk->lexeme,child2->tokens->tk->lexeme);
+                        return "error";
                     }
                 }else{
-                    printf("Line:%d ==> Data type of %s and %s don't match\n", child1->tokens->tk->lineNo,child1->tokens->tk->lexeme,child2->tokens->tk->lexeme);
-                    return ERROR;
+                    // printf("Line:%d ==> Data type of %s and %s don't match\n", child1->tokens->tk->lineNo,child1->tokens->tk->lexeme,child2->tokens->tk->lexeme);
+                    return "error";
                 }
             }
             break;
@@ -137,65 +136,22 @@ dataType getExpressionDtype(NODE_AstTree root, int funcHashVal){
                 NODE_AstTree child1 = root->child;
                 NODE_AstTree child2 = root->child->sibling;
 
-                dataType dtChild1 = getExpressionDtype(child1,funcHashVal);
-                dataType dtChild2 = getExpressionDtype(child2,funcHashVal);
+                char* dtChild1 = getExpressionDtype(child1,funcHashVal);
+                char* dtChild2 = getExpressionDtype(child2,funcHashVal);
 
-                if(dtChild1 == dtChild2){
-                    if(dtChild1 == INT || dtChild1 == REAL){
-                        return BOOL;
+                if(!strcmp(dtChild1,dtChild2)){
+                    if(!strcmp(dtChild1,"int") || !strcmp(dtChild1,"real")){
+                        return "bool";
                     }else{
-                        printf("Line:%d ==> Operation is not valid between %s and %s\n", child1->tokens->tk->lineNo,child1->tokens->tk->lexeme,child2->tokens->tk->lexeme);
-                        return ERROR;
+                        // printf("Line:%d ==> Operation is not valid between %s and %s\n", child1->tokens->tk->lineNo,child1->tokens->tk->lexeme,child2->tokens->tk->lexeme);
+                        return "error";
                     }
                 }else{
-                    printf("Line:%d ==> Data type of %s and %s don't match\n", child1->tokens->tk->lineNo,child1->tokens->tk->lexeme,child2->tokens->tk->lexeme);
-                    return ERROR;
+                    // printf("Line:%d ==> Data type of %s and %s don't match\n", child1->tokens->tk->lineNo,child1->tokens->tk->lexeme,child2->tokens->tk->lexeme);
+                    return "error";
                 }
             }
             break;
         }
     }
-}
-
-dataType matchRecordType(NODE_AstTree child1, NODE_AstTree child2,int funcHashVal){
-    // go to leaf node of both and check their recordID
-    NODE_AstTree tmp1 = child1;
-    while (tmp1->child != NULL) {
-        tmp1 = tmp1->child;
-    }
-    NODE_AstTree tmp2 = child2;
-    while (tmp2->child != NULL) {
-        tmp2 = tmp2->child;
-    }
-    int ind1 = lookupEntry("global",tmp1->tokens->tk->lexeme,NULL);
-    if(ind1 < 0){
-        ind1 = lookupEntry(functions[funcHashVal].function_name,tmp1->tokens->tk->lexeme,NULL);
-        if(ind1 < 0){
-            // error, var not defined
-            // printf("Line:%d ==> %s variable is not defined\n",child1->tokens->tk->lineNo,child1->tokens->tk->lexeme );
-            return ERROR;
-        }
-    }
-
-    int ind2 = lookupEntry("global",tmp2->tokens->tk->lexeme,NULL);
-    if(ind2 < 0){
-        // error, var not defined
-        ind1 = lookupEntry(functions[funcHashVal].function_name,tmp2->tokens->tk->lexeme,NULL);
-        if(ind2 < 0){
-            // error, var not defined
-            // printf("Line:%d ==> %s variable is not defined\n",child2->tokens->tk->lineNo,child2->tokens->tk->lexeme );
-            return ERROR;
-        }
-    }
-    hashsymbol h1 = h[ind1];
-    hashsymbol h2 = h[ind2];
-
-
-    if (strcmp(h1.entry_ptr->record_name,h2.entry_ptr->record_name)==0) {
-        return RECORD;
-    }else{
-        printf("Line:%d ==> %s and %s record types don't match\n",child1->tokens->tk->lineNo,child1->tokens->tk->lexeme,child2->tokens->tk->lexeme );
-        return ERROR;
-    }
-
 }
