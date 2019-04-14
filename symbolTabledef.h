@@ -24,7 +24,7 @@ typedef union {
 
 struct field {
     dataType dType;
-    int set:1;
+    int set;
 	char* fieldname;
     VAL value;
 	FIELD next;
@@ -38,7 +38,7 @@ struct symbolentry {
     int int_no;
 	int real_no;
     FIELD record;
-    int init:1;
+    int init;
     SYMBOLENTRY next;
 };
 

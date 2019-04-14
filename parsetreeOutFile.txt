@@ -213,8 +213,13 @@ eps                           	-1 	eps                 	 ---- new_24 1 ----
 36                  	
 ---- ---- ---- ---- stmt                          	0	assignmentStmt      	
 <---                          	18 	TK_ASSIGNOP         	 ---- assignmentStmt 1 ---- 
-5                             	18 	TK_NUM              	 5     all 1 ---- 
-62                  	
+b3                            	18 	TK_ID               	 ---- singleOrRecId 1 ---- 
+37                  	
+---- ---- ---- ---- all                           	0	singleOrRecId       	
+eps                           	-1 	eps                 	 ---- new_24 1 ---- 
+30                  	
+---- ---- ---- ---- singleOrRecId                 	0	new_24              	
+64                  	
 ---- ---- ---- ---- factor                        	0	all                 	
 57                  	
 ---- ---- ---- ---- term                          	0	factor              	
@@ -260,8 +265,8 @@ eps                           	-1 	eps                 	 ---- new_24 1 ----
 <                             	19 	TK_LT               	 ---- relationalOp 1 ---- 
 70                  	
 ---- ---- ---- ---- booleanExpression             	0	relationalOp        	
-2                             	19 	TK_NUM              	 2     all 1 ---- 
-62                  	
+2.00                          	19 	TK_RNUM             	 2.000000 all 1 ---- 
+63                  	
 ---- ---- ---- ---- booleanExpression             	0	all                 	
 )                             	19 	TK_CL               	 ---- iterativeStmt 1 ---- 
 b3                            	20 	TK_ID               	 ---- singleOrRecId 1 ---- 
@@ -416,7 +421,7 @@ read                          	24 	TK_READ             	 ---- ioStmt 1 ----
 48                  	
 ---- ---- ---- ---- stmt                          	0	ioStmt              	
 (                             	24 	TK_OP               	 ---- ioStmt 1 ---- 
-b7                            	24 	TK_ID               	 ---- singleOrRecId 1 ---- 
+b2                            	24 	TK_ID               	 ---- singleOrRecId 1 ---- 
 37                  	
 ---- ---- ---- ---- ioStmt                        	0	singleOrRecId       	
 eps                           	-1 	eps                 	 ---- new_24 1 ---- 

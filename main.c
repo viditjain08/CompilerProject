@@ -1,5 +1,5 @@
 // #include"astDef.h"
-#include"typeCheckerDef.h"
+#include"semanticAnalyzerDef.h"
 // #include "parserDef.h"
 
 #define HASHSIZE 300
@@ -51,7 +51,7 @@ int main (int argc, char* argv[]){
 	printf("\n" );
 
 	printf("----------Semantic Errors---------\n" );
-	checkType(tree);
+	semAnalyze(tree);
 
 	return 0;
 }
