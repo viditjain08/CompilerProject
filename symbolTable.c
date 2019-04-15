@@ -291,10 +291,8 @@ SYMBOLENTRY addDeclarations(NODE_AstTree parent, SYMBOLTABLE st, int offset, SYM
 			input_par = input_par->sibling;
 			continue;
 		}
-		int hashval = lookupEntry("global", input_par->tokens->next->tk->lexeme, NULL);
-		if(hashval==-1) {
-			hashval = lookupEntry(st->name, input_par->tokens->next->tk->lexeme, NULL);
-		}
+		int hashval = lookupEntry(st->name, input_par->tokens->next->tk->lexeme, NULL);
+
 		if(hashval!=-1) {
 			if(prev==NULL) {
 				parent->child=input_par->sibling;
@@ -637,6 +635,6 @@ HASHSYMBOL populateSymbolTable(NODE_AstTree ast) {
 	   f_temp = f_temp->sibling;
 
    }
-
+	return h;
 	// functionSymbolTable(main_node, h, hash_size, SYMBOLTABLE global_table)
 }

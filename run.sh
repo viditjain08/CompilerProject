@@ -10,4 +10,4 @@ rm AST.o
 rm symbolTable.o
 rm typeChecker.o
 rm semanticAnalyzer.o
-./program semantic/testcase1.txt
+./program semantic/testcase3.txt

@@ -76,5 +76,6 @@ extern HASHSYMBOL h;
 extern int hash_size;
 extern FN_ENTRY functions;
 extern int fn_size;
-
+extern SYMBOLTABLE record_table;
+extern SYMBOLTABLE global_table;
 #include "symbolTable.h"

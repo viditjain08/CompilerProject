@@ -3,6 +3,7 @@
 // #include "lexer.h"
 #define HASHSIZE 300
 
+
 extern Hashtable non_termainals;
 extern Hashtable terminals;
 int no_of_lines=0;
@@ -13,17 +14,13 @@ FN_ENTRY functions;
 int fn_size;
 
 int main(int argc, char *argv[]) {
-	char *file = argv[1];
 
-	if (argc < 2) {
-		printf("Give command line arguments\n" );
-		exit(0);
-	}
 
-	// char *parsetreefile = argv[2];
-
-	// char* file = "testcases/testcase4.txt";
-	// char* parsetreefile = "parsetreeOutFile.txt";
+	// if (argc < 2) {
+	// 	printf("Give command line arguments\n" );
+	// 	exit(0);
+	// }
+	char *file = "semantic/testcase3.txt";
 	clock_t start_time, end_time;
 	double total_CPU_time, total_CPU_time_in_seconds;
 
@@ -42,7 +39,7 @@ int main(int argc, char *argv[]) {
 
 	TREE_NODE pt = NULL;
 	NODE_AstTree ast = NULL;
-	HASHSYMBOL h;
+	h = NULL;
 	int i;
 	for ( i = 0; i < no_of_lines; i++) {
 		errors[i] = NULL;
@@ -95,13 +92,14 @@ int main(int argc, char *argv[]) {
 
 			ast = buildAST(pt);
 			printf("\n");
-			printf("--------AST Traveral-------\n");
+			printf("--------AST POSTORDER Traveral-------\n");
 			traverseAST(ast);
 			printf("\n");
 			printf("\n");
 		}else if(choice == 4){
 			if (ast == NULL) {
 				printf("First make AST with option 3\n");
+				continue;
 			}
 
 			h = populateSymbolTable(ast);
@@ -109,10 +107,10 @@ int main(int argc, char *argv[]) {
 			int nAst = countNodesAST(ast);
 			int nPt = countNodesParseTree(pt);
 
-			printf("Number of Nodes in parsetree: %d\t`",nPt);
+			printf("Number of Nodes in parsetree: %d\t",nPt);
 			printf("Memory Allocated for Parse Tree: %ld\n",sizeof(TREE_NODE)*nPt );
-			printf("Number of Nodes in Ast: %d\t",nAst);
-			printf("Memory Allocated for Abstract Syntax Tree: %ld\n",sizeof(NODE_AstTree)*nPt );
+			printf("Number of Nodes in Ast: %d\t\t",nAst);
+			printf("Memory Allocated for Abstract Syntax Tree: %ld\n",sizeof(NODE_AstTree)*nAst );
 			printf("\n" );
 			printf("Compression Ratio: %.2f\n",(1-((float)nAst/nPt))*100 );
 
@@ -129,6 +127,19 @@ int main(int argc, char *argv[]) {
 			if (h == NULL) {
 				printf("First populate symbol table using option 4\n");
 				continue;
+			}
+
+			SYMBOLENTRY se = global_table->head;
+			while(se!=NULL) {
+				printf("%s ",se->id);
+				if(se->int_no==1 && se->real_no==0) {
+					printf("INT ");
+				} else if(se->int_no==0 && se->real_no==1) {
+					printf("REAL ");
+				} else {
+					printf("%s ",se->record_name);
+				}
+				printf("%d\n",se->offset);
 			}
 
 		}else if(choice == 7){
@@ -154,6 +165,7 @@ int main(int argc, char *argv[]) {
 				printf("First remove all syntactic errors\n");
 				// show syntactic errors
 				pt = parseInputSourceCode(file, t, f, g);
+				// printf("temp\n" );
 				continue;
 			}
 			printf("No syntactic errors\n" );
