@@ -41,6 +41,7 @@ int main(int argc, char *argv[]) {
 	NODE_AstTree ast = NULL;
 	h = NULL;
 	int i;
+	errors = (char**)malloc(sizeof(char*)*no_of_lines);
 	for ( i = 0; i < no_of_lines; i++) {
 		errors[i] = NULL;
 	}
@@ -140,19 +141,65 @@ int main(int argc, char *argv[]) {
 					printf("%s ",se->record_name);
 				}
 				printf("%d\n",se->offset);
+				se = se->next;
 			}
 
 		}else if(choice == 7){
 			//For printing the total memory requirement (sum total of widths of all variables in the function scope) for each function.
+
 			if (h == NULL) {
 				printf("First populate symbol table using option 4\n");
 				continue;
 			}
+			int temp = getFunction("_main");
+			FN_ENTRY f = functions+temp;
+			SYMBOLENTRY st = f->st->head;
+			if(st==NULL) {
+				printf("_main\t\t%d\n",0);
+			} else {
+				while(st->next!=NULL) {
+					st=st->next;
+				}
+				printf("_main\t\t%d\n",st->offset+(2*st->int_no+4*st->real_no));
+			}
+			NODE_AstTree ns = ast->child->sibling;
+			while(ns!=NULL) {
+				int temp = getFunction(ns->child->tokens->tk->lexeme);
+				FN_ENTRY f = functions+temp;
+				SYMBOLENTRY st = f->st->head;
+				if(st==NULL) {
+					printf("%s\t\t0\n",ns->child->tokens->tk->lexeme);
+				} else {
+					while(st->next!=NULL) {
+						st=st->next;
+					}
+					printf("%s\t\t%d\n",ns->child->tokens->tk->lexeme, st->offset+(2*st->int_no+4*st->real_no));
+				}
+				ns=ns->sibling;
+			}
+
 		}else if(choice == 8){
 			//. For printing the type expressions and width of globally visible record definitions. Example format
 			if (h == NULL) {
 				printf("First populate symbol table using option 4\n");
 				continue;
+			}
+			SYMBOLENTRY se = record_table->head;
+			while(se!=NULL) {
+				int x = 0;
+				printf("%s\t",se->record_name);
+				FIELD f = se->record;
+				while(f!=NULL) {
+					if(f->dType==INT) {
+						x+=2;
+						printf("int, ");
+					} else {
+						printf("real, ");
+					}
+					f=f->next;
+				}
+				printf("\t%d\n",x);
+				se=se->next;
 			}
 		}else if(choice == 9){
 			// first check syntactic errors and them semantic errors
