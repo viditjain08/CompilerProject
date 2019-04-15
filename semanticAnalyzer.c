@@ -1,5 +1,7 @@
 #include "semanticAnalyzerDef.h"
 
+char buf[256];
+
 void checkInitialisations(NODE_AstTree expr, int funcHashVal){
     if (expr->child == NULL) { // it is an identifier
         ifInit(expr,funcHashVal);
@@ -40,7 +42,9 @@ void ifInit(NODE_AstTree var, int funcHashVal){
             }
         }
         if(hVar.entry_ptr->init != 1) {// it is not initialised
-            printf("Line:%d ==> Var %s is not initialised\n",var->tokens->tk->lineNo,var->tokens->tk->lexeme );
+            memset(buf,0,256);
+            sprintf(buf,"Line:%d ==> Var %s is not initialised\n",var->tokens->tk->lineNo,var->tokens->tk->lexeme );
+            addError(var->tokens->tk->lineNo);
             return ;
         }
 
@@ -61,38 +65,13 @@ void ifInit(NODE_AstTree var, int funcHashVal){
         hashsymbol hVar = h[index];
 
         if (hVar.field_ptr->set != 1) {
-            printf("Line:%d ==> Var %s.%s is not initialised\n",var->tokens->tk->lineNo,var->tokens->tk->lexeme,var->tokens->next->tk->lexeme );
+            memset(buf,0,256);
+            sprintf(buf,"Line:%d ==> Var %s.%s is not initialised\n",var->tokens->tk->lineNo,var->tokens->tk->lexeme,var->tokens->next->tk->lexeme );
+            addError(var->tokens->tk->lineNo);
             return ;
         }
     }
 }
-
-
-
-int getHashIndex(NODE_AstTree var, int funcHashVal){
-    int index;
-    if(var->tokens->next == NULL){// single identifier is there
-        index = lookupEntry("global",var->tokens->tk->lexeme,NULL);
-        if(index < 0){
-            // error, var not defined
-            index = lookupEntry(functions[funcHashVal].function_name,var->tokens->tk->lexeme,NULL);
-            return index;
-        }
-
-    }else{// identifier with field id is there
-        index = lookupEntry("global",var->tokens->tk->lexeme,var->tokens->next->tk->lexeme);
-        if(index < 0){
-            // error, var not defined
-            index = lookupEntry(functions[funcHashVal].function_name,var->tokens->tk->lexeme,var->tokens->next->tk->lexeme);
-            if(index < 0){
-                // error, var not defined
-                return index;
-            }
-        }
-    }
-}
-
-
 
 void semStmts(NODE_AstTree root, int funcHashVal){
     NODE_AstTree stmt = root->child;
@@ -106,7 +85,12 @@ void semStmts(NODE_AstTree root, int funcHashVal){
             case TK_ASSIGNOP:{
                 //
                 if(assignStmtSemantics(stmt,funcHashVal) == 0){
-                    printf("Line:%d ==> Data Types don't match in assignment statement\n",stmt->child->tokens->tk->lineNo );
+                    if (errno != 1) {
+                        memset(buf,0,256);
+                        sprintf(buf,"Line:%d ==> Data Types don't match in assignment statement\n",stmt->child->tokens->tk->lineNo );
+                        addError(stmt->child->tokens->tk->lineNo);
+                    }
+                    errno = 0;
                     break;
                 }
                 checkInitialisations(stmt->child->sibling,funcHashVal);
@@ -127,7 +111,9 @@ void semStmts(NODE_AstTree root, int funcHashVal){
                     checkInitialisations(boolExpr,funcHashVal);
                 }else if(strcmp(dt,"error")){
                     // don't check Initialisations
-                    printf("Line:%d ==> Data type of booleanExpression is not bool\n",boolExpr->tokens->tk->lineNo );
+                    memset(buf,0,256);
+                    sprintf(buf,"Line:%d ==> Data type of booleanExpression is not bool\n",boolExpr->tokens->tk->lineNo );
+                    addError(boolExpr->tokens->tk->lineNo);
                 }
                 semStmts(stmts,funcHashVal);
                 whileLoopSemantic(stmt,funcHashVal);
@@ -144,7 +130,9 @@ void semStmts(NODE_AstTree root, int funcHashVal){
                     checkInitialisations(boolExpr,funcHashVal);
                 }else if(strcmp(dt,"error")){
                     // don't check Initialisations
-                    printf("Line:%d ==> Data type of booleanExpression is not bool\n",boolExpr->tokens->tk->lineNo );
+                    memset(buf,0,256);
+                    sprintf(buf,"Line:%d ==> Data type of booleanExpression is not bool\n",boolExpr->tokens->tk->lineNo );
+                    addError(boolExpr->tokens->tk->lineNo);
                 }
                 semStmts(stmts,funcHashVal);
                 semStmts(elsePart,funcHashVal);
@@ -153,24 +141,30 @@ void semStmts(NODE_AstTree root, int funcHashVal){
 
             case TK_READ:{
                 char *dt = getIdentifierDtype(stmt->child,funcHashVal);
-                if(strcmp(dt,"int") && strcmp(dt,"real") && strcmp(dt,"error")){
-                    printf("Line:%d ==> Data type of %s is not valid for reading input\n",stmt->child->tokens->tk->lineNo,stmt->child->tokens->tk->lexeme );
+                if(stmt->child->tokens->tk->token != TK_ID){
+                    memset(buf,0,256);
+                    sprintf(buf,"Line:%d ==> Data type of %s is not valid for reading input\n",stmt->child->tokens->tk->lineNo,stmt->child->tokens->tk->lexeme );
+                    addError(stmt->child->tokens->tk->lineNo);
                     break;
                 }
-                if(getHashIndex(stmt->child,funcHashVal) > 0){
+                if(getHashIndex(stmt->child,funcHashVal) > 0 && errno != 1){
                     h[getHashIndex(stmt->child,funcHashVal)].entry_ptr->init = 1;
                 }
+                errno = 0;
             }
             break;
 
             case TK_WRITE:{
                 char* dtVar = getIdentifierDtype(stmt->child,funcHashVal);
-                if (stmt->child->tokens->tk->token == TK_ID && strcmp(dtVar,"int") && strcmp(dtVar,"real") && strcmp(dtVar,"error")) {
-                    printf("Line:%d ==> Data type of %s is not valid for writing output\n",stmt->child->tokens->tk->lineNo,stmt->child->tokens->tk->lexeme );
+                if (stmt->child->tokens->tk->token != TK_ID && stmt->child->tokens->tk->token != TK_NUM && stmt->child->tokens->tk->token != TK_RNUM) {
+                    memset(buf,0,256);
+                    sprintf(buf,"Line:%d ==> var %s is not valid for writing output\n",stmt->child->tokens->tk->lineNo,stmt->child->tokens->tk->lexeme );
+                    addError(stmt->child->tokens->tk->lineNo);
                     break;
-                }else if(strcmp(dtVar,"error")){
+                }else if(errno != 1){
                     checkInitialisations(stmt->child,funcHashVal);
                 }
+                errno = 0;
 
             }
             break;
@@ -190,18 +184,33 @@ void semStmts(NODE_AstTree root, int funcHashVal){
                 switch (checkFunctionSignature(inputParList,inputParSignature,funcHashVal)) {
                     case 1:{ // types don't match
                         init = 0;
-                        printf("Line:%d ==> types of input parameters of call function %s don't match with function signature\n",stmt->tokens->tk->lineNo,stmt->tokens->tk->lexeme );
+                        if (errno != 1 && (errno == 2 || errno == 3)) {
+                            memset(buf,0,256);
+                            sprintf(buf,"Line:%d ==> Input parameters type mismatch\n",stmt->tokens->tk->lineNo );
+                            addError(stmt->tokens->tk->lineNo );
+                        }
+                        errno = 0;
                     }break;
 
                     case 2:{ // numbers don't match
                         init = 0;
-                        printf("Line:%d ==> number of input parameters of call function %s don't match with function signature\n",stmt->tokens->tk->lineNo,stmt->tokens->tk->lexeme );
+                        if (errno != 1 && (errno == 2 || errno == 3)) {
+                            memset(buf,0,256);
+                            sprintf(buf,"Line:%d ==> Input parameters number mismatch\n",stmt->tokens->tk->lineNo );
+                            addError(stmt->tokens->tk->lineNo );
+                        }
+                        errno = 0;
 
                     }break;
 
                     case 3:{ // both types and numbers don't match
                         init = 0;
-                        printf("Line:%d ==> number and types of input parameters of call function %s don't match with function signature\n",stmt->tokens->tk->lineNo,stmt->tokens->tk->lexeme );
+                        if (errno != 1 && (errno == 2 || errno == 3)) {
+                            memset(buf,0,256);
+                            sprintf(buf,"Line:%d ==> Input parameters type and number mismatch\n",stmt->tokens->tk->lineNo );
+                            addError(stmt->tokens->tk->lineNo );
+                        }
+                        errno = 0;
 
                     }break;
                 }
@@ -209,18 +218,33 @@ void semStmts(NODE_AstTree root, int funcHashVal){
                 switch (checkFunctionSignature(outputParList,outputParSignature,funcHashVal)) {
                     case 1:{ // types don't match
                         init = 0;
-                        printf("Line:%d ==> types of output parameters of call function %s don't match with function signature\n",stmt->tokens->tk->lineNo,stmt->tokens->tk->lexeme );
+                        if (errno != 1 && (errno == 2 || errno == 3)) {
+                            memset(buf,0,256);
+                            sprintf(buf,"Line:%d ==> output parameters type mismatch\n",stmt->tokens->tk->lineNo );
+                            addError(stmt->tokens->tk->lineNo );
+                        }
+                        errno = 0;
                     }break;
 
                     case 2:{ // numbers don't match
                         init = 0;
-                        printf("Line:%d ==> number of output parameters of call function %s don't match with function signature\n",stmt->tokens->tk->lineNo,stmt->tokens->tk->lexeme );
+                        if (errno != 1 && (errno == 2 || errno == 3)) {
+                            memset(buf,0,256);
+                            sprintf(buf,"Line:%d ==> output parameters number mismatch\n",stmt->tokens->tk->lineNo);
+                            addError(stmt->tokens->tk->lineNo );
+                        }
+                        errno = 0;
 
                     }break;
 
                     case 3:{ // both types and numbers don't match
                         init = 0;
-                        printf("Line:%d ==> number and types of output parameters of call function %s don't match with function signature\n",stmt->tokens->tk->lineNo,stmt->tokens->tk->lexeme );
+                        if (errno != 1 && (errno == 2 || errno == 3)) {
+                            memset(buf,0,256);
+                            sprintf(buf,"Line:%d ==> output parameters type and number mismatch\n",stmt->tokens->tk->lineNo);
+                            addError(stmt->tokens->tk->lineNo );
+                        }
+                        errno = 0;
 
                     }break;
                 }
@@ -228,8 +252,13 @@ void semStmts(NODE_AstTree root, int funcHashVal){
                 if ((checkFunctionInvoke(stmt, funcHashVal)) > 0 && (init == 1)) {
                     // initialise all the variables in outputParList
                     NODE_AstTree tmp = outputParList->child;
+                    int ind;
                     while (tmp!= NULL) {
-                        h[getHashIndex(tmp,funcHashVal)].entry_ptr->init = 1;
+                        ind = getHashIndex(tmp,funcHashVal);
+                        if (ind>0) {
+                            h[getHashIndex(tmp,funcHashVal)].entry_ptr->init = 1;
+                        }
+
                         tmp = tmp->sibling;
                     }
                 }
@@ -263,23 +292,42 @@ void returnStmtSemantics(NODE_AstTree stmt, int funcHashVal) {
     int flag = 1;
     switch (checkFunctionSignature(stmt,outputSignature,funcHashVal)) {
         case 1:{
-            printf("Line:%d ==> types of return parameters of function %s don't match with function signature\n",stmt->child->tokens->tk->lineNo,functions[funcHashVal].function_name );
+            if (errno != 1 && (errno == 2 || errno == 3)) {
+                memset(buf,0,256);
+                sprintf(buf,"Line:%d ==> return parameter type mismatch in function %s\n",stmt->child->tokens->tk->lineNo,functions[funcHashVal].function_name );
+                addError(stmt->child->tokens->tk->lineNo );
+            }
+            errno = 0;
             flag = 0;
         }break;
         case 2:{
-            printf("Line:%d ==> number of return parameters of function %s don't match with function signature\n",stmt->child->tokens->tk->lineNo,functions[funcHashVal].function_name );
+            if (errno != 1 && (errno == 2 || errno == 3)) {
+                memset(buf,0,256);
+                sprintf(buf,"Line:%d ==> return parameter type mismatch in function %s\n",stmt->child->tokens->tk->lineNo,functions[funcHashVal].function_name );
+                addError(stmt->child->tokens->tk->lineNo );
+            }
+            errno = 0;
             flag = 0;
         }break;
         case 3:{
-            printf("Line:%d ==> types and number of return parameters of function %s don't match with function signature\n",stmt->child->tokens->tk->lineNo,functions[funcHashVal].function_name );
+            if (errno != 1 && (errno == 2 || errno == 3)) {
+                memset(buf,0,256);
+                sprintf(buf,"Line:%d ==> return parameter type mismatch in function %s\n",stmt->child->tokens->tk->lineNo,functions[funcHashVal].function_name );
+                addError(stmt->child->tokens->tk->lineNo );
+            }
+            errno = 0;
             flag = 0;
         }break;
     }
     if (flag) { //if no type error then see if every parameter is assigned vaue is not
         NODE_AstTree val = stmt->child;
+        int ind ;
         while(val!=NULL){
-            if(h[getHashIndex(val,funcHashVal)].entry_ptr->init != 1){
-                printf("Line:%d ==> %s parameter is not assigned any value\n",val->tokens->tk->lineNo,val->tokens->tk->lexeme );
+            ind = getHashIndex(val,funcHashVal);
+            if(ind> 0 && h[ind].entry_ptr->init != 1){
+                memset(buf,0,256);
+                sprintf(buf,"Line:%d ==> %s parameter is not assigned any value\n",val->tokens->tk->lineNo,val->tokens->tk->lexeme );
+                addError(val->tokens->tk->lineNo );
                 return ;
             }
             val = val->sibling;
@@ -295,7 +343,9 @@ int checkFunctionInvoke(NODE_AstTree stmt, int funcHashVal) {
     int index = getFunction(stmt->tokens->tk->lexeme);
     if(index < 0){
         // error, function not defined
-        printf("Line:%d ==> Function %s not defined\n",stmt->tokens->tk->lineNo,stmt->tokens->tk->lexeme );
+        memset(buf,0,256);
+        sprintf(buf,"Line:%d ==> Function %s not defined\n",stmt->tokens->tk->lineNo,stmt->tokens->tk->lexeme );
+        addError(stmt->tokens->tk->lineNo );
         return -1;
     }
     int newFuncInd = functions[index].index;
@@ -303,7 +353,9 @@ int checkFunctionInvoke(NODE_AstTree stmt, int funcHashVal) {
 
     if(oldFuncInd <= newFuncInd){
         // stmt for error, old does not know the signature of new function
-        printf("Line:%d ==> %s does not know the signature of %s\n", stmt->tokens->tk->lineNo,functions[funcHashVal].function_name,functions[index].function_name);
+        memset(buf,0,256);
+        sprintf(buf,"Line:%d ==> %s does not know the signature of %s\n", stmt->tokens->tk->lineNo,functions[funcHashVal].function_name,functions[index].function_name);
+        addError(stmt->tokens->tk->lineNo );
     }
 
     return oldFuncInd-newFuncInd;
@@ -328,6 +380,10 @@ int checkFunctionSignature(NODE_AstTree par_list, NODE_AstTree par_signature, in
         tmp2 = tmp2->sibling;
     }
 
+    if(errno != 1 && res == 1){
+        errno = 2;
+    }
+    // printf("%d\n",errno );
     if(tmp1 == NULL && tmp2 != NULL){
         res = (res == 1) ? 3 : 2;
     }else if(tmp1 != NULL && tmp2 == NULL){
@@ -357,6 +413,7 @@ void semAnalyze(NODE_AstTree root){
 }
 
 void initInputParameters(NODE_AstTree root) {
+    errno = 0;
     NODE_AstTree tmp = root->child->sibling;
 
     while (tmp!=NULL) {
@@ -370,4 +427,33 @@ void initInputParameters(NODE_AstTree root) {
 
     }
 
+}
+
+void addError(int lineNo){
+    if (errors[lineNo]!=NULL) {
+        // append the string
+        // printf("%s", buf);
+        char *temp = (char*)malloc(strlen(errors[lineNo])+strlen(buf));
+        temp[0] = '\0';
+        strcat(temp,errors[lineNo]);
+        strcat(temp,buf);
+        // printf("%s\n",temp );
+        char *tmp = errors[lineNo];
+        errors[lineNo] = temp;
+        free(tmp);
+    }else{
+        //assign the string
+        // printf("%s", buf);
+        errors[lineNo] = (char*)malloc(strlen(buf));
+        strcpy(errors[lineNo],buf);
+    }
+}
+
+void printErrors(int n){
+    int i;
+    for ( i = 0; i < n; i++) {
+        if (errors[i]!= NULL) {
+            printf("%s",errors[i] );
+        }
+    }
 }

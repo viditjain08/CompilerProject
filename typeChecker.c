@@ -1,24 +1,63 @@
 #include "typeChecker.h"
+int errno = 0;
+
+int getHashIndex(NODE_AstTree var, int funcHashVal){
+    int index;
+    if(var->tokens->next == NULL){// single identifier is there
+        index = lookupEntry("global",var->tokens->tk->lexeme,NULL);
+        if(index < 0){
+            // error, var not defined
+            index = lookupEntry(functions[funcHashVal].function_name,var->tokens->tk->lexeme,NULL);
+            return index;
+        }
+
+    }else{// identifier with field id is there
+        index = lookupEntry("global",var->tokens->tk->lexeme,var->tokens->next->tk->lexeme);
+        if(index < 0){
+            // error, var not defined
+            index = lookupEntry(functions[funcHashVal].function_name,var->tokens->tk->lexeme,var->tokens->next->tk->lexeme);
+            return index;
+        }
+
+    }
+}
+
 
 char *getIdentifierDtype(NODE_AstTree var, int funcHashVal){
     int index ;
+    char buf[256];
+    int lineNo;
     if(var->tokens->tk->token == TK_NUM){
         return "int";
     }else if(var->tokens->tk->token == TK_RNUM){
         return "real";
     }
     if(var->tokens->next == NULL){// single identifier is there
-        index = lookupEntry("global",var->tokens->tk->lexeme,NULL);
-        if(index < 0){
-            // error, var not defined
-            index = lookupEntry(functions[funcHashVal].function_name,var->tokens->tk->lexeme,NULL);
-            if(index < 0){
-                // error, var not defined
-                printf("Line:%d ==> %s variable not declared\n",var->tokens->tk->lineNo,var->tokens->tk->lexeme );
-                return "error";
+        index = getHashIndex(var,funcHashVal);
+        if (index < 0) {
+            errno = 1;
+            memset(buf,0,256);
+            sprintf(buf,"Line:%d ==> %s variable not declared\n",var->tokens->tk->lineNo,var->tokens->tk->lexeme );
+            lineNo = var->tokens->tk->lineNo;
+            if (errors[lineNo]!=NULL) {
+                // append the string
+                // printf("%s", buf);
+                char *temp = (char*)malloc(strlen(errors[lineNo])+strlen(buf));
+                temp[0] = '\0';
+                strcat(temp,errors[lineNo]);
+                strcat(temp,buf);
+                // printf("%s\n",temp );
+                char *tmp = errors[lineNo];
+                errors[lineNo] = temp;
+                free(tmp);
+            }else{
+                //assign the string
+                // printf("%s", buf);
+                errors[lineNo] = (char*)malloc(strlen(buf));
+                strcpy(errors[lineNo],buf);
             }
+            return "error";
         }
-
 
         hashsymbol hVar = h[index];
 
@@ -32,16 +71,36 @@ char *getIdentifierDtype(NODE_AstTree var, int funcHashVal){
             return "error";
         }
     }else{// identifier with field id is there
-        index = lookupEntry("global",var->tokens->tk->lexeme,var->tokens->next->tk->lexeme);
-        if(index < 0){
-            // error, var not defined
-            index = lookupEntry(functions[funcHashVal].function_name,var->tokens->tk->lexeme,var->tokens->next->tk->lexeme);
-            if(index < 0){
-                // error, var not defined
-                printf("Line:%d ==> %s variable not declared\n",var->tokens->tk->lineNo,var->tokens->tk->lexeme);
-                return "error";
+        index = getHashIndex(var,funcHashVal);
+        if (index < 0) {
+            // errno = 1;
+            // printf("Line:%d ==> %s variable not declared\n",var->tokens->tk->lineNo,var->tokens->tk->lexeme );
+
+            errno = 1;
+            memset(buf,0,256);
+            sprintf(buf,"Line:%d ==> %s variable not declared\n",var->tokens->tk->lineNo,var->tokens->tk->lexeme );
+            lineNo = var->tokens->tk->lineNo;
+            if (errors[lineNo]!=NULL) {
+                // append the string
+                // printf("%s", buf);
+                char *temp = (char*)malloc(strlen(errors[lineNo])+strlen(buf));
+                temp[0] = '\0';
+                strcat(temp,errors[lineNo]);
+                strcat(temp,buf);
+                // printf("%s\n",temp );
+                char *tmp = errors[lineNo];
+                errors[lineNo] = temp;
+                free(tmp);
+            }else{
+                //assign the string
+                // printf("%s", buf);
+                errors[lineNo] = (char*)malloc(strlen(buf));
+                strcpy(errors[lineNo],buf);
             }
+            return "error";
         }
+        // index = lookupEntry("global",var->tokens->tk->lexeme,var->tokens->next->tk->lexeme);
+
         hashsymbol hVar = h[index];
 
         return (hVar.field_ptr->dType==INT) ? "int" : "real";
@@ -65,6 +124,7 @@ char* getExpressionDtype(NODE_AstTree root, int funcHashVal){
                 if(!strcmp(dtChild1,dtChild2)){
                     return dtChild1;
                 }else{
+
                     return "error";
                 }
             }
@@ -102,6 +162,7 @@ char* getExpressionDtype(NODE_AstTree root, int funcHashVal){
                     // printf("Line:%d ==> Operation is not valid on %s\n",child1->tokens->tk->lineNo,child1->tokens->tk->lexeme );
                     return "error";
                 }
+                return "bool";
             }
             break;
 
@@ -112,16 +173,17 @@ char* getExpressionDtype(NODE_AstTree root, int funcHashVal){
 
                 char* dtChild1 = getExpressionDtype(child1,funcHashVal);
                 char* dtChild2 = getExpressionDtype(child2,funcHashVal);
-
                 if(!strcmp(dtChild1,dtChild2)){
                     if(!strcmp(dtChild1,"bool")){
                         return "bool";
                     }else{
                         // printf("Line:%d ==> Operation is not valid between %s and %s\n", child1->tokens->tk->lineNo,child1->tokens->tk->lexeme,child2->tokens->tk->lexeme);
+
                         return "error";
                     }
                 }else{
                     // printf("Line:%d ==> Data type of %s and %s don't match\n", child1->tokens->tk->lineNo,child1->tokens->tk->lexeme,child2->tokens->tk->lexeme);
+
                     return "error";
                 }
             }
@@ -144,10 +206,12 @@ char* getExpressionDtype(NODE_AstTree root, int funcHashVal){
                         return "bool";
                     }else{
                         // printf("Line:%d ==> Operation is not valid between %s and %s\n", child1->tokens->tk->lineNo,child1->tokens->tk->lexeme,child2->tokens->tk->lexeme);
+
                         return "error";
                     }
                 }else{
                     // printf("Line:%d ==> Data type of %s and %s don't match\n", child1->tokens->tk->lineNo,child1->tokens->tk->lexeme,child2->tokens->tk->lexeme);
+
                     return "error";
                 }
             }

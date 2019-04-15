@@ -24,7 +24,7 @@ int main (int argc, char* argv[]){
 	PARSETABLE t = createParseTable(f,g,t);
 
 	FILE *parsetree = fopen("parsetreeOutFile.txt","w+");
-	TREE_NODE x = parseInputSourceCode("t1.txt",t,f,g);
+	TREE_NODE x = parseInputSourceCode("semantic/testcase2.txt",t,f,g);
 	traversal(parsetree, g, x);
 	fclose(parsetree);
 
@@ -33,6 +33,10 @@ int main (int argc, char* argv[]){
 	int nAst = countNodesAST(tree);
 	int nPt = countNodesParseTree(x);
 	errors = (char**)malloc(sizeof(char*)*no_of_lines);
+	int i;
+	for ( i = 0; i < no_of_lines; i++) {
+		errors[i] = NULL;
+	}
 	printf("\n");
 	printf("Number of Nodes in Ast: %d\n",nAst);
 	printf("Number of Nodes in parsetree: %d\n",nPt);
@@ -47,11 +51,15 @@ int main (int argc, char* argv[]){
 	printf("\n" );
 	printf("\n" );
 	printf("\n" );
-	printf("\n" );
-	printf("\n" );
+
+
+
+	semAnalyze(tree);
 
 	printf("----------Semantic Errors---------\n" );
-	semAnalyze(tree);
+	printErrors(no_of_lines);
+	printf("\n" );
+	printf("\n" );
 
 	return 0;
 }
