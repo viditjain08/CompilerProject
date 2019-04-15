@@ -1,14 +1,11 @@
-compileAll	:	hashTable.o		driver.o	lexer.o
-	gcc hashTable.o driver.o lexer.o -o program
-	rm hashTable.o
-	rm driver.o
+compileAll	:	AST.c ast.h astDef.h main.c hashTable.c hashTable.h lexer.c lexer.h lexerDef.h parser.c parser.h parserDef.h semanticAnalyzer.h semanticAnalyzerDef.h semanticAnalyzer.c symbolTable.c symbolTable.h symbolTabledef.h typeChecker.c typeChecker.h
+	gcc -g -c main.c parser.c lexer.c hashTable.c AST.c symbolTable.c typeChecker.c semanticAnalyzer.c
+	gcc main.o parser.o lexer.o hashTable.o AST.o symbolTable.o typeChecker.o semanticAnalyzer.o -o program
+	rm main.o
+	rm parser.o
 	rm lexer.o
-
-lexer.o		:	lexer.c		lexerDef.h	lexer.h		hashTable.h
-	gcc -c -g lexer.c
-
-hashTable.o	:	hashTable.c		hashTable.h
-	gcc -c -g hashTable.c
-
-driver.o	:	lexerDef.h		driver.c
-	gcc -c -g driver.c
+	rm hashTable.o
+	rm AST.o
+	rm symbolTable.o
+	rm typeChecker.o
+	rm semanticAnalyzer.o
