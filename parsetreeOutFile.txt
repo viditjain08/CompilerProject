@@ -114,9 +114,10 @@ record                        	12 	TK_RECORD           	 ---- constructedDatatyp
 ---- ---- ---- ---- declaration                   	0	dataType            	
 :                             	12 	TK_COLON            	 ---- declaration 1 ---- 
 b3c2                          	12 	TK_ID               	 ---- declaration 1 ---- 
-eps                           	-1 	eps                 	 ---- global_or_not 1 ---- 
-28                  	
+:                             	12 	TK_COLON            	 ---- global_or_not 1 ---- 
+27                  	
 ---- ---- ---- ---- declaration                   	0	global_or_not       	
+global                        	12 	TK_GLOBAL           	 ---- global_or_not 1 ---- 
 ;                             	12 	TK_SEM              	 ---- declaration 1 ---- 
 24                  	
 ---- ---- ---- ---- declarations                  	0	declarations        	

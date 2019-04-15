@@ -6,19 +6,28 @@ extern SYMBOLTABLE record_table;
 extern SYMBOLTABLE global_table;
 
 
-FN_STACK stack_init(char* name, SYMBOLTABLE s) {
+FN_STACK stack_init(char* var_name, char* fieldname, SYMBOLTABLE s) {
 	FN_STACK f = (FN_STACK)malloc(sizeof(fn_stack));
-	f->function_name = (char*)malloc(sizeof(char)*(1+strlen(name)));
-	strcpy(f->function_name,name);
+	f->var_name = (char*)malloc(sizeof(char)*(1+strlen(var_name)));
+	strcpy(f->var_name,var_name);
+	if(fieldname!=NULL) {
+		f->field_name = (char*)malloc(sizeof(char)*(1+strlen(fieldname)));
+		strcpy(f->field_name,fieldname);
+	}
+
 	f->next = NULL;
 	f->symboltable = s;
 	return f;
 }
 
-FN_STACK push(FN_STACK f, char* name, SYMBOLTABLE s) {
+FN_STACK push(FN_STACK f, char* var_name, char* fieldname, SYMBOLTABLE s) {
 	FN_STACK new = (FN_STACK)malloc(sizeof(fn_stack));
-	new->function_name = (char*)malloc(sizeof(char)*(1+strlen(name)));
-	strcpy(new->function_name,name);
+	new->var_name = (char*)malloc(sizeof(char)*(1+strlen(var_name)));
+	strcpy(new->var_name,var_name);
+	if(fieldname!=NULL) {
+		new->field_name = (char*)malloc(sizeof(char)*(1+strlen(fieldname)));
+		strcpy(new->field_name,fieldname);
+	}
 	new->next = f;
 	new->symboltable = s;
 	return new;

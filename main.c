@@ -54,6 +54,6 @@ int main (int argc, char* argv[]){
 
 	printf("----------Semantic Errors---------\n" );
 	checkType(tree);
-	codeGeneration(tree);
+	codeGeneration(tree->child);
 	return 0;
 }
