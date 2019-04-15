@@ -8,7 +8,7 @@ extern SYMBOLTABLE record_table;
 extern SYMBOLTABLE global_table;
 
 int global_count=0;
-FN_STACK stack;
+extern FN_STACK stack;
 void arithmeticTrav(NODE_AstTree temp){
 
 	if(temp->child==NULL) {
@@ -57,7 +57,7 @@ void arithmeticTrav(NODE_AstTree temp){
 			hashval1 = lookupEntry("_main", f1->var_name, f1->field_name);
 		}
 		if(hashval1==-1) {
-			if(f1->var_name==NULL) {
+			if(f1->var_name==NULL || f1->var_name[0]!='t') {
 				flag1=0;
 			} else {
 				int right;
@@ -82,7 +82,7 @@ void arithmeticTrav(NODE_AstTree temp){
 			hashval2 = lookupEntry("_main", f2->var_name, f2->field_name);
 		}
 		if(hashval2==-1) {
-			if(f2->var_name==NULL) {
+			if(f2->var_name==NULL || f2->var_name[0]!='t') {
 				flag2=0;
 			} else {
 				int right;
@@ -152,7 +152,7 @@ void arithmeticTrav(NODE_AstTree temp){
 				sprintf(rec, "temp%d_%d", hashval,right);
 				stack = push(stack, rec, NULL);
 			} else {
-				printf("add\tax,bx\n");
+				printf("sub\tax,bx\n");
 				printf("push\tax\n");
 				stack = push(stack, NULL, NULL);
 			}
@@ -254,7 +254,7 @@ void arithmeticTrav(NODE_AstTree temp){
 				sprintf(rec, "temp%d_%d", hashval,right);
 				stack = push(stack, rec, NULL);
 			} else {
-				printf("mul\tbx\n");
+				printf("div\tbx\n");
 				printf("push\tax\n");
 				stack = push(stack, NULL, NULL);
 			}
@@ -275,6 +275,9 @@ void stmtrecursion(NODE_AstTree stmt) {
 
 			if(stmt->child->tokens->next==NULL) {
 				hashval = lookupEntry("_main", stmt->child->tokens->tk->lexeme, NULL);
+                if(hashval==-1) {
+                    hashval = lookupEntry("_main", stmt->child->tokens->tk->lexeme, NULL);
+                }
 				SYMBOLENTRY temp = h[hashval].entry_ptr;
 
 				if((temp->real_no+temp->int_no)>1) {
@@ -282,7 +285,10 @@ void stmtrecursion(NODE_AstTree stmt) {
 				}
 			} else {
 				hashval = lookupEntry("_main", stmt->child->tokens->tk->lexeme, stmt->child->tokens->next->tk->lexeme);
-				flag=2;
+                if(hashval==-1) {
+                    hashval = lookupEntry("_main", stmt->child->tokens->tk->lexeme, stmt->child->tokens->next->tk->lexeme);
+                }
+                flag=2;
 			}
 			if(flag==0) {
 				printf("call\tread\n");
@@ -310,6 +316,9 @@ void stmtrecursion(NODE_AstTree stmt) {
 
 			if(stmt->child->tokens->next==NULL) {
 				hashval = lookupEntry("_main", stmt->child->tokens->tk->lexeme, NULL);
+                if(hashval==-1) {
+                    hashval = lookupEntry("global", stmt->child->tokens->tk->lexeme, NULL);
+                }
 				SYMBOLENTRY temp = h[hashval].entry_ptr;
 
 				if((temp->real_no+temp->int_no)>1) {
@@ -317,7 +326,10 @@ void stmtrecursion(NODE_AstTree stmt) {
 				}
 			} else {
 				hashval = lookupEntry("_main", stmt->child->tokens->tk->lexeme, stmt->child->tokens->next->tk->lexeme);
-				flag=2;
+                if(hashval==-1) {
+                    hashval = lookupEntry("global", stmt->child->tokens->tk->lexeme, stmt->child->tokens->next->tk->lexeme);
+                }
+                flag=2;
 			}
 			if(flag==0) {
 				printf("mov\tax,[%s]\n",stmt->child->tokens->tk->lexeme);
@@ -338,8 +350,6 @@ void stmtrecursion(NODE_AstTree stmt) {
 			}
 
 			// printf("%d  %s \n",stmt->child->tokens->tk->dataType, stmt->child->tokens->tk->token);
-			printf("mov\tax,[%s]\n",stmt->child->tokens->tk->lexeme);
-			printf("call\twrite\n");
 		}
 		else if(strcmp(stmt->tokens->tk->lexeme, "while")==0) {
 			// printf("while\n");
@@ -367,7 +377,7 @@ void stmtrecursion(NODE_AstTree stmt) {
 			printf("jne\tlabel%d\n",global_count++);
 			stmtrecursion(stmt->child->sibling->child);
 			int y = global_count;
-			if(stmt->sibling->sibling!=NULL) {
+			if(stmt->child->sibling->sibling!=NULL) {
 				printf("jmp\tlabel%d\n",global_count++);
 			}
 			printf("label%d:\n",x);
@@ -401,7 +411,14 @@ void stmtrecursion(NODE_AstTree stmt) {
                 printf("mov\t[%s],ax\n",stmt->child->tokens->tk->lexeme);
             } else if(flag==1) {
                 arithmeticTrav(stmt->child->sibling);
+                printf("pop\tax\n");
+                FIELD f = h[hashval].entry_ptr->record;
+                while(f!=NULL) {
+                    printf("mov\tbx,[ax+%s]\n",f->fieldname);
+                    printf("mov\t[%s+%s],bx\n",stmt->child->tokens->tk->lexeme,f->fieldname);
 
+                    f=f->next;
+                }
             } else {
                 arithmeticTrav(stmt->child->sibling);
                 printf("pop\tax\n");
@@ -418,8 +435,14 @@ void booleanTrav(NODE_AstTree temp){
 	if(temp->child==NULL) {
 
 		if(temp->tokens->next==NULL) {
-			printf("mov\tax,[%s]\n",temp->tokens->tk->lexeme);
-			printf("push\tax\n");
+            if(temp->tokens->tk->token==TK_NUM) {
+                printf("mov\tax,%s\n",temp->tokens->tk->lexeme);
+                printf("push\tax\n");
+            } else {
+                printf("mov\tax,[%s]\n",temp->tokens->tk->lexeme);
+    			printf("push\tax\n");
+            }
+
 		} else {
 			printf("mov\tax,[%s+%s]\n",temp->tokens->tk->lexeme,temp->tokens->next->tk->lexeme);
 			printf("push\tax\n");
@@ -677,9 +700,9 @@ void codeGeneration(NODE_AstTree nt){
 		se2 =se2->next;
 	}
 
-
+    printf("sinput\tresb\t16");
 	printf("\nSECTION\t.data\n");
-
+    printf("negative\tdb\t'-'");
 	printf("\nglobal\t_start\n");
 
 //asm code for write
@@ -774,6 +797,8 @@ void codeGeneration(NODE_AstTree nt){
 	NODE_AstTree stmt = nt->child->sibling->sibling->child;
 	stmtrecursion(stmt);
 
-
+    printf("mov\tebx,0\n");
+    printf("mov\teax,1\n");
+    printf("int\t80h\n");
 	fclose(fp);
 }

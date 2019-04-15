@@ -7,16 +7,16 @@ _main
 	endrecord;
 
 	type record #marks : d4;
-	type int : b5 : global;
+	type int : b5;
 	type int : d5cb34567;
-	type record #marks : b3c2 : global;
+	type record #marks : b3c2;
 
 	b5 <--- 1;
-	read(d4.maths);
+	read(d5cb34567);
 	d4.maths <--- 0;
 	d4.physics <--- 0;
 	d4.chemistry <---0;
-	while(d4.maths<=d5cb34567)
+	while(b5<=d5cb34567)
 		read(b3c2.maths);
 		read(b3c2.physics);
 		read(b3c2.chemistry);

@@ -80,10 +80,9 @@ int                           	10 	TK_INT              	 ---- primitiveDatatype 
 ---- ---- ---- ---- declaration                   	0	dataType            	
 :                             	10 	TK_COLON            	 ---- declaration 1 ---- 
 b5                            	10 	TK_ID               	 ---- declaration 1 ---- 
-:                             	10 	TK_COLON            	 ---- global_or_not 1 ---- 
-27                  	
+eps                           	-1 	eps                 	 ---- global_or_not 1 ---- 
+28                  	
 ---- ---- ---- ---- declaration                   	0	global_or_not       	
-global                        	10 	TK_GLOBAL           	 ---- global_or_not 1 ---- 
 ;                             	10 	TK_SEM              	 ---- declaration 1 ---- 
 24                  	
 ---- ---- ---- ---- declarations                  	0	declarations        	
@@ -114,10 +113,9 @@ record                        	12 	TK_RECORD           	 ---- constructedDatatyp
 ---- ---- ---- ---- declaration                   	0	dataType            	
 :                             	12 	TK_COLON            	 ---- declaration 1 ---- 
 b3c2                          	12 	TK_ID               	 ---- declaration 1 ---- 
-:                             	12 	TK_COLON            	 ---- global_or_not 1 ---- 
-27                  	
+eps                           	-1 	eps                 	 ---- global_or_not 1 ---- 
+28                  	
 ---- ---- ---- ---- declaration                   	0	global_or_not       	
-global                        	12 	TK_GLOBAL           	 ---- global_or_not 1 ---- 
 ;                             	12 	TK_SEM              	 ---- declaration 1 ---- 
 24                  	
 ---- ---- ---- ---- declarations                  	0	declarations        	
@@ -157,13 +155,12 @@ read                          	15 	TK_READ             	 ---- ioStmt 1 ----
 48                  	
 ---- ---- ---- ---- stmt                          	0	ioStmt              	
 (                             	15 	TK_OP               	 ---- ioStmt 1 ---- 
-d4                            	15 	TK_ID               	 ---- singleOrRecId 1 ---- 
+d5cb34567                     	15 	TK_ID               	 ---- singleOrRecId 1 ---- 
 37                  	
 ---- ---- ---- ---- ioStmt                        	0	singleOrRecId       	
-.                             	15 	TK_DOT              	 ---- new_24 1 ---- 
-38                  	
+eps                           	-1 	eps                 	 ---- new_24 1 ---- 
+39                  	
 ---- ---- ---- ---- singleOrRecId                 	0	new_24              	
-maths                         	15 	TK_FIELDID          	 ---- new_24 1 ---- 
 )                             	15 	TK_CL               	 ---- ioStmt 1 ---- 
 ;                             	15 	TK_SEM              	 ---- ioStmt 1 ---- 
 34                  	
@@ -264,13 +261,12 @@ while                         	19 	TK_WHILE            	 ---- iterativeStmt 1 --
 44                  	
 ---- ---- ---- ---- stmt                          	0	iterativeStmt       	
 (                             	19 	TK_OP               	 ---- iterativeStmt 1 ---- 
-d4                            	19 	TK_ID               	 ---- singleOrRecId 1 ---- 
+b5                            	19 	TK_ID               	 ---- singleOrRecId 1 ---- 
 37                  	
 ---- ---- ---- ---- all                           	0	singleOrRecId       	
-.                             	19 	TK_DOT              	 ---- new_24 1 ---- 
-38                  	
+eps                           	-1 	eps                 	 ---- new_24 1 ---- 
+30                  	
 ---- ---- ---- ---- singleOrRecId                 	0	new_24              	
-maths                         	19 	TK_FIELDID          	 ---- new_24 1 ---- 
 64                  	
 ---- ---- ---- ---- booleanExpression             	0	all                 	
 66                  	

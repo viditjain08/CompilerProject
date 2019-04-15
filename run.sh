@@ -10,4 +10,4 @@ rm AST.o
 rm symbolTable.o
 rm typeChecker.o
 rm codeGen.o
-gdb ./program
+./program

@@ -14,7 +14,7 @@ FN_ENTRY functions;
 int fn_size;
 SYMBOLTABLE record_table;
 SYMBOLTABLE global_table;
-
+FN_STACK stack;
 int main (int argc, char* argv[]){
 	// char *file = argv[1];
 	// char *parsetreefile = argv[2];
@@ -54,6 +54,7 @@ int main (int argc, char* argv[]){
 
 	printf("----------Semantic Errors---------\n" );
 	checkType(tree);
+	stack = NULL;
 	codeGeneration(tree->child);
 	return 0;
 }
