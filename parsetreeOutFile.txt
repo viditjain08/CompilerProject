@@ -157,12 +157,13 @@ read                          	15 	TK_READ             	 ---- ioStmt 1 ----
 48                  	
 ---- ---- ---- ---- stmt                          	0	ioStmt              	
 (                             	15 	TK_OP               	 ---- ioStmt 1 ---- 
-d5cb34567                     	15 	TK_ID               	 ---- singleOrRecId 1 ---- 
+d4                            	15 	TK_ID               	 ---- singleOrRecId 1 ---- 
 37                  	
 ---- ---- ---- ---- ioStmt                        	0	singleOrRecId       	
-eps                           	-1 	eps                 	 ---- new_24 1 ---- 
-39                  	
+.                             	15 	TK_DOT              	 ---- new_24 1 ---- 
+38                  	
 ---- ---- ---- ---- singleOrRecId                 	0	new_24              	
+maths                         	15 	TK_FIELDID          	 ---- new_24 1 ---- 
 )                             	15 	TK_CL               	 ---- ioStmt 1 ---- 
 ;                             	15 	TK_SEM              	 ---- ioStmt 1 ---- 
 34                  	
@@ -263,12 +264,13 @@ while                         	19 	TK_WHILE            	 ---- iterativeStmt 1 --
 44                  	
 ---- ---- ---- ---- stmt                          	0	iterativeStmt       	
 (                             	19 	TK_OP               	 ---- iterativeStmt 1 ---- 
-b5                            	19 	TK_ID               	 ---- singleOrRecId 1 ---- 
+d4                            	19 	TK_ID               	 ---- singleOrRecId 1 ---- 
 37                  	
 ---- ---- ---- ---- all                           	0	singleOrRecId       	
-eps                           	-1 	eps                 	 ---- new_24 1 ---- 
-30                  	
+.                             	19 	TK_DOT              	 ---- new_24 1 ---- 
+38                  	
 ---- ---- ---- ---- singleOrRecId                 	0	new_24              	
+maths                         	19 	TK_FIELDID          	 ---- new_24 1 ---- 
 64                  	
 ---- ---- ---- ---- booleanExpression             	0	all                 	
 66                  	
