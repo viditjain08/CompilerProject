@@ -24,7 +24,7 @@ int main (int argc, char* argv[]){
 	PARSETABLE t = createParseTable(f,g,t);
 
 	FILE *parsetree = fopen("parsetreeOutFile.txt","w+");
-	TREE_NODE x = parseInputSourceCode("semantic/testcase2.txt",t,f,g);
+	TREE_NODE x = parseInputSourceCode("semantic/testcase1.txt",t,f,g);
 	traversal(parsetree, g, x);
 	fclose(parsetree);
 

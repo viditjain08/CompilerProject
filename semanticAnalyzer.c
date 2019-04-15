@@ -109,6 +109,7 @@ void semStmts(NODE_AstTree root, int funcHashVal){
                 char* dt = getExpressionDtype(boolExpr,funcHashVal);
                 if(!(strcmp(dt,"bool"))){ // no type errors in boolExpr
                     checkInitialisations(boolExpr,funcHashVal);
+                    whileLoopSemantic(stmt,funcHashVal);
                 }else if(strcmp(dt,"error")){
                     // don't check Initialisations
                     memset(buf,0,256);
@@ -116,7 +117,7 @@ void semStmts(NODE_AstTree root, int funcHashVal){
                     addError(boolExpr->tokens->tk->lineNo);
                 }
                 semStmts(stmts,funcHashVal);
-                whileLoopSemantic(stmt,funcHashVal);
+
             }
             break;
 
@@ -334,10 +335,10 @@ void returnStmtSemantics(NODE_AstTree stmt, int funcHashVal) {
         }
     }
 }
-
-void whileLoopSemantic(NODE_AstTree stmt, int funcHashVal){
-
-}
+//
+// void whileLoopSemantic(NODE_AstTree stmt, int funcHashVal){
+//
+// }
 
 int checkFunctionInvoke(NODE_AstTree stmt, int funcHashVal) {
     int index = getFunction(stmt->tokens->tk->lexeme);
@@ -456,4 +457,123 @@ void printErrors(int n){
             printf("%s",errors[i] );
         }
     }
+}
+
+void whileLoopSemantic(NODE_AstTree stmt, int funcHashVal){
+    NODE_AstTree child1 = stmt->child;
+    NODE_AstTree child2 = stmt->child->sibling;
+
+    VARLIST vars = NULL;
+
+    vars = extractAllVar(child1,vars);
+
+    int flag = 0;
+    VARLIST temp = vars;
+
+    while (temp!=NULL) {
+
+        if (checkUpdate(temp->v,child2)) {
+            flag = 1;
+            break;
+        }
+        temp = temp->next;
+    }
+
+    if (!flag) {
+        // error no one gets updated
+        int start = stmt->child->tokens->tk->lineNo;
+        int end = start;
+        NODE_AstTree tmp = stmt->child->sibling->child;
+        while (tmp->sibling != NULL) {
+            tmp = tmp->sibling ;
+        }
+        end = tmp->child->tokens->tk->lineNo+1;
+        memset(buf,0,256);
+        sprintf(buf,"Line:%d-%d ==> No variable is getting updated in while loop\n",start,end );
+        addError(start);
+    }
+
+}
+
+VARLIST addVar(NODE_AstTree var, VARLIST ls){
+    if (ls==NULL) {
+        ls = (VARLIST)malloc(sizeof(varList));
+        ls->v = var;
+        ls->next = NULL;
+        return ls;
+    }else{
+        VARLIST tmp = ls;
+        ls = (VARLIST)malloc(sizeof(varList));
+        ls->v = var;
+        ls->next = tmp;
+        return ls;
+    }
+}
+
+VARLIST extractAllVar(NODE_AstTree expr, VARLIST vars){
+    if (expr->child == NULL) {
+        if (expr->tokens->tk->token == TK_ID) {
+            vars = addVar(expr,vars);
+            return vars;
+        }
+        return vars;
+    }else{
+        if(expr->tokens->tk->token == TK_NOT){
+            vars = extractAllVar(expr->child,vars);
+        }else{
+            vars = extractAllVar(expr->child,vars);
+            vars = extractAllVar(expr->child->sibling,vars);
+        }
+        return vars;
+    }
+}
+
+int checkUpdate(NODE_AstTree var, NODE_AstTree stmts){
+
+    NODE_AstTree stmt = stmts->child;
+
+    while (stmt!=NULL) {
+
+        tokenType tok = stmt->tokens->tk->token;
+        switch (tok) {
+            case TK_ASSIGNOP:{
+                if (!strcmp(var->tokens->tk->lexeme, stmt->child->tokens->tk->lexeme)) {
+                    return 1;
+                }
+            }break;
+            case TK_READ:{
+                if (!strcmp(var->tokens->tk->lexeme, stmt->child->tokens->tk->lexeme)) {
+                    return 1;
+                }
+            }break;
+            case TK_FUNID:{
+                NODE_AstTree tmp = stmt->child->child;
+                while (tmp!=NULL) {
+                    if (!strcmp(var->tokens->tk->lexeme, tmp->tokens->tk->lexeme)) {
+                        return 1;
+                    }
+                    tmp = tmp->sibling;
+                }
+            }break;
+            case TK_WRITE:{
+
+            }break;
+            case TK_IF:{
+                if (checkUpdate(var,stmt->child->sibling) == 1) {
+                    return 1;
+                }else if (checkUpdate(var,stmt->child->sibling->sibling) == 1) {
+                    return 1;
+                }else{
+                    return 0;
+                }
+            }break;
+            case TK_WHILE:{
+                return checkUpdate(var,stmt->child->sibling);
+            }
+        }
+
+        stmt = stmt->sibling;
+    }
+
+    return 0;
 }

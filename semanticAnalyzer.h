@@ -13,3 +13,7 @@ void initInputParameters(NODE_AstTree root) ;
 int checkFunctionInvoke(NODE_AstTree stmt, int funcHashVal);
 void printErrors(int n);
 void addError(int lineNo);
+
+int checkUpdate(NODE_AstTree var, NODE_AstTree stmts);
+VARLIST extractAllVar(NODE_AstTree expr, VARLIST vars);
+VARLIST addVar(NODE_AstTree var, VARLIST ls);

@@ -1,141 +1,199 @@
-_addRecords                   	9  	TK_FUNID            	 ---- function 1 ---- 
+_sumN                         	4  	TK_FUNID            	 ---- function 1 ---- 
 4                   	
 ---- ---- ---- ---- otherFunctions                	0	function            	
-input                         	9  	TK_INPUT            	 ---- input_par 1 ---- 
+input                         	4  	TK_INPUT            	 ---- input_par 1 ---- 
 5                   	
 ---- ---- ---- ---- function                      	0	input_par           	
-parameter                     	9  	TK_PARAMETER        	 ---- input_par 1 ---- 
-list                          	9  	TK_LIST             	 ---- input_par 1 ---- 
-[                             	9  	TK_SQL              	 ---- input_par 1 ---- 
-int                           	9  	TK_INT              	 ---- primitiveDatatype 1 ---- 
+parameter                     	4  	TK_PARAMETER        	 ---- input_par 1 ---- 
+list                          	4  	TK_LIST             	 ---- input_par 1 ---- 
+[                             	4  	TK_SQL              	 ---- input_par 1 ---- 
+int                           	4  	TK_INT              	 ---- primitiveDatatype 1 ---- 
 11                  	
 ---- ---- ---- ---- dataType                      	0	primitiveDatatype   	
 9                   	
 ---- ---- ---- ---- parameter_list                	0	dataType            	
 8                   	
 ---- ---- ---- ---- input_par                     	0	parameter_list      	
-b2                            	9  	TK_ID               	 ---- parameter_list 1 ---- 
-,                             	9  	TK_COMMA            	 ---- remaining_list 1 ---- 
-14                  	
----- ---- ---- ---- parameter_list                	0	remaining_list      	
-record                        	9  	TK_RECORD           	 ---- constructedDatatype 1 ---- 
-13                  	
----- ---- ---- ---- dataType                      	0	constructedDatatype 	
-#marks                        	9  	TK_RECORDID         	 ---- constructedDatatype 1 ---- 
-10                  	
----- ---- ---- ---- parameter_list                	0	dataType            	
-8                   	
----- ---- ---- ---- remaining_list                	0	parameter_list      	
-c3b5                          	9  	TK_ID               	 ---- parameter_list 1 ---- 
-,                             	9  	TK_COMMA            	 ---- remaining_list 1 ---- 
-14                  	
----- ---- ---- ---- parameter_list                	0	remaining_list      	
-record                        	9  	TK_RECORD           	 ---- constructedDatatype 1 ---- 
-13                  	
----- ---- ---- ---- dataType                      	0	constructedDatatype 	
-#marks                        	9  	TK_RECORDID         	 ---- constructedDatatype 1 ---- 
-10                  	
----- ---- ---- ---- parameter_list                	0	dataType            	
-8                   	
----- ---- ---- ---- remaining_list                	0	parameter_list      	
-c3b6                          	9  	TK_ID               	 ---- parameter_list 1 ---- 
+d5cc34                        	4  	TK_ID               	 ---- parameter_list 1 ---- 
 eps                           	-1 	eps                 	 ---- remaining_list 1 ---- 
 15                  	
 ---- ---- ---- ---- parameter_list                	0	remaining_list      	
-]                             	9  	TK_SQR              	 ---- input_par 1 ---- 
-output                        	10 	TK_OUTPUT           	 ---- output_par 1 ---- 
+]                             	4  	TK_SQR              	 ---- input_par 1 ---- 
+output                        	5  	TK_OUTPUT           	 ---- output_par 1 ---- 
 6                   	
 ---- ---- ---- ---- function                      	0	output_par          	
-parameter                     	10 	TK_PARAMETER        	 ---- output_par 1 ---- 
-list                          	10 	TK_LIST             	 ---- output_par 1 ---- 
-[                             	10 	TK_SQL              	 ---- output_par 1 ---- 
-record                        	10 	TK_RECORD           	 ---- constructedDatatype 1 ---- 
-13                  	
----- ---- ---- ---- dataType                      	0	constructedDatatype 	
-#marks                        	10 	TK_RECORDID         	 ---- constructedDatatype 1 ---- 
-10                  	
+parameter                     	5  	TK_PARAMETER        	 ---- output_par 1 ---- 
+list                          	5  	TK_LIST             	 ---- output_par 1 ---- 
+[                             	5  	TK_SQL              	 ---- output_par 1 ---- 
+real                          	5  	TK_REAL             	 ---- primitiveDatatype 1 ---- 
+12                  	
+---- ---- ---- ---- dataType                      	0	primitiveDatatype   	
+9                   	
 ---- ---- ---- ---- parameter_list                	0	dataType            	
 8                   	
 ---- ---- ---- ---- output_par                    	0	parameter_list      	
-b3c45                         	10 	TK_ID               	 ---- parameter_list 1 ---- 
+d3                            	5  	TK_ID               	 ---- parameter_list 1 ---- 
 eps                           	-1 	eps                 	 ---- remaining_list 1 ---- 
 15                  	
 ---- ---- ---- ---- parameter_list                	0	remaining_list      	
-]                             	10 	TK_SQR              	 ---- output_par 1 ---- 
-;                             	10 	TK_SEM              	 ---- function 1 ---- 
+]                             	5  	TK_SQR              	 ---- output_par 1 ---- 
+;                             	5  	TK_SEM              	 ---- function 1 ---- 
 eps                           	-1 	eps                 	 ---- typeDefinitions 1 ---- 
 18                  	
 ---- ---- ---- ---- stmts                         	0	typeDefinitions     	
 16                  	
 ---- ---- ---- ---- function                      	0	stmts               	
+type                          	6  	TK_TYPE             	 ---- declaration 1 ---- 
+26                  	
+---- ---- ---- ---- declarations                  	0	declaration         	
+int                           	6  	TK_INT              	 ---- primitiveDatatype 1 ---- 
+11                  	
+---- ---- ---- ---- dataType                      	0	primitiveDatatype   	
+9                   	
+---- ---- ---- ---- declaration                   	0	dataType            	
+:                             	6  	TK_COLON            	 ---- declaration 1 ---- 
+b5b567                        	6  	TK_ID               	 ---- declaration 1 ---- 
+:                             	6  	TK_COLON            	 ---- global_or_not 1 ---- 
+27                  	
+---- ---- ---- ---- declaration                   	0	global_or_not       	
+global                        	6  	TK_GLOBAL           	 ---- global_or_not 1 ---- 
+;                             	6  	TK_SEM              	 ---- declaration 1 ---- 
+24                  	
+---- ---- ---- ---- stmts                         	0	declarations        	
+type                          	7  	TK_TYPE             	 ---- declaration 1 ---- 
+26                  	
+---- ---- ---- ---- declarations                  	0	declaration         	
+int                           	7  	TK_INT              	 ---- primitiveDatatype 1 ---- 
+11                  	
+---- ---- ---- ---- dataType                      	0	primitiveDatatype   	
+9                   	
+---- ---- ---- ---- declaration                   	0	dataType            	
+:                             	7  	TK_COLON            	 ---- declaration 1 ---- 
+b3                            	7  	TK_ID               	 ---- declaration 1 ---- 
+eps                           	-1 	eps                 	 ---- global_or_not 1 ---- 
+28                  	
+---- ---- ---- ---- declaration                   	0	global_or_not       	
+;                             	7  	TK_SEM              	 ---- declaration 1 ---- 
+24                  	
+---- ---- ---- ---- declarations                  	0	declarations        	
+type                          	8  	TK_TYPE             	 ---- declaration 1 ---- 
+26                  	
+---- ---- ---- ---- declarations                  	0	declaration         	
+real                          	8  	TK_REAL             	 ---- primitiveDatatype 1 ---- 
+12                  	
+---- ---- ---- ---- dataType                      	0	primitiveDatatype   	
+9                   	
+---- ---- ---- ---- declaration                   	0	dataType            	
+:                             	8  	TK_COLON            	 ---- declaration 1 ---- 
+c3bd                          	8  	TK_ID               	 ---- declaration 1 ---- 
+eps                           	-1 	eps                 	 ---- global_or_not 1 ---- 
+28                  	
+---- ---- ---- ---- declaration                   	0	global_or_not       	
+;                             	8  	TK_SEM              	 ---- declaration 1 ---- 
+24                  	
+---- ---- ---- ---- declarations                  	0	declarations        	
 eps                           	-1 	eps                 	 ---- declarations 1 ---- 
 25                  	
----- ---- ---- ---- stmts                         	0	declarations        	
-[                             	11 	TK_SQL              	 ---- outputParameters 1 ---- 
-41                  	
----- ---- ---- ---- funCallStmt                   	0	outputParameters    	
-c3b5                          	11 	TK_ID               	 ---- idList 1 ---- 
-79                  	
----- ---- ---- ---- outputParameters              	0	idList              	
-eps                           	-1 	eps                 	 ---- more_ids 1 ---- 
-81                  	
----- ---- ---- ---- idList                        	0	more_ids            	
-]                             	11 	TK_SQR              	 ---- outputParameters 1 ---- 
-<---                          	11 	TK_ASSIGNOP         	 ---- outputParameters 1 ---- 
-40                  	
----- ---- ---- ---- stmt                          	0	funCallStmt         	
-call                          	11 	TK_CALL             	 ---- funCallStmt 1 ---- 
-_readMarks                    	11 	TK_FUNID            	 ---- funCallStmt 1 ---- 
-with                          	11 	TK_WITH             	 ---- funCallStmt 1 ---- 
-parameters                    	11 	TK_PARAMETERS       	 ---- funCallStmt 1 ---- 
-[                             	11 	TK_SQL              	 ---- inputParameters 1 ---- 
-43                  	
----- ---- ---- ---- funCallStmt                   	0	inputParameters     	
-b2                            	11 	TK_ID               	 ---- idList 1 ---- 
-79                  	
----- ---- ---- ---- inputParameters               	0	idList              	
-eps                           	-1 	eps                 	 ---- more_ids 1 ---- 
-81                  	
----- ---- ---- ---- idList                        	0	more_ids            	
-]                             	11 	TK_SQR              	 ---- inputParameters 1 ---- 
-;                             	11 	TK_SEM              	 ---- funCallStmt 1 ---- 
-35                  	
+---- ---- ---- ---- declarations                  	0	declarations        	
+b5b567                        	9  	TK_ID               	 ---- singleOrRecId 1 ---- 
+37                  	
+---- ---- ---- ---- assignmentStmt                	0	singleOrRecId       	
+eps                           	-1 	eps                 	 ---- new_24 1 ---- 
+39                  	
+---- ---- ---- ---- singleOrRecId                 	0	new_24              	
+36                  	
+---- ---- ---- ---- stmt                          	0	assignmentStmt      	
+<---                          	9  	TK_ASSIGNOP         	 ---- assignmentStmt 1 ---- 
+1                             	9  	TK_NUM              	 1     all 1 ---- 
+62                  	
+---- ---- ---- ---- factor                        	0	all                 	
+57                  	
+---- ---- ---- ---- term                          	0	factor              	
+53                  	
+---- ---- ---- ---- arithmeticExpression          	0	term                	
+eps                           	-1 	eps                 	 ---- termPrime 1 ---- 
+55                  	
+---- ---- ---- ---- term                          	0	termPrime           	
+50                  	
+---- ---- ---- ---- assignmentStmt                	0	arithmeticExpression	
+eps                           	-1 	eps                 	 ---- expPrime 1 ---- 
+52                  	
+---- ---- ---- ---- arithmeticExpression          	0	expPrime            	
+;                             	9  	TK_SEM              	 ---- assignmentStmt 1 ---- 
+31                  	
 ---- ---- ---- ---- otherStmts                    	0	stmt                	
 29                  	
 ---- ---- ---- ---- stmts                         	0	otherStmts          	
-[                             	12 	TK_SQL              	 ---- outputParameters 1 ---- 
-41                  	
----- ---- ---- ---- funCallStmt                   	0	outputParameters    	
-c3b6                          	12 	TK_ID               	 ---- idList 1 ---- 
-79                  	
----- ---- ---- ---- outputParameters              	0	idList              	
-eps                           	-1 	eps                 	 ---- more_ids 1 ---- 
-81                  	
----- ---- ---- ---- idList                        	0	more_ids            	
-]                             	12 	TK_SQR              	 ---- outputParameters 1 ---- 
-<---                          	12 	TK_ASSIGNOP         	 ---- outputParameters 1 ---- 
-40                  	
----- ---- ---- ---- stmt                          	0	funCallStmt         	
-call                          	12 	TK_CALL             	 ---- funCallStmt 1 ---- 
-_readMarks                    	12 	TK_FUNID            	 ---- funCallStmt 1 ---- 
-with                          	12 	TK_WITH             	 ---- funCallStmt 1 ---- 
-parameters                    	12 	TK_PARAMETERS       	 ---- funCallStmt 1 ---- 
-[                             	12 	TK_SQL              	 ---- inputParameters 1 ---- 
-43                  	
----- ---- ---- ---- funCallStmt                   	0	inputParameters     	
-b2                            	12 	TK_ID               	 ---- idList 1 ---- 
-79                  	
----- ---- ---- ---- inputParameters               	0	idList              	
-eps                           	-1 	eps                 	 ---- more_ids 1 ---- 
-81                  	
----- ---- ---- ---- idList                        	0	more_ids            	
-]                             	12 	TK_SQR              	 ---- inputParameters 1 ---- 
-;                             	12 	TK_SEM              	 ---- funCallStmt 1 ---- 
-35                  	
+d3                            	10 	TK_ID               	 ---- singleOrRecId 1 ---- 
+37                  	
+---- ---- ---- ---- assignmentStmt                	0	singleOrRecId       	
+eps                           	-1 	eps                 	 ---- new_24 1 ---- 
+39                  	
+---- ---- ---- ---- singleOrRecId                 	0	new_24              	
+36                  	
+---- ---- ---- ---- stmt                          	0	assignmentStmt      	
+<---                          	10 	TK_ASSIGNOP         	 ---- assignmentStmt 1 ---- 
+0.00                          	10 	TK_RNUM             	 0.000000 all 1 ---- 
+63                  	
+---- ---- ---- ---- factor                        	0	all                 	
+57                  	
+---- ---- ---- ---- term                          	0	factor              	
+53                  	
+---- ---- ---- ---- arithmeticExpression          	0	term                	
+eps                           	-1 	eps                 	 ---- termPrime 1 ---- 
+55                  	
+---- ---- ---- ---- term                          	0	termPrime           	
+50                  	
+---- ---- ---- ---- assignmentStmt                	0	arithmeticExpression	
+eps                           	-1 	eps                 	 ---- expPrime 1 ---- 
+52                  	
+---- ---- ---- ---- arithmeticExpression          	0	expPrime            	
+;                             	10 	TK_SEM              	 ---- assignmentStmt 1 ---- 
+31                  	
 ---- ---- ---- ---- otherStmts                    	0	stmt                	
 29                  	
 ---- ---- ---- ---- otherStmts                    	0	otherStmts          	
-b3c45                         	13 	TK_ID               	 ---- singleOrRecId 1 ---- 
+while                         	11 	TK_WHILE            	 ---- iterativeStmt 1 ---- 
+44                  	
+---- ---- ---- ---- stmt                          	0	iterativeStmt       	
+(                             	11 	TK_OP               	 ---- iterativeStmt 1 ---- 
+b5b567                        	11 	TK_ID               	 ---- singleOrRecId 1 ---- 
+37                  	
+---- ---- ---- ---- all                           	0	singleOrRecId       	
+eps                           	-1 	eps                 	 ---- new_24 1 ---- 
+30                  	
+---- ---- ---- ---- singleOrRecId                 	0	new_24              	
+64                  	
+---- ---- ---- ---- booleanExpression             	0	all                 	
+66                  	
+---- ---- ---- ---- iterativeStmt                 	0	booleanExpression   	
+<=                            	11 	TK_LE               	 ---- relationalOp 1 ---- 
+71                  	
+---- ---- ---- ---- booleanExpression             	0	relationalOp        	
+d5cc34                        	11 	TK_ID               	 ---- singleOrRecId 1 ---- 
+37                  	
+---- ---- ---- ---- all                           	0	singleOrRecId       	
+eps                           	-1 	eps                 	 ---- new_24 1 ---- 
+39                  	
+---- ---- ---- ---- singleOrRecId                 	0	new_24              	
+64                  	
+---- ---- ---- ---- booleanExpression             	0	all                 	
+)                             	11 	TK_CL               	 ---- iterativeStmt 1 ---- 
+read                          	12 	TK_READ             	 ---- ioStmt 1 ---- 
+48                  	
+---- ---- ---- ---- stmt                          	0	ioStmt              	
+(                             	12 	TK_OP               	 ---- ioStmt 1 ---- 
+c3bd                          	12 	TK_ID               	 ---- singleOrRecId 1 ---- 
+37                  	
+---- ---- ---- ---- ioStmt                        	0	singleOrRecId       	
+eps                           	-1 	eps                 	 ---- new_24 1 ---- 
+39                  	
+---- ---- ---- ---- singleOrRecId                 	0	new_24              	
+)                             	12 	TK_CL               	 ---- ioStmt 1 ---- 
+;                             	12 	TK_SEM              	 ---- ioStmt 1 ---- 
+34                  	
+---- ---- ---- ---- iterativeStmt                 	0	stmt                	
+d3                            	13 	TK_ID               	 ---- singleOrRecId 1 ---- 
 37                  	
 ---- ---- ---- ---- assignmentStmt                	0	singleOrRecId       	
 eps                           	-1 	eps                 	 ---- new_24 1 ---- 
@@ -144,7 +202,7 @@ eps                           	-1 	eps                 	 ---- new_24 1 ----
 36                  	
 ---- ---- ---- ---- stmt                          	0	assignmentStmt      	
 <---                          	13 	TK_ASSIGNOP         	 ---- assignmentStmt 1 ---- 
-c3b5                          	13 	TK_ID               	 ---- singleOrRecId 1 ---- 
+d3                            	13 	TK_ID               	 ---- singleOrRecId 1 ---- 
 37                  	
 ---- ---- ---- ---- all                           	0	singleOrRecId       	
 eps                           	-1 	eps                 	 ---- new_24 1 ---- 
@@ -166,7 +224,7 @@ eps                           	-1 	eps                 	 ---- termPrime 1 ----
 ---- ---- ---- ---- expPrime                      	0	lowPrecedenceOperators	
 51                  	
 ---- ---- ---- ---- arithmeticExpression          	0	expPrime            	
-c3b6                          	13 	TK_ID               	 ---- singleOrRecId 1 ---- 
+c3bd                          	13 	TK_ID               	 ---- singleOrRecId 1 ---- 
 37                  	
 ---- ---- ---- ---- all                           	0	singleOrRecId       	
 eps                           	-1 	eps                 	 ---- new_24 1 ---- 
@@ -188,288 +246,101 @@ eps                           	-1 	eps                 	 ---- expPrime 1 ----
 31                  	
 ---- ---- ---- ---- otherStmts                    	0	stmt                	
 29                  	
+---- ---- ---- ---- iterativeStmt                 	0	otherStmts          	
+eps                           	-1 	eps                 	 ---- otherStmts 1 ---- 
+30                  	
+---- ---- ---- ---- otherStmts                    	0	otherStmts          	
+endwhile                      	14 	TK_ENDWHILE         	 ---- iterativeStmt 1 ---- 
+32                  	
+---- ---- ---- ---- otherStmts                    	0	stmt                	
+29                  	
 ---- ---- ---- ---- otherStmts                    	0	otherStmts          	
 eps                           	-1 	eps                 	 ---- otherStmts 1 ---- 
 30                  	
 ---- ---- ---- ---- otherStmts                    	0	otherStmts          	
-return                        	14 	TK_RETURN           	 ---- returnStmt 1 ---- 
+return                        	15 	TK_RETURN           	 ---- returnStmt 1 ---- 
 76                  	
 ---- ---- ---- ---- stmts                         	0	returnStmt          	
-[                             	14 	TK_SQL              	 ---- optionalReturn 1 ---- 
+[                             	15 	TK_SQL              	 ---- optionalReturn 1 ---- 
 77                  	
 ---- ---- ---- ---- returnStmt                    	0	optionalReturn      	
-b3c45                         	14 	TK_ID               	 ---- idList 1 ---- 
+b5b567                        	15 	TK_ID               	 ---- idList 1 ---- 
 79                  	
 ---- ---- ---- ---- optionalReturn                	0	idList              	
 eps                           	-1 	eps                 	 ---- more_ids 1 ---- 
 81                  	
 ---- ---- ---- ---- idList                        	0	more_ids            	
-]                             	14 	TK_SQR              	 ---- optionalReturn 1 ---- 
-;                             	14 	TK_SEM              	 ---- returnStmt 1 ---- 
-end                           	15 	TK_END              	 ---- function 1 ---- 
+]                             	15 	TK_SQR              	 ---- optionalReturn 1 ---- 
+;                             	15 	TK_SEM              	 ---- returnStmt 1 ---- 
+end                           	16 	TK_END              	 ---- function 1 ---- 
 2                   	
 ---- ---- ---- ---- program                       	0	otherFunctions      	
-_readMarks                    	17 	TK_FUNID            	 ---- function 1 ---- 
-4                   	
----- ---- ---- ---- otherFunctions                	0	function            	
-input                         	17 	TK_INPUT            	 ---- input_par 1 ---- 
-5                   	
----- ---- ---- ---- function                      	0	input_par           	
-parameter                     	17 	TK_PARAMETER        	 ---- input_par 1 ---- 
-list                          	17 	TK_LIST             	 ---- input_par 1 ---- 
-[                             	17 	TK_SQL              	 ---- input_par 1 ---- 
-int                           	17 	TK_INT              	 ---- primitiveDatatype 1 ---- 
-11                  	
----- ---- ---- ---- dataType                      	0	primitiveDatatype   	
-9                   	
----- ---- ---- ---- parameter_list                	0	dataType            	
-8                   	
----- ---- ---- ---- input_par                     	0	parameter_list      	
-b7                            	17 	TK_ID               	 ---- parameter_list 1 ---- 
-eps                           	-1 	eps                 	 ---- remaining_list 1 ---- 
-15                  	
----- ---- ---- ---- parameter_list                	0	remaining_list      	
-]                             	17 	TK_SQR              	 ---- input_par 1 ---- 
-output                        	18 	TK_OUTPUT           	 ---- output_par 1 ---- 
-6                   	
----- ---- ---- ---- function                      	0	output_par          	
-parameter                     	18 	TK_PARAMETER        	 ---- output_par 1 ---- 
-list                          	18 	TK_LIST             	 ---- output_par 1 ---- 
-[                             	18 	TK_SQL              	 ---- output_par 1 ---- 
-record                        	18 	TK_RECORD           	 ---- constructedDatatype 1 ---- 
-13                  	
----- ---- ---- ---- dataType                      	0	constructedDatatype 	
-#marks                        	18 	TK_RECORDID         	 ---- constructedDatatype 1 ---- 
-10                  	
----- ---- ---- ---- parameter_list                	0	dataType            	
-8                   	
----- ---- ---- ---- output_par                    	0	parameter_list      	
-b3c2                          	18 	TK_ID               	 ---- parameter_list 1 ---- 
-eps                           	-1 	eps                 	 ---- remaining_list 1 ---- 
-15                  	
----- ---- ---- ---- parameter_list                	0	remaining_list      	
-]                             	18 	TK_SQR              	 ---- output_par 1 ---- 
-;                             	18 	TK_SEM              	 ---- function 1 ---- 
-eps                           	-1 	eps                 	 ---- typeDefinitions 1 ---- 
-18                  	
----- ---- ---- ---- stmts                         	0	typeDefinitions     	
-16                  	
----- ---- ---- ---- function                      	0	stmts               	
-eps                           	-1 	eps                 	 ---- declarations 1 ---- 
-25                  	
----- ---- ---- ---- stmts                         	0	declarations        	
-read                          	19 	TK_READ             	 ---- ioStmt 1 ---- 
-48                  	
----- ---- ---- ---- stmt                          	0	ioStmt              	
-(                             	19 	TK_OP               	 ---- ioStmt 1 ---- 
-b3c2                          	19 	TK_ID               	 ---- singleOrRecId 1 ---- 
-37                  	
----- ---- ---- ---- ioStmt                        	0	singleOrRecId       	
-.                             	19 	TK_DOT              	 ---- new_24 1 ---- 
-38                  	
----- ---- ---- ---- singleOrRecId                 	0	new_24              	
-maths                         	19 	TK_FIELDID          	 ---- new_24 1 ---- 
-)                             	19 	TK_CL               	 ---- ioStmt 1 ---- 
-;                             	19 	TK_SEM              	 ---- ioStmt 1 ---- 
-34                  	
----- ---- ---- ---- otherStmts                    	0	stmt                	
-29                  	
----- ---- ---- ---- stmts                         	0	otherStmts          	
-read                          	20 	TK_READ             	 ---- ioStmt 1 ---- 
-48                  	
----- ---- ---- ---- stmt                          	0	ioStmt              	
-(                             	20 	TK_OP               	 ---- ioStmt 1 ---- 
-b3c2                          	20 	TK_ID               	 ---- singleOrRecId 1 ---- 
-37                  	
----- ---- ---- ---- ioStmt                        	0	singleOrRecId       	
-.                             	20 	TK_DOT              	 ---- new_24 1 ---- 
-38                  	
----- ---- ---- ---- singleOrRecId                 	0	new_24              	
-physics                       	20 	TK_FIELDID          	 ---- new_24 1 ---- 
-)                             	20 	TK_CL               	 ---- ioStmt 1 ---- 
-;                             	20 	TK_SEM              	 ---- ioStmt 1 ---- 
-34                  	
----- ---- ---- ---- otherStmts                    	0	stmt                	
-29                  	
----- ---- ---- ---- otherStmts                    	0	otherStmts          	
-read                          	21 	TK_READ             	 ---- ioStmt 1 ---- 
-48                  	
----- ---- ---- ---- stmt                          	0	ioStmt              	
-(                             	21 	TK_OP               	 ---- ioStmt 1 ---- 
-b3c2                          	21 	TK_ID               	 ---- singleOrRecId 1 ---- 
-37                  	
----- ---- ---- ---- ioStmt                        	0	singleOrRecId       	
-.                             	21 	TK_DOT              	 ---- new_24 1 ---- 
-38                  	
----- ---- ---- ---- singleOrRecId                 	0	new_24              	
-chemistry                     	21 	TK_FIELDID          	 ---- new_24 1 ---- 
-)                             	21 	TK_CL               	 ---- ioStmt 1 ---- 
-;                             	21 	TK_SEM              	 ---- ioStmt 1 ---- 
-34                  	
----- ---- ---- ---- otherStmts                    	0	stmt                	
-29                  	
----- ---- ---- ---- otherStmts                    	0	otherStmts          	
-eps                           	-1 	eps                 	 ---- otherStmts 1 ---- 
-30                  	
----- ---- ---- ---- otherStmts                    	0	otherStmts          	
-return                        	22 	TK_RETURN           	 ---- returnStmt 1 ---- 
-76                  	
----- ---- ---- ---- stmts                         	0	returnStmt          	
-[                             	22 	TK_SQL              	 ---- optionalReturn 1 ---- 
-77                  	
----- ---- ---- ---- returnStmt                    	0	optionalReturn      	
-b3c2                          	22 	TK_ID               	 ---- idList 1 ---- 
-79                  	
----- ---- ---- ---- optionalReturn                	0	idList              	
-eps                           	-1 	eps                 	 ---- more_ids 1 ---- 
-81                  	
----- ---- ---- ---- idList                        	0	more_ids            	
-]                             	22 	TK_SQR              	 ---- optionalReturn 1 ---- 
-;                             	22 	TK_SEM              	 ---- returnStmt 1 ---- 
-end                           	23 	TK_END              	 ---- function 1 ---- 
-2                   	
----- ---- ---- ---- otherFunctions                	0	otherFunctions      	
 eps                           	-1 	eps                 	 ---- otherFunctions 1 ---- 
 3                   	
 ---- ---- ---- ---- otherFunctions                	0	otherFunctions      	
 0                   	
 ---- ---- ---- ---- ROOT	0	program             	
-_main                         	27 	TK_MAIN             	 ---- mainFunction 1 ---- 
+_main                         	18 	TK_MAIN             	 ---- mainFunction 1 ---- 
 1                   	
 ---- ---- ---- ---- program                       	0	mainFunction        	
-record                        	28 	TK_RECORD           	 ---- typeDefinition 1 ---- 
-19                  	
----- ---- ---- ---- typeDefinitions               	0	typeDefinition      	
-#marks                        	28 	TK_RECORDID         	 ---- typeDefinition 1 ---- 
-type                          	29 	TK_TYPE             	 ---- fieldDefinition 1 ---- 
-21                  	
----- ---- ---- ---- fieldDefinitions              	0	fieldDefinition     	
-real                          	29 	TK_REAL             	 ---- primitiveDatatype 1 ---- 
-12                  	
----- ---- ---- ---- fieldDefinition               	0	primitiveDatatype   	
-:                             	29 	TK_COLON            	 ---- fieldDefinition 1 ---- 
-maths                         	29 	TK_FIELDID          	 ---- fieldDefinition 1 ---- 
-;                             	29 	TK_SEM              	 ---- fieldDefinition 1 ---- 
-20                  	
----- ---- ---- ---- typeDefinition                	0	fieldDefinitions    	
-type                          	30 	TK_TYPE             	 ---- fieldDefinition 1 ---- 
-21                  	
----- ---- ---- ---- fieldDefinitions              	0	fieldDefinition     	
-real                          	30 	TK_REAL             	 ---- primitiveDatatype 1 ---- 
-12                  	
----- ---- ---- ---- fieldDefinition               	0	primitiveDatatype   	
-:                             	30 	TK_COLON            	 ---- fieldDefinition 1 ---- 
-physics                       	30 	TK_FIELDID          	 ---- fieldDefinition 1 ---- 
-;                             	30 	TK_SEM              	 ---- fieldDefinition 1 ---- 
-type                          	31 	TK_TYPE             	 ---- fieldDefinition 1 ---- 
-21                  	
----- ---- ---- ---- moreFields                    	0	fieldDefinition     	
-real                          	31 	TK_REAL             	 ---- primitiveDatatype 1 ---- 
-12                  	
----- ---- ---- ---- fieldDefinition               	0	primitiveDatatype   	
-:                             	31 	TK_COLON            	 ---- fieldDefinition 1 ---- 
-chemistry                     	31 	TK_FIELDID          	 ---- fieldDefinition 1 ---- 
-;                             	31 	TK_SEM              	 ---- fieldDefinition 1 ---- 
-22                  	
----- ---- ---- ---- fieldDefinitions              	0	moreFields          	
-eps                           	-1 	eps                 	 ---- moreFields 1 ---- 
-23                  	
----- ---- ---- ---- moreFields                    	0	moreFields          	
-endrecord                     	32 	TK_ENDRECORD        	 ---- typeDefinition 1 ---- 
-;                             	32 	TK_SEM              	 ---- typeDefinition 1 ---- 
-17                  	
----- ---- ---- ---- stmts                         	0	typeDefinitions     	
 eps                           	-1 	eps                 	 ---- typeDefinitions 1 ---- 
 18                  	
----- ---- ---- ---- typeDefinitions               	0	typeDefinitions     	
+---- ---- ---- ---- stmts                         	0	typeDefinitions     	
 16                  	
 ---- ---- ---- ---- mainFunction                  	0	stmts               	
-type                          	35 	TK_TYPE             	 ---- declaration 1 ---- 
+type                          	19 	TK_TYPE             	 ---- declaration 1 ---- 
 26                  	
 ---- ---- ---- ---- declarations                  	0	declaration         	
-record                        	35 	TK_RECORD           	 ---- constructedDatatype 1 ---- 
-13                  	
----- ---- ---- ---- dataType                      	0	constructedDatatype 	
-#marks                        	35 	TK_RECORDID         	 ---- constructedDatatype 1 ---- 
-10                  	
----- ---- ---- ---- declaration                   	0	dataType            	
-:                             	35 	TK_COLON            	 ---- declaration 1 ---- 
-d4                            	35 	TK_ID               	 ---- declaration 1 ---- 
-eps                           	-1 	eps                 	 ---- global_or_not 1 ---- 
-28                  	
----- ---- ---- ---- declaration                   	0	global_or_not       	
-;                             	35 	TK_SEM              	 ---- declaration 1 ---- 
-24                  	
----- ---- ---- ---- stmts                         	0	declarations        	
-type                          	38 	TK_TYPE             	 ---- declaration 1 ---- 
-26                  	
----- ---- ---- ---- declarations                  	0	declaration         	
-int                           	38 	TK_INT              	 ---- primitiveDatatype 1 ---- 
-11                  	
----- ---- ---- ---- dataType                      	0	primitiveDatatype   	
-9                   	
----- ---- ---- ---- declaration                   	0	dataType            	
-:                             	38 	TK_COLON            	 ---- declaration 1 ---- 
-b5                            	38 	TK_ID               	 ---- declaration 1 ---- 
-eps                           	-1 	eps                 	 ---- global_or_not 1 ---- 
-28                  	
----- ---- ---- ---- declaration                   	0	global_or_not       	
-;                             	38 	TK_SEM              	 ---- declaration 1 ---- 
-24                  	
----- ---- ---- ---- declarations                  	0	declarations        	
-type                          	39 	TK_TYPE             	 ---- declaration 1 ---- 
-26                  	
----- ---- ---- ---- declarations                  	0	declaration         	
-int                           	39 	TK_INT              	 ---- primitiveDatatype 1 ---- 
-11                  	
----- ---- ---- ---- dataType                      	0	primitiveDatatype   	
-9                   	
----- ---- ---- ---- declaration                   	0	dataType            	
-:                             	39 	TK_COLON            	 ---- declaration 1 ---- 
-d5cb34567                     	39 	TK_ID               	 ---- declaration 1 ---- 
-eps                           	-1 	eps                 	 ---- global_or_not 1 ---- 
-28                  	
----- ---- ---- ---- declaration                   	0	global_or_not       	
-;                             	39 	TK_SEM              	 ---- declaration 1 ---- 
-24                  	
----- ---- ---- ---- declarations                  	0	declarations        	
-type                          	40 	TK_TYPE             	 ---- declaration 1 ---- 
-26                  	
----- ---- ---- ---- declarations                  	0	declaration         	
-real                          	40 	TK_REAL             	 ---- primitiveDatatype 1 ---- 
+real                          	19 	TK_REAL             	 ---- primitiveDatatype 1 ---- 
 12                  	
 ---- ---- ---- ---- dataType                      	0	primitiveDatatype   	
 9                   	
 ---- ---- ---- ---- declaration                   	0	dataType            	
-:                             	40 	TK_COLON            	 ---- declaration 1 ---- 
-b5                            	40 	TK_ID               	 ---- declaration 1 ---- 
+:                             	19 	TK_COLON            	 ---- declaration 1 ---- 
+c4bd56                        	19 	TK_ID               	 ---- declaration 1 ---- 
 eps                           	-1 	eps                 	 ---- global_or_not 1 ---- 
 28                  	
 ---- ---- ---- ---- declaration                   	0	global_or_not       	
-;                             	40 	TK_SEM              	 ---- declaration 1 ---- 
+;                             	19 	TK_SEM              	 ---- declaration 1 ---- 
 24                  	
----- ---- ---- ---- declarations                  	0	declarations        	
-type                          	41 	TK_TYPE             	 ---- declaration 1 ---- 
+---- ---- ---- ---- stmts                         	0	declarations        	
+type                          	20 	TK_TYPE             	 ---- declaration 1 ---- 
 26                  	
 ---- ---- ---- ---- declarations                  	0	declaration         	
-record                        	41 	TK_RECORD           	 ---- constructedDatatype 1 ---- 
-13                  	
----- ---- ---- ---- dataType                      	0	constructedDatatype 	
-#marks                        	41 	TK_RECORDID         	 ---- constructedDatatype 1 ---- 
-10                  	
+int                           	20 	TK_INT              	 ---- primitiveDatatype 1 ---- 
+11                  	
+---- ---- ---- ---- dataType                      	0	primitiveDatatype   	
+9                   	
 ---- ---- ---- ---- declaration                   	0	dataType            	
-:                             	41 	TK_COLON            	 ---- declaration 1 ---- 
-b5c6                          	41 	TK_ID               	 ---- declaration 1 ---- 
+:                             	20 	TK_COLON            	 ---- declaration 1 ---- 
+c2                            	20 	TK_ID               	 ---- declaration 1 ---- 
 eps                           	-1 	eps                 	 ---- global_or_not 1 ---- 
 28                  	
 ---- ---- ---- ---- declaration                   	0	global_or_not       	
-;                             	41 	TK_SEM              	 ---- declaration 1 ---- 
+;                             	20 	TK_SEM              	 ---- declaration 1 ---- 
+24                  	
+---- ---- ---- ---- declarations                  	0	declarations        	
+type                          	21 	TK_TYPE             	 ---- declaration 1 ---- 
+26                  	
+---- ---- ---- ---- declarations                  	0	declaration         	
+int                           	21 	TK_INT              	 ---- primitiveDatatype 1 ---- 
+11                  	
+---- ---- ---- ---- dataType                      	0	primitiveDatatype   	
+9                   	
+---- ---- ---- ---- declaration                   	0	dataType            	
+:                             	21 	TK_COLON            	 ---- declaration 1 ---- 
+b5b567                        	21 	TK_ID               	 ---- declaration 1 ---- 
+:                             	21 	TK_COLON            	 ---- global_or_not 1 ---- 
+27                  	
+---- ---- ---- ---- declaration                   	0	global_or_not       	
+global                        	21 	TK_GLOBAL           	 ---- global_or_not 1 ---- 
+;                             	21 	TK_SEM              	 ---- declaration 1 ---- 
 24                  	
 ---- ---- ---- ---- declarations                  	0	declarations        	
 eps                           	-1 	eps                 	 ---- declarations 1 ---- 
 25                  	
 ---- ---- ---- ---- declarations                  	0	declarations        	
-b5                            	44 	TK_ID               	 ---- singleOrRecId 1 ---- 
+b3                            	22 	TK_ID               	 ---- singleOrRecId 1 ---- 
 37                  	
 ---- ---- ---- ---- assignmentStmt                	0	singleOrRecId       	
 eps                           	-1 	eps                 	 ---- new_24 1 ---- 
@@ -477,8 +348,8 @@ eps                           	-1 	eps                 	 ---- new_24 1 ----
 ---- ---- ---- ---- singleOrRecId                 	0	new_24              	
 36                  	
 ---- ---- ---- ---- stmt                          	0	assignmentStmt      	
-<---                          	44 	TK_ASSIGNOP         	 ---- assignmentStmt 1 ---- 
-1                             	44 	TK_NUM              	 1     all 1 ---- 
+<---                          	22 	TK_ASSIGNOP         	 ---- assignmentStmt 1 ---- 
+7                             	22 	TK_NUM              	 7     all 1 ---- 
 62                  	
 ---- ---- ---- ---- factor                        	0	all                 	
 57                  	
@@ -493,364 +364,73 @@ eps                           	-1 	eps                 	 ---- termPrime 1 ----
 eps                           	-1 	eps                 	 ---- expPrime 1 ---- 
 52                  	
 ---- ---- ---- ---- arithmeticExpression          	0	expPrime            	
-;                             	44 	TK_SEM              	 ---- assignmentStmt 1 ---- 
+;                             	22 	TK_SEM              	 ---- assignmentStmt 1 ---- 
 31                  	
 ---- ---- ---- ---- otherStmts                    	0	stmt                	
 29                  	
 ---- ---- ---- ---- stmts                         	0	otherStmts          	
-read                          	45 	TK_READ             	 ---- ioStmt 1 ---- 
+read                          	23 	TK_READ             	 ---- ioStmt 1 ---- 
 48                  	
 ---- ---- ---- ---- stmt                          	0	ioStmt              	
-(                             	45 	TK_OP               	 ---- ioStmt 1 ---- 
-d5cb34567                     	45 	TK_ID               	 ---- singleOrRecId 1 ---- 
+(                             	23 	TK_OP               	 ---- ioStmt 1 ---- 
+c2                            	23 	TK_ID               	 ---- singleOrRecId 1 ---- 
 37                  	
 ---- ---- ---- ---- ioStmt                        	0	singleOrRecId       	
 eps                           	-1 	eps                 	 ---- new_24 1 ---- 
 39                  	
 ---- ---- ---- ---- singleOrRecId                 	0	new_24              	
-)                             	45 	TK_CL               	 ---- ioStmt 1 ---- 
-;                             	45 	TK_SEM              	 ---- ioStmt 1 ---- 
+)                             	23 	TK_CL               	 ---- ioStmt 1 ---- 
+;                             	23 	TK_SEM              	 ---- ioStmt 1 ---- 
 34                  	
 ---- ---- ---- ---- otherStmts                    	0	stmt                	
 29                  	
 ---- ---- ---- ---- otherStmts                    	0	otherStmts          	
-b5c6                          	46 	TK_ID               	 ---- singleOrRecId 1 ---- 
-37                  	
----- ---- ---- ---- assignmentStmt                	0	singleOrRecId       	
-.                             	46 	TK_DOT              	 ---- new_24 1 ---- 
-38                  	
----- ---- ---- ---- singleOrRecId                 	0	new_24              	
-maths                         	46 	TK_FIELDID          	 ---- new_24 1 ---- 
-36                  	
----- ---- ---- ---- stmt                          	0	assignmentStmt      	
-<---                          	46 	TK_ASSIGNOP         	 ---- assignmentStmt 1 ---- 
-0.00                          	46 	TK_RNUM             	 0.000000 all 1 ---- 
-63                  	
----- ---- ---- ---- factor                        	0	all                 	
-57                  	
----- ---- ---- ---- term                          	0	factor              	
-53                  	
----- ---- ---- ---- arithmeticExpression          	0	term                	
-eps                           	-1 	eps                 	 ---- termPrime 1 ---- 
-55                  	
----- ---- ---- ---- term                          	0	termPrime           	
-50                  	
----- ---- ---- ---- assignmentStmt                	0	arithmeticExpression	
-eps                           	-1 	eps                 	 ---- expPrime 1 ---- 
-52                  	
----- ---- ---- ---- arithmeticExpression          	0	expPrime            	
-;                             	46 	TK_SEM              	 ---- assignmentStmt 1 ---- 
-31                  	
----- ---- ---- ---- otherStmts                    	0	stmt                	
-29                  	
----- ---- ---- ---- otherStmts                    	0	otherStmts          	
-b5c6                          	47 	TK_ID               	 ---- singleOrRecId 1 ---- 
-37                  	
----- ---- ---- ---- assignmentStmt                	0	singleOrRecId       	
-.                             	47 	TK_DOT              	 ---- new_24 1 ---- 
-38                  	
----- ---- ---- ---- singleOrRecId                 	0	new_24              	
-physics                       	47 	TK_FIELDID          	 ---- new_24 1 ---- 
-36                  	
----- ---- ---- ---- stmt                          	0	assignmentStmt      	
-<---                          	47 	TK_ASSIGNOP         	 ---- assignmentStmt 1 ---- 
-0.00                          	47 	TK_RNUM             	 0.000000 all 1 ---- 
-63                  	
----- ---- ---- ---- factor                        	0	all                 	
-57                  	
----- ---- ---- ---- term                          	0	factor              	
-53                  	
----- ---- ---- ---- arithmeticExpression          	0	term                	
-eps                           	-1 	eps                 	 ---- termPrime 1 ---- 
-55                  	
----- ---- ---- ---- term                          	0	termPrime           	
-50                  	
----- ---- ---- ---- assignmentStmt                	0	arithmeticExpression	
-eps                           	-1 	eps                 	 ---- expPrime 1 ---- 
-52                  	
----- ---- ---- ---- arithmeticExpression          	0	expPrime            	
-;                             	47 	TK_SEM              	 ---- assignmentStmt 1 ---- 
-31                  	
----- ---- ---- ---- otherStmts                    	0	stmt                	
-29                  	
----- ---- ---- ---- otherStmts                    	0	otherStmts          	
-b5c6                          	48 	TK_ID               	 ---- singleOrRecId 1 ---- 
-37                  	
----- ---- ---- ---- assignmentStmt                	0	singleOrRecId       	
-.                             	48 	TK_DOT              	 ---- new_24 1 ---- 
-38                  	
----- ---- ---- ---- singleOrRecId                 	0	new_24              	
-chemistry                     	48 	TK_FIELDID          	 ---- new_24 1 ---- 
-36                  	
----- ---- ---- ---- stmt                          	0	assignmentStmt      	
-<---                          	48 	TK_ASSIGNOP         	 ---- assignmentStmt 1 ---- 
-0.00                          	48 	TK_RNUM             	 0.000000 all 1 ---- 
-63                  	
----- ---- ---- ---- factor                        	0	all                 	
-57                  	
----- ---- ---- ---- term                          	0	factor              	
-53                  	
----- ---- ---- ---- arithmeticExpression          	0	term                	
-eps                           	-1 	eps                 	 ---- termPrime 1 ---- 
-55                  	
----- ---- ---- ---- term                          	0	termPrime           	
-50                  	
----- ---- ---- ---- assignmentStmt                	0	arithmeticExpression	
-eps                           	-1 	eps                 	 ---- expPrime 1 ---- 
-52                  	
----- ---- ---- ---- arithmeticExpression          	0	expPrime            	
-;                             	48 	TK_SEM              	 ---- assignmentStmt 1 ---- 
-31                  	
----- ---- ---- ---- otherStmts                    	0	stmt                	
-29                  	
----- ---- ---- ---- otherStmts                    	0	otherStmts          	
-while                         	49 	TK_WHILE            	 ---- iterativeStmt 1 ---- 
-44                  	
----- ---- ---- ---- stmt                          	0	iterativeStmt       	
-(                             	49 	TK_OP               	 ---- iterativeStmt 1 ---- 
-b5                            	49 	TK_ID               	 ---- singleOrRecId 1 ---- 
-37                  	
----- ---- ---- ---- all                           	0	singleOrRecId       	
-eps                           	-1 	eps                 	 ---- new_24 1 ---- 
-30                  	
----- ---- ---- ---- singleOrRecId                 	0	new_24              	
-64                  	
----- ---- ---- ---- booleanExpression             	0	all                 	
-66                  	
----- ---- ---- ---- iterativeStmt                 	0	booleanExpression   	
-<=                            	49 	TK_LE               	 ---- relationalOp 1 ---- 
-71                  	
----- ---- ---- ---- booleanExpression             	0	relationalOp        	
-d5cb34567                     	49 	TK_ID               	 ---- singleOrRecId 1 ---- 
-37                  	
----- ---- ---- ---- all                           	0	singleOrRecId       	
-eps                           	-1 	eps                 	 ---- new_24 1 ---- 
-39                  	
----- ---- ---- ---- singleOrRecId                 	0	new_24              	
-64                  	
----- ---- ---- ---- booleanExpression             	0	all                 	
-)                             	49 	TK_CL               	 ---- iterativeStmt 1 ---- 
-[                             	50 	TK_SQL              	 ---- outputParameters 1 ---- 
+[                             	24 	TK_SQL              	 ---- outputParameters 1 ---- 
 41                  	
 ---- ---- ---- ---- funCallStmt                   	0	outputParameters    	
-d4                            	50 	TK_ID               	 ---- idList 1 ---- 
+c4bd56                        	24 	TK_ID               	 ---- idList 1 ---- 
 79                  	
 ---- ---- ---- ---- outputParameters              	0	idList              	
 eps                           	-1 	eps                 	 ---- more_ids 1 ---- 
 81                  	
 ---- ---- ---- ---- idList                        	0	more_ids            	
-]                             	50 	TK_SQR              	 ---- outputParameters 1 ---- 
-<---                          	50 	TK_ASSIGNOP         	 ---- outputParameters 1 ---- 
+]                             	24 	TK_SQR              	 ---- outputParameters 1 ---- 
+<---                          	24 	TK_ASSIGNOP         	 ---- outputParameters 1 ---- 
 40                  	
 ---- ---- ---- ---- stmt                          	0	funCallStmt         	
-call                          	50 	TK_CALL             	 ---- funCallStmt 1 ---- 
-_readMarks                    	50 	TK_FUNID            	 ---- funCallStmt 1 ---- 
-with                          	50 	TK_WITH             	 ---- funCallStmt 1 ---- 
-parameters                    	50 	TK_PARAMETERS       	 ---- funCallStmt 1 ---- 
-[                             	50 	TK_SQL              	 ---- inputParameters 1 ---- 
+call                          	24 	TK_CALL             	 ---- funCallStmt 1 ---- 
+_sumN                         	24 	TK_FUNID            	 ---- funCallStmt 1 ---- 
+with                          	24 	TK_WITH             	 ---- funCallStmt 1 ---- 
+parameters                    	24 	TK_PARAMETERS       	 ---- funCallStmt 1 ---- 
+[                             	24 	TK_SQL              	 ---- inputParameters 1 ---- 
 43                  	
 ---- ---- ---- ---- funCallStmt                   	0	inputParameters     	
-b5                            	50 	TK_ID               	 ---- idList 1 ---- 
+c2                            	24 	TK_ID               	 ---- idList 1 ---- 
 79                  	
 ---- ---- ---- ---- inputParameters               	0	idList              	
 eps                           	-1 	eps                 	 ---- more_ids 1 ---- 
 81                  	
 ---- ---- ---- ---- idList                        	0	more_ids            	
-]                             	50 	TK_SQR              	 ---- inputParameters 1 ---- 
-;                             	50 	TK_SEM              	 ---- funCallStmt 1 ---- 
-35                  	
----- ---- ---- ---- iterativeStmt                 	0	stmt                	
-[                             	51 	TK_SQL              	 ---- outputParameters 1 ---- 
-41                  	
----- ---- ---- ---- funCallStmt                   	0	outputParameters    	
-b5c6                          	51 	TK_ID               	 ---- idList 1 ---- 
-79                  	
----- ---- ---- ---- outputParameters              	0	idList              	
-eps                           	-1 	eps                 	 ---- more_ids 1 ---- 
-81                  	
----- ---- ---- ---- idList                        	0	more_ids            	
-]                             	51 	TK_SQR              	 ---- outputParameters 1 ---- 
-<---                          	51 	TK_ASSIGNOP         	 ---- outputParameters 1 ---- 
-40                  	
----- ---- ---- ---- stmt                          	0	funCallStmt         	
-call                          	51 	TK_CALL             	 ---- funCallStmt 1 ---- 
-_addRecords                   	51 	TK_FUNID            	 ---- funCallStmt 1 ---- 
-with                          	51 	TK_WITH             	 ---- funCallStmt 1 ---- 
-parameters                    	51 	TK_PARAMETERS       	 ---- funCallStmt 1 ---- 
-[                             	51 	TK_SQL              	 ---- inputParameters 1 ---- 
-43                  	
----- ---- ---- ---- funCallStmt                   	0	inputParameters     	
-b5c6                          	51 	TK_ID               	 ---- idList 1 ---- 
-79                  	
----- ---- ---- ---- inputParameters               	0	idList              	
-eps                           	-1 	eps                 	 ---- more_ids 1 ---- 
-81                  	
----- ---- ---- ---- idList                        	0	more_ids            	
-]                             	51 	TK_SQR              	 ---- inputParameters 1 ---- 
-;                             	51 	TK_SEM              	 ---- funCallStmt 1 ---- 
+]                             	24 	TK_SQR              	 ---- inputParameters 1 ---- 
+;                             	24 	TK_SEM              	 ---- funCallStmt 1 ---- 
 35                  	
 ---- ---- ---- ---- otherStmts                    	0	stmt                	
 29                  	
----- ---- ---- ---- iterativeStmt                 	0	otherStmts          	
-b5                            	53 	TK_ID               	 ---- singleOrRecId 1 ---- 
+---- ---- ---- ---- otherStmts                    	0	otherStmts          	
+write                         	25 	TK_WRITE            	 ---- ioStmt 1 ---- 
+49                  	
+---- ---- ---- ---- stmt                          	0	ioStmt              	
+(                             	25 	TK_OP               	 ---- ioStmt 1 ---- 
+c4bd56                        	25 	TK_ID               	 ---- singleOrRecId 1 ---- 
 37                  	
----- ---- ---- ---- assignmentStmt                	0	singleOrRecId       	
+---- ---- ---- ---- all                           	0	singleOrRecId       	
 eps                           	-1 	eps                 	 ---- new_24 1 ---- 
 39                  	
 ---- ---- ---- ---- singleOrRecId                 	0	new_24              	
-36                  	
----- ---- ---- ---- stmt                          	0	assignmentStmt      	
-<---                          	53 	TK_ASSIGNOP         	 ---- assignmentStmt 1 ---- 
-b5                            	53 	TK_ID               	 ---- singleOrRecId 1 ---- 
-37                  	
----- ---- ---- ---- all                           	0	singleOrRecId       	
-eps                           	-1 	eps                 	 ---- new_24 1 ---- 
-30                  	
----- ---- ---- ---- singleOrRecId                 	0	new_24              	
-64                  	
----- ---- ---- ---- factor                        	0	all                 	
-57                  	
----- ---- ---- ---- term                          	0	factor              	
-53                  	
----- ---- ---- ---- arithmeticExpression          	0	term                	
-eps                           	-1 	eps                 	 ---- termPrime 1 ---- 
-55                  	
----- ---- ---- ---- term                          	0	termPrime           	
-50                  	
----- ---- ---- ---- assignmentStmt                	0	arithmeticExpression	
-+                             	53 	TK_PLUS             	 ---- lowPrecedenceOperators 1 ---- 
-60                  	
----- ---- ---- ---- expPrime                      	0	lowPrecedenceOperators	
-51                  	
----- ---- ---- ---- arithmeticExpression          	0	expPrime            	
-1                             	53 	TK_NUM              	 1     all 1 ---- 
-62                  	
----- ---- ---- ---- factor                        	0	all                 	
-57                  	
----- ---- ---- ---- term                          	0	factor              	
-53                  	
----- ---- ---- ---- expPrime                      	0	term                	
-eps                           	-1 	eps                 	 ---- termPrime 1 ---- 
-55                  	
----- ---- ---- ---- term                          	0	termPrime           	
-eps                           	-1 	eps                 	 ---- expPrime 1 ---- 
-52                  	
----- ---- ---- ---- expPrime                      	0	expPrime            	
-;                             	53 	TK_SEM              	 ---- assignmentStmt 1 ---- 
-31                  	
----- ---- ---- ---- otherStmts                    	0	stmt                	
-29                  	
----- ---- ---- ---- otherStmts                    	0	otherStmts          	
-eps                           	-1 	eps                 	 ---- otherStmts 1 ---- 
-30                  	
----- ---- ---- ---- otherStmts                    	0	otherStmts          	
-endwhile                      	54 	TK_ENDWHILE         	 ---- iterativeStmt 1 ---- 
-32                  	
----- ---- ---- ---- otherStmts                    	0	stmt                	
-29                  	
----- ---- ---- ---- otherStmts                    	0	otherStmts          	
-d4                            	55 	TK_ID               	 ---- singleOrRecId 1 ---- 
-37                  	
----- ---- ---- ---- assignmentStmt                	0	singleOrRecId       	
-eps                           	-1 	eps                 	 ---- new_24 1 ---- 
-39                  	
----- ---- ---- ---- singleOrRecId                 	0	new_24              	
-36                  	
----- ---- ---- ---- stmt                          	0	assignmentStmt      	
-<---                          	55 	TK_ASSIGNOP         	 ---- assignmentStmt 1 ---- 
-b5c6                          	55 	TK_ID               	 ---- singleOrRecId 1 ---- 
-37                  	
----- ---- ---- ---- all                           	0	singleOrRecId       	
-eps                           	-1 	eps                 	 ---- new_24 1 ---- 
-30                  	
----- ---- ---- ---- singleOrRecId                 	0	new_24              	
-64                  	
----- ---- ---- ---- factor                        	0	all                 	
-57                  	
----- ---- ---- ---- term                          	0	factor              	
-53                  	
----- ---- ---- ---- arithmeticExpression          	0	term                	
-/                             	55 	TK_DIV              	 ---- highPrecedenceOperators 1 ---- 
-59                  	
----- ---- ---- ---- termPrime                     	0	highPrecedenceOperators	
-54                  	
----- ---- ---- ---- term                          	0	termPrime           	
-d5cb34567                     	55 	TK_ID               	 ---- singleOrRecId 1 ---- 
-37                  	
----- ---- ---- ---- all                           	0	singleOrRecId       	
-eps                           	-1 	eps                 	 ---- new_24 1 ---- 
-30                  	
----- ---- ---- ---- singleOrRecId                 	0	new_24              	
-64                  	
----- ---- ---- ---- factor                        	0	all                 	
-57                  	
----- ---- ---- ---- termPrime                     	0	factor              	
-eps                           	-1 	eps                 	 ---- termPrime 1 ---- 
-55                  	
----- ---- ---- ---- termPrime                     	0	termPrime           	
-50                  	
----- ---- ---- ---- assignmentStmt                	0	arithmeticExpression	
-eps                           	-1 	eps                 	 ---- expPrime 1 ---- 
-52                  	
----- ---- ---- ---- arithmeticExpression          	0	expPrime            	
-;                             	55 	TK_SEM              	 ---- assignmentStmt 1 ---- 
-31                  	
----- ---- ---- ---- otherStmts                    	0	stmt                	
-29                  	
----- ---- ---- ---- otherStmts                    	0	otherStmts          	
-write                         	56 	TK_WRITE            	 ---- ioStmt 1 ---- 
-49                  	
----- ---- ---- ---- stmt                          	0	ioStmt              	
-(                             	56 	TK_OP               	 ---- ioStmt 1 ---- 
-d4                            	56 	TK_ID               	 ---- singleOrRecId 1 ---- 
-37                  	
----- ---- ---- ---- all                           	0	singleOrRecId       	
-.                             	56 	TK_DOT              	 ---- new_24 1 ---- 
-38                  	
----- ---- ---- ---- singleOrRecId                 	0	new_24              	
-maths                         	56 	TK_FIELDID          	 ---- new_24 1 ---- 
 64                  	
 ---- ---- ---- ---- ioStmt                        	0	all                 	
-)                             	56 	TK_CL               	 ---- ioStmt 1 ---- 
-;                             	56 	TK_SEM              	 ---- ioStmt 1 ---- 
-34                  	
----- ---- ---- ---- otherStmts                    	0	stmt                	
-29                  	
----- ---- ---- ---- otherStmts                    	0	otherStmts          	
-write                         	57 	TK_WRITE            	 ---- ioStmt 1 ---- 
-49                  	
----- ---- ---- ---- stmt                          	0	ioStmt              	
-(                             	57 	TK_OP               	 ---- ioStmt 1 ---- 
-d4                            	57 	TK_ID               	 ---- singleOrRecId 1 ---- 
-37                  	
----- ---- ---- ---- all                           	0	singleOrRecId       	
-.                             	57 	TK_DOT              	 ---- new_24 1 ---- 
-38                  	
----- ---- ---- ---- singleOrRecId                 	0	new_24              	
-physics                       	57 	TK_FIELDID          	 ---- new_24 1 ---- 
-64                  	
----- ---- ---- ---- ioStmt                        	0	all                 	
-)                             	57 	TK_CL               	 ---- ioStmt 1 ---- 
-;                             	57 	TK_SEM              	 ---- ioStmt 1 ---- 
-34                  	
----- ---- ---- ---- otherStmts                    	0	stmt                	
-29                  	
----- ---- ---- ---- otherStmts                    	0	otherStmts          	
-write                         	58 	TK_WRITE            	 ---- ioStmt 1 ---- 
-49                  	
----- ---- ---- ---- stmt                          	0	ioStmt              	
-(                             	58 	TK_OP               	 ---- ioStmt 1 ---- 
-d4                            	58 	TK_ID               	 ---- singleOrRecId 1 ---- 
-37                  	
----- ---- ---- ---- all                           	0	singleOrRecId       	
-.                             	58 	TK_DOT              	 ---- new_24 1 ---- 
-38                  	
----- ---- ---- ---- singleOrRecId                 	0	new_24              	
-chemistry                     	58 	TK_FIELDID          	 ---- new_24 1 ---- 
-64                  	
----- ---- ---- ---- ioStmt                        	0	all                 	
-)                             	58 	TK_CL               	 ---- ioStmt 1 ---- 
-;                             	58 	TK_SEM              	 ---- ioStmt 1 ---- 
+)                             	25 	TK_CL               	 ---- ioStmt 1 ---- 
+;                             	25 	TK_SEM              	 ---- ioStmt 1 ---- 
 34                  	
 ---- ---- ---- ---- otherStmts                    	0	stmt                	
 29                  	
@@ -858,11 +438,11 @@ chemistry                     	58 	TK_FIELDID          	 ---- new_24 1 ----
 eps                           	-1 	eps                 	 ---- otherStmts 1 ---- 
 30                  	
 ---- ---- ---- ---- otherStmts                    	0	otherStmts          	
-return                        	59 	TK_RETURN           	 ---- returnStmt 1 ---- 
+return                        	26 	TK_RETURN           	 ---- returnStmt 1 ---- 
 76                  	
 ---- ---- ---- ---- stmts                         	0	returnStmt          	
 eps                           	-1 	eps                 	 ---- optionalReturn 1 ---- 
 78                  	
 ---- ---- ---- ---- returnStmt                    	0	optionalReturn      	
-;                             	59 	TK_SEM              	 ---- returnStmt 1 ---- 
-end                           	60 	TK_END              	 ---- mainFunction 1 ---- 
+;                             	26 	TK_SEM              	 ---- returnStmt 1 ---- 
+end                           	27 	TK_END              	 ---- mainFunction 1 ---- 
