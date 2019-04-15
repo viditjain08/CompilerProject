@@ -270,11 +270,51 @@ int deallocate(NODE_AstTree x) {
 	return y;
 }
 
+
 void printSymbolTable(SYMBOLTABLE s) {
 	SYMBOLENTRY temp = s->head;
+
 	printf("Printing SYMBOLTABLE for %s with entries %d\n",s->name, s->no_entries);
+
+	printf("Lexeme\t\tType\t\tScope\t\tOffset\n");
 	while(temp!=NULL) {
-		printf("%s %s %d\n",temp->id, s->name, temp->offset);
+		// if(temp->record_name!=NULL){
+		// 	printf("%s",temp->record_name);
+		// }
+
+		if(temp->int_no==0 && temp->real_no==1){
+			printf("%s\t\treal\t\t%s\t\t%d\n",temp->id, s->name, temp->offset);
+
+		}
+		else if(temp->int_no==1 && temp->real_no==0){
+			printf("%s\t\tint\t\t%s\t\t%d\n",temp->id, s->name, temp->offset);
+
+		}
+		else{
+			printf("%s\t\t",temp->id);
+			FIELD f = temp->record;
+			if(f!=NULL){
+			if(f->dType==INT){
+					printf("int\t");
+			}
+			else{
+					printf("real\t");
+			}
+
+			f = f->next;
+			}
+			while(f!=NULL){
+				if(f->dType==INT){
+					printf("x int\t");
+				}
+				else{
+					printf("x real\t");
+				}
+
+				f=f->next;
+			}
+			printf("%s\t\t%d\n",s->name,temp->offset);
+		}
 		temp=temp->next;
 	}
 }
@@ -450,7 +490,7 @@ void functionSymbolTable(NODE_AstTree function, SYMBOLTABLE st) {
 	NODE_AstTree node = stmts->child->sibling;
 	y = addDeclarations(node, st, offset, y, 0);
 
-	printSymbolTable(st);
+	// printSymbolTable(st);
 }
 
 
@@ -609,9 +649,9 @@ HASHSYMBOL populateSymbolTable(NODE_AstTree ast) {
 			flag=1;
 		}
 	}
-	printSymbolTable(record_table);
+	//printSymbolTable(record_table);
 
-	printSymbolTable(global_table);
+//	printSymbolTable(global_table);
 	NODE_AstTree f_temp = main_node;
 	// SYMBOLTABLE main_table = symbolTableinit("_main");
 	// FN_STACK stack= stack_init("_main", main_table);

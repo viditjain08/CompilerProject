@@ -1,4 +1,4 @@
-#include "semanticAnalyzerDef.h"
+#include "codeGenDef.h"
 #include <time.h>
 // #include "lexer.h"
 #define HASHSIZE 300
@@ -6,7 +6,7 @@
 
 extern Hashtable non_termainals;
 extern Hashtable terminals;
-int no_of_lines=0;
+int no_of_lines=1000;
 char** errors;
 HASHSYMBOL h;
 int hash_size;
@@ -121,7 +121,25 @@ int main(int argc, char *argv[]) {
 				continue;
 			}
 			// print symbol table in appropraite format
+			printSymbolTable(record_table);
+            printSymbolTable(global_table);
 
+            NODE_AstTree temp = ast->child;
+            while(temp!=NULL){
+
+              int x;
+              if(temp->tokens==NULL) {
+                x = getFunction("_main");
+                //printf("ma%d\n",x);
+              } else {
+                x = getFunction(temp->tokens->tk->lexeme);
+               // printf("fun%d\n",x);
+              }
+//              printf("asdasa\n");
+              FN_ENTRY f = functions+x;
+              printSymbolTable(f->st);
+              temp=temp->sibling;
+            }
 
 		}else if(choice == 6){
 			// print list of all global variables
@@ -227,6 +245,7 @@ int main(int argc, char *argv[]) {
 
 		}else if(choice == 10){
 			// to produce the assembly code
+			codeGeneration(ast->child);
 		}
 		// {
 		//
