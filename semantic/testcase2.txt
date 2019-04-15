@@ -46,7 +46,7 @@ _main
 	b5c6.maths <--- 0.00;
 	b5c6.physics <--- 0.00;
 	b5c6.chemistry <---0.00;
-	while(b5<=d5cb34567)
+	while(~(b5<=d5cb34567))
 		[d4] <--- call _readMarks with parameters [b5];
 		[b5c6] <--- call _addRecords with parameters [b5c6];
 		% above displays the sum of records

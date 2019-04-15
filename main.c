@@ -24,11 +24,18 @@ int main (int argc, char* argv[]){
 	PARSETABLE t = createParseTable(f,g,t);
 
 	FILE *parsetree = fopen("parsetreeOutFile.txt","w+");
-	TREE_NODE x = parseInputSourceCode("semantic/testcase1.txt",t,f,g);
-	traversal(parsetree, g, x);
+	TREE_NODE x = parseInputSourceCode("semantic/testcase3.txt",t,f,g);
+	// traversal(parsetree, g, x);
 	fclose(parsetree);
 
 	NODE_AstTree tree = buildAST(x);
+	printf("\n" );
+	printf("\n" );
+	printf("------AST------\n" );
+	printf("\n" );
+	traverseAST(tree);
+	printf("\n" );
+	printf("\n" );
 
 	int nAst = countNodesAST(tree);
 	int nPt = countNodesParseTree(x);
@@ -44,6 +51,7 @@ int main (int argc, char* argv[]){
 	HASHSYMBOL h = populateSymbolTable(tree);
 
 	nAst = countNodesAST(tree);
+
 	printf("Number of Nodes in Ast: %d\n",nAst);
 	printf("Number of Nodes in parsetree: %d\n",nPt);
 	printf("Compression Ratio: %.2f\n",(1-((float)nAst/nPt))*100 );
@@ -56,7 +64,8 @@ int main (int argc, char* argv[]){
 
 	semAnalyze(tree);
 
-	printf("----------Semantic Errors---------\n" );
+	printf("\t----------Semantic Errors---------\n" );
+	printf("\n" );
 	printErrors(no_of_lines);
 	printf("\n" );
 	printf("\n" );

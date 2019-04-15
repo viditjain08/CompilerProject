@@ -950,13 +950,6 @@ NODE_AstTree buildAST(TREE_NODE root){
 
     }
 
-
-
-
-
-
-
-
         }
     }
 
@@ -986,4 +979,165 @@ int countNodesParseTree(TREE_NODE root){
     }
 
     return sum +1;
+}
+
+void traverseAST(NODE_AstTree root){
+    NODE_AstTree temp = root->child->sibling;
+
+    while (temp!=NULL) {
+        traverseFuncAST(temp);
+        temp = temp->sibling;
+        printf("\n" );
+        printf("\n" );
+    }
+    traverseMainFuncAST(root->child);
+}
+
+void traverseFuncAST(NODE_AstTree root){
+    printf("\nFunction Name:\t\t%s\n\n",root->child->tokens->tk->lexeme );
+
+    NODE_AstTree in = root->child->sibling;
+    NODE_AstTree out = in->sibling;
+
+    printf("Input parameters:\t" );
+    printParams(in);
+    printf("Output parameters:\t" );
+    printParams(out);
+    printf("\n" );
+
+    printTypeDefs(root->child->sibling->sibling->sibling->child);
+    printf("Variable Declaration:\t");
+    printParams(root->child->sibling->sibling->sibling->child->sibling);
+    printf("Statements:\n");
+    printStmts(root->child->sibling->sibling->sibling->child->sibling->sibling);
+    printRetStmt(root->child->sibling->sibling->sibling->child->sibling->sibling->sibling);
+
+}
+
+void printTypeDefs(NODE_AstTree root){
+    NODE_AstTree tmp = root->child;
+    printf("Type Definitions:\n" );
+    while (tmp!=NULL) {
+        printDef(tmp);
+        tmp = tmp->sibling;
+    }
+}
+
+void printDef(NODE_AstTree root){
+    printf("\t%s:: \t\t",root->child->tokens->next->tk->lexeme );
+
+    NODE_AstTree tmp = root->child->sibling;
+    while (tmp != NULL) {
+        printf("%s %s, ",tmp->tokens->tk->lexeme,tmp->tokens->next->tk->lexeme );
+        tmp = tmp->sibling;
+    }
+    printf("\n" );
+
+}
+
+void printParams(NODE_AstTree root){
+    NODE_AstTree temp = root->child;
+
+    while (temp != NULL) {
+        printf("%s %s, ", temp->tokens->tk->lexeme,temp->tokens->next->tk->lexeme );
+        temp = temp->sibling;
+    }
+    printf("\n" );
+}
+
+void printRetStmt(NODE_AstTree root){
+    NODE_AstTree temp = root->child;
+    printf("Return parameters:\t" );
+    while (temp != NULL) {
+        printf("%s, ", temp->tokens->tk->lexeme);
+        temp = temp->sibling;
+    }
+}
+
+void traverseMainFuncAST(NODE_AstTree main){
+    printf("Function Name:\t\t_main\n\n");
+
+    printTypeDefs(main->child);
+    printf("Variable Declaration:\t");
+    printParams(main->child->sibling);
+    printf("Statements:\n");
+    printStmts(main->child->sibling->sibling);
+    printRetStmt(main->child->sibling->sibling->sibling);
+
+}
+
+void printStmts(NODE_AstTree root) {
+
+    NODE_AstTree stmt = root->child;
+
+    while (stmt!=NULL) {
+        tokenType tok = stmt->tokens->tk->token;
+
+        switch (tok) {
+            case TK_ASSIGNOP:{
+                printf("Assignment Stmt:\t%s <--- ",stmt->child->tokens->tk->lexeme );
+                printExpr(stmt->child->sibling);
+                printf("\n" );
+            }break;
+            case TK_READ:{
+                printf("IO Read:\t%s\n",stmt->child->tokens->tk->lexeme );
+            }break;
+            case TK_WRITE:{
+                printf("IO Write:\t%s\n",stmt->child->tokens->tk->lexeme );
+            }break;
+            case TK_IF:{
+                printf("Conditional Stmt:\t boolExpr: \n" );
+                printExpr(stmt->child);
+                printf("\nIf then\n" );
+                printStmts(stmt->child->sibling);
+                printf("Else\n" );
+                printStmts(stmt->child->sibling->sibling);
+                printf("Endif\n" );
+            }break;
+            case TK_FUNID:{
+                printf("Function call to %s\n",stmt->tokens->tk->lexeme );
+                printf("Input Params:\t");
+                NODE_AstTree tmp = stmt->child->sibling->child;
+                while (tmp != NULL) {
+                    printf("%s, ",tmp->tokens->tk->lexeme );
+                    tmp = tmp->sibling;
+                }
+                printf("\nOutput Params:\t" );
+                tmp = stmt->child->child;
+                while (tmp != NULL) {
+                    printf("%s, ",tmp->tokens->tk->lexeme );
+                    tmp = tmp->sibling;
+                }
+                printf("\n" );
+            }break;
+            case TK_WHILE:{
+                printf("Iterative Stmt:\t boolExpr: " );
+                printExpr(stmt->child);
+                printf("\n");
+                printStmts(stmt->child->sibling);
+                printf("Endwhile\n" );
+            }break;
+        }
+        stmt = stmt->sibling;
+    }
+
+}
+
+void printExpr(NODE_AstTree root){
+    if (root->child == NULL) {
+        printf("%s", root->tokens->tk->lexeme );
+    }else{
+        if (root->tokens->tk->token == TK_NOT) {
+            printf("%s(",root->tokens->tk->lexeme );
+            printExpr(root->child);
+            printf(")");
+        }else{
+            printf("%s(",root->tokens->tk->lexeme );
+            printExpr(root->child);
+            printf(")(");
+            printExpr(root->child->sibling);
+            printf(")");
+        }
+
+    }
 }

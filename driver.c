@@ -1,10 +1,16 @@
-#include "parser.h"
+#include "semanticAnalyzerDef.h"
 #include <time.h>
 // #include "lexer.h"
 #define HASHSIZE 300
 
-extern Hashtable non_terminals;
+extern Hashtable non_termainals;
 extern Hashtable terminals;
+int no_of_lines=0;
+char** errors;
+HASHSYMBOL h;
+int hash_size;
+FN_ENTRY functions;
+int fn_size;
 
 int main(int argc, char *argv[]) {
 	char *file = argv[1];

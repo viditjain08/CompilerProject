@@ -355,7 +355,7 @@ int checkFunctionInvoke(NODE_AstTree stmt, int funcHashVal) {
     if(oldFuncInd <= newFuncInd){
         // stmt for error, old does not know the signature of new function
         memset(buf,0,256);
-        sprintf(buf,"Line:%d ==> %s does not know the signature of %s\n", stmt->tokens->tk->lineNo,functions[funcHashVal].function_name,functions[index].function_name);
+        sprintf(buf,"Line:%d ==> %s can't call function %s\n", stmt->tokens->tk->lineNo,functions[funcHashVal].function_name,functions[index].function_name);
         addError(stmt->tokens->tk->lineNo );
     }
 
