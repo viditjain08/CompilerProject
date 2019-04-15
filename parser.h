@@ -8,4 +8,4 @@ PARSETABLE createParseTable(FirstFollow F, GRAMMAR G, PARSETABLE PT);
 TREE_NODE addRule(int r_index, TREE_NODE s, FILE* fp, PARSETABLE pt, FirstFollow f, GRAMMAR g);
 TREE_NODE buildParseTree(TREE_NODE s, FILE* fp, PARSETABLE pt, FirstFollow f, GRAMMAR g);
 TREE_NODE parseInputSourceCode(char *testcaseFile, PARSETABLE pt, FirstFollow f, GRAMMAR g);
-void traversal(FILE* fp, GRAMMAR g, TREE_NODE tree);
+void traversal(GRAMMAR g, TREE_NODE tree);

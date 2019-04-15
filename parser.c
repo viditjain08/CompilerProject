@@ -845,43 +845,43 @@ TREE_NODE parseInputSourceCode(char *testcaseFile, PARSETABLE pt, FirstFollow f,
 	return s;
 }
 
-void traversal(FILE*fp, GRAMMAR g, TREE_NODE tree){
+void traversal( GRAMMAR g, TREE_NODE tree){
 	if (tree->child != NULL) {
-		traversal(fp, g, tree->child);
+		traversal( g, tree->child);
 	}
 	if(tree->type==T) {
 		if(tree->tk_info.tk!=NULL) {
-			fprintf(fp,"%-30s\t%-3d\t%-20s\t ",tree->tk_info.tk->lexeme, tree->tk_info.tk->lineNo, terminals[g->terminals[tree->tk_info.tk->token]].name);
+			printf("%-30s\t%-3d\t%-20s\t ",tree->tk_info.tk->lexeme, tree->tk_info.tk->lineNo, terminals[g->terminals[tree->tk_info.tk->token]].name);
 			if(tree->tk_info.tk->dataType==0) {
-				fprintf(fp,"%-5d ",tree->tk_info.tk->val->valI);
+				printf("%-5d ",tree->tk_info.tk->val->valI);
 			} else if(tree->tk_info.tk->dataType==1) {
-				fprintf(fp,"%-5f ",tree->tk_info.tk->val->valF);
+				printf("%-5f ",tree->tk_info.tk->val->valF);
 			} else {
-				fprintf(fp,"---- ");
+				printf("---- ");
 			}
-			fprintf(fp,"%s ",non_terminals[tree->parent_index].name);
-			fprintf(fp,"%d ",1-tree->type);
-			fprintf(fp,"---- \n");
+			printf("%s ",non_terminals[tree->parent_index].name);
+			printf("%d ",1-tree->type);
+			printf("---- \n");
 		}
 
 	} else {
-		fprintf(fp,"%-20d\t\n", tree->rule_index);
-		fprintf(fp,"---- ---- ---- ---- ");
+		printf("%-20d\t\n", tree->rule_index);
+		printf("---- ---- ---- ---- ");
 		if(tree->parent_index==-1) {
-			fprintf(fp,"ROOT\t");
+			printf("ROOT\t");
 		} else {
-			fprintf(fp,"%-30s\t",non_terminals[tree->parent_index].name);
+			printf("%-30s\t",non_terminals[tree->parent_index].name);
 
 		}
-		fprintf(fp,"0\t");
-		fprintf(fp,"%-20s\t\n",non_terminals[tree->tk_info.index].name);
+		printf("0\t");
+		printf("%-20s\t\n",non_terminals[tree->tk_info.index].name);
 	}
 
 	// printf("ntt %d, parent index %d, \n",tree->type, tree->parent_index);
 	if(tree->child != NULL) {
 		TREE_NODE tmp = tree->child->next;
 		while(tmp != NULL) {
-			traversal(fp, g, tmp);
+			traversal( g, tmp);
 			tmp = tmp->next;
 		}
 	}
