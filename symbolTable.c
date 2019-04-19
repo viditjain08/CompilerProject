@@ -1,3 +1,12 @@
+/*
+    Group 1:
+    1. Anupam Aggarwal     2016A7PS0033P
+    2. Piyush Garg         2016A7PS0035P
+    3. Rijul Katiyar       2016A7PS0063P
+    4. Vidit Jain          2016A7PS0064P
+
+*/
+
 #include "symbolTabledef.h"
 // #include "astDef.h"
 
@@ -6,21 +15,34 @@ SYMBOLTABLE record_table;
 SYMBOLTABLE global_table;
 
 
-FN_STACK stack_init(char* name, SYMBOLTABLE s) {
+FN_STACK stack_init(char* var_name, char* fieldname) {
 	FN_STACK f = (FN_STACK)malloc(sizeof(fn_stack));
-	f->function_name = (char*)malloc(sizeof(char)*(1+strlen(name)));
-	strcpy(f->function_name,name);
+	f->var_name = (char*)malloc(sizeof(char)*(1+strlen(var_name)));
+	strcpy(f->var_name,var_name);
+	if(fieldname!=NULL) {
+		f->field_name = (char*)malloc(sizeof(char)*(1+strlen(fieldname)));
+		strcpy(f->field_name,fieldname);
+	}
+
 	f->next = NULL;
-	f->symboltable = s;
 	return f;
 }
 
-FN_STACK push(FN_STACK f, char* name, SYMBOLTABLE s) {
+FN_STACK push(FN_STACK f, char* var_name, char* fieldname) {
 	FN_STACK new = (FN_STACK)malloc(sizeof(fn_stack));
-	new->function_name = (char*)malloc(sizeof(char)*(1+strlen(name)));
-	strcpy(new->function_name,name);
+	if(var_name!=NULL) {
+		new->var_name = (char*)malloc(sizeof(char)*(strlen(var_name)+1));
+		strcpy(new->var_name,var_name);
+	} else {
+		new->var_name=NULL;
+	}
+	if(fieldname!=NULL) {
+		new->field_name = (char*)malloc(sizeof(char)*(1+strlen(fieldname)));
+		strcpy(new->field_name,fieldname);
+	} else {
+		new->field_name=NULL;
+	}
 	new->next = f;
-	new->symboltable = s;
 	return new;
 }
 
@@ -29,10 +51,8 @@ FN_STACK pop(FN_STACK f) {
 		return NULL;
 	}
 	FN_STACK temp = f->next;
-	free(f);
-	return temp;
+	return f;
 }
-
 void functionsInit() {
 	functions = (FN_ENTRY)malloc(sizeof(fn_entry)*fn_size);
 	for(int i=0; i<fn_size; i++) {
@@ -325,14 +345,17 @@ SYMBOLENTRY addDeclarations(NODE_AstTree parent, SYMBOLTABLE st, int offset, SYM
 	NODE_AstTree prev = NULL;
 	while(input_par!=NULL) {
 		if((flag==0 && input_par->tokens->next->next!=NULL)||(flag==1 && input_par->tokens->next->next==NULL)) {
-			printf("%s \n",input_par->tokens->next->tk->lexeme);
+		//	printf("%s \n",input_par->tokens->next->tk->lexeme);
 
 			prev = input_par;
 			input_par = input_par->sibling;
 			continue;
 		}
 		int hashval = lookupEntry(st->name, input_par->tokens->next->tk->lexeme, NULL);
+		if(hashval==-1) {
+			hashval = lookupEntry("global", input_par->tokens->next->tk->lexeme, NULL);
 
+		}
 		if(hashval!=-1) {
 			if(prev==NULL) {
 				parent->child=input_par->sibling;
@@ -345,7 +368,7 @@ SYMBOLENTRY addDeclarations(NODE_AstTree parent, SYMBOLTABLE st, int offset, SYM
 			int temp = deallocate(input_par);
 			char e[200];
 			sprintf(e, "Line %d: Variable %s already declared.\n", Line, name);
-			printf("%s",e);
+		//	printf("%s",e);
 			errors[Line] = (char*)malloc(sizeof(char)*(strlen(e)+1));
 			strcpy(errors[Line],e);
 			if(prev==NULL) {
@@ -399,7 +422,7 @@ SYMBOLENTRY addDeclarations(NODE_AstTree parent, SYMBOLTABLE st, int offset, SYM
 				int temp = deallocate(input_par);
 				char e[200];
 				sprintf(e, "Line %d: No record %s found.\n", Line, name);
-				printf("%s",e);
+			//	printf("%s",e);
 				errors[Line] = (char*)malloc(sizeof(char)*(strlen(e)+1));
 				strcpy(errors[Line],e);
 				if(prev==NULL) {
@@ -453,11 +476,11 @@ SYMBOLENTRY addDeclarations(NODE_AstTree parent, SYMBOLTABLE st, int offset, SYM
 		if(st->head==NULL) {
 			st->head = s;
 			y = s;
-			printf("Added to %s table\n",st->name);
+		//	printf("Added to %s table\n",st->name);
 		} else {
 			y->next=s;
 			y=s;
-			printf("Added to previous %s entry\n",st->name);
+		//	printf("Added to previous %s entry\n",st->name);
 		}
 		st->no_entries++;
 		prev = input_par;
@@ -468,7 +491,7 @@ SYMBOLENTRY addDeclarations(NODE_AstTree parent, SYMBOLTABLE st, int offset, SYM
 
 void functionSymbolTable(NODE_AstTree function, SYMBOLTABLE st) {
 
-	printf("Function: %s\n",st->name);
+//	printf("Function: %s\n",st->name);
 
 	int offset=0;
 	NODE_AstTree stmts = function;
@@ -510,13 +533,17 @@ HASHSYMBOL populateSymbolTable(NODE_AstTree ast) {
 
 	SYMBOLENTRY x,y;
 	int flag=0;
+	if(record_temp==NULL) {
+		flag=1;
+		record_temp=main_node;
+	}
 	while(record_temp!=NULL) {
 		NODE_AstTree stmts;
 		if(record_temp==main_node) {
 			SYMBOLTABLE sym = symbolTableinit("_main");
 			int temp = enterFunction("_main", index, sym, record_temp);
 			index++;
-			printf("Function _main for records\n");
+		//	printf("Function _main for records\n");
 			stmts = record_temp;
 		} else {
 			if(getFunction(record_temp->child->tokens->tk->lexeme)!=-1) {
@@ -526,7 +553,7 @@ HASHSYMBOL populateSymbolTable(NODE_AstTree ast) {
 				int endLine = deallocate(record_temp)+1;
 				char e[200];
 				sprintf(e, "Line %d-%d: Function %s defined more than once\n", startLine,endLine, name);
-				printf("%s",e);
+		//		printf("%s",e);
 				errors[startLine] = (char*)malloc(sizeof(char)*(strlen(e)+1));
 				strcpy(errors[startLine],e);
 				record_temp = prev_record->sibling;
@@ -535,13 +562,13 @@ HASHSYMBOL populateSymbolTable(NODE_AstTree ast) {
 			SYMBOLTABLE sym = symbolTableinit(record_temp->child->tokens->tk->lexeme);
 			int temp = enterFunction(record_temp->child->tokens->tk->lexeme, index, sym, record_temp);
 			index++;
-			printf("Function %s for records\n",record_temp->child->tokens->tk->lexeme);
+		//	printf("Function %s for records\n",record_temp->child->tokens->tk->lexeme);
 			stmts = record_temp->child->sibling->sibling->sibling;
 		}
 		NODE_AstTree records = stmts->child->child;
 		NODE_AstTree prev = NULL;
 		for(; records!=NULL;) {
-			printf("--%s--\n",records->child->tokens->next->tk->lexeme);
+		//	printf("--%s--\n",records->child->tokens->next->tk->lexeme);
 			NODE_AstTree record_def = records->child;
 			int hval = lookupRecord(records->child->tokens->next->tk->lexeme);
 			// printf("%u \n",records->sibling);
@@ -558,7 +585,7 @@ HASHSYMBOL populateSymbolTable(NODE_AstTree ast) {
 				int endLine = deallocate(records)+1;
 				char e[200];
 				sprintf(e, "Line %d-%d: Record %s already defined\n", startLine,endLine, name);
-				printf("%s",e);
+			//	printf("%s",e);
 				errors[startLine] = (char*)malloc(sizeof(char)*(strlen(e)+1));
 				strcpy(errors[startLine],e);
 				if(prev==NULL) {
@@ -574,33 +601,33 @@ HASHSYMBOL populateSymbolTable(NODE_AstTree ast) {
 			s->record_name = (char*)malloc(sizeof(char)*(strlen(record_def->tokens->next->tk->lexeme)+1));
 			strcpy(s->record_name,record_def->tokens->next->tk->lexeme);
 			hval = hashSymbolEntry(record_table, s, NULL, "record", s->record_name, NULL);
-			printf("%d \n",hval);
+		//	printf("%d \n",hval);
 			if(record_table->head==NULL) {
 				record_table->head = s;
 				x = s;
-				printf("Added to record table\n");
+		//		printf("Added to record table\n");
 			} else {
 				x->next=s;
 				x=s;
-				printf("Added to previous record entry\n");
+		//		printf("Added to previous record entry\n");
 			}
 			record_table->no_entries++;
 			record_def=record_def->sibling;
 			FIELD temp_field;
 			int i=0,r=0;
 			for(; record_def!=NULL; record_def=record_def->sibling) {
-				printf("%s %s \n", record_def->tokens->tk->lexeme,record_def->tokens->next->tk->lexeme);
+			//	printf("%s %s \n", record_def->tokens->tk->lexeme,record_def->tokens->next->tk->lexeme);
 				VAL v;
 				v.ival = -1;
 				FIELD f = fieldinit(record_def->tokens->tk->token, v, record_def->tokens->next->tk->lexeme);
 				if(s->record==NULL) {
 					s->record = f;
 					temp_field = f;
-					printf("Added field to record entry\n");
+			//		printf("Added field to record entry\n");
 				} else {
 					temp_field->next = f;
 					temp_field = f;
-					printf("Added field to previous record field\n");
+					//printf("Added field to previous record field\n");
 				}
 				if(f->dType==INT) {
 					i++;
@@ -611,7 +638,7 @@ HASHSYMBOL populateSymbolTable(NODE_AstTree ast) {
 			}
 			s->int_no = i;
 			s->real_no = r;
-			printf("%d %d\n",i,r);
+		//	printf("%d %d\n",i,r);
 			s->offset = 2*i + 4*r;
 			prev=records;
 			records=records->sibling;
@@ -629,7 +656,12 @@ HASHSYMBOL populateSymbolTable(NODE_AstTree ast) {
 	}
 	prev_record = NULL;
 	flag = 0;
-	for(record_temp=main_node->sibling; record_temp!=NULL;) {
+	record_temp=main_node->sibling;
+	if(record_temp==NULL) {
+		flag=1;
+		record_temp=main_node;
+	}
+	while(record_temp!=NULL) {
 		NODE_AstTree stmts;
 		if(record_temp==main_node) {
 			stmts = main_node;

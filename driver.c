@@ -1,3 +1,11 @@
+/*
+    Group 1:
+    1. Anupam Aggarwal     2016A7PS0033P
+    2. Piyush Garg         2016A7PS0035P
+    3. Rijul Katiyar       2016A7PS0063P
+    4. Vidit Jain          2016A7PS0064P
+
+*/
 #include "codeGenDef.h"
 #include <time.h>
 // #include "lexer.h"
@@ -12,15 +20,15 @@ HASHSYMBOL h;
 int hash_size;
 FN_ENTRY functions;
 int fn_size;
-
+FN_STACK stack = NULL;
 int main(int argc, char *argv[]) {
 
 
-	// if (argc < 2) {
-	// 	printf("Give command line arguments\n" );
-	// 	exit(0);
-	// }
-	char *file = "semantic/testcase3.txt";
+	if (argc < 2) {
+		printf("Give command line arguments\n" );
+		exit(0);
+	}
+	char *file = argv[1];
 	clock_t start_time, end_time;
 	double total_CPU_time, total_CPU_time_in_seconds;
 
@@ -128,11 +136,11 @@ int main(int argc, char *argv[]) {
             while(temp!=NULL){
 
               int x;
-              if(temp->tokens==NULL) {
+              if(temp->tokens!=NULL) {
                 x = getFunction("_main");
                 //printf("ma%d\n",x);
               } else {
-                x = getFunction(temp->tokens->tk->lexeme);
+                x = getFunction(temp->child->tokens->tk->lexeme);
                // printf("fun%d\n",x);
               }
 //              printf("asdasa\n");
@@ -245,7 +253,19 @@ int main(int argc, char *argv[]) {
 
 		}else if(choice == 10){
 			// to produce the assembly code
+			int count=0;
+			for(int i=0;i<1000;i++) {
+				if(errors[i]==NULL) {
+					count++;
+				}
+			}
+			if(count!=1000) {
+				printf("Errors, cannot create asm\n");
+				continue;
+			}
+			printf("code.asm dumped\n");
 			codeGeneration(ast->child);
+			break;
 		}
 		// {
 		//

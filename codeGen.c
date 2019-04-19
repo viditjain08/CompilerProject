@@ -7,14 +7,19 @@
 
 */
 #include "codeGenDef.h"
-
+#include <fcntl.h>
+#include <sys/wait.h>
+#include <sys/types.h>
+#include <stdio.h>
+#include <unistd.h>
+#include <stdlib.h>
 extern HASHSYMBOL h;
 extern int hash_size;
 extern FN_ENTRY functions;
 extern int fn_size;
 extern SYMBOLTABLE record_table;
 extern SYMBOLTABLE global_table;
-
+FILE *fp;
 int global_count=0;
 extern FN_STACK stack;
 void arithmeticTrav(NODE_AstTree temp){
@@ -562,7 +567,8 @@ void codeGeneration(NODE_AstTree nt){
 	// //   printf("\n");
 	// // }
 
-	FILE *fp = fopen("code.asm","a+");
+	int fd = open("code.asm", O_CREAT|O_RDWR, 0666);
+	dup2(fd,1);
 	printf( "SECTION\t.bss\n\n");
 	SYMBOLENTRY se = record_table->head;
 	while(se!=NULL) {
@@ -808,5 +814,5 @@ void codeGeneration(NODE_AstTree nt){
     printf("mov\tebx,0\n");
     printf("mov\teax,1\n");
     printf("int\t80h\n");
-	fclose(fp);
+	close(1);
 }

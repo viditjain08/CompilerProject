@@ -75,8 +75,8 @@ struct fn_entry{
 };
 
 struct fn_stack {
-	char* function_name;
-	SYMBOLTABLE symboltable;
+	char* var_name;
+	char* field_name;
 	FN_STACK next;
 };
 
