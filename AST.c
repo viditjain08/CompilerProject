@@ -94,6 +94,7 @@ NODE_AstTree buildAST(TREE_NODE root){
 
             // printf("%s ",child2->child->sibling->tokens->next->tk->lexeme);
             NODE_AstTree res = (NODE_AstTree)malloc(sizeof(Node_AstTree));
+            printf("%s\n",child1->tokens->tk->lexeme);
             res->tokens = NULL;
             res->parent = NULL;
             res->child = child1;
@@ -155,9 +156,11 @@ NODE_AstTree buildAST(TREE_NODE root){
             return buildAST(children);
         }break;
         case 9:{
+        
             NODE_AstTree child1 = buildAST(children);
             NODE_AstTree child2 = buildAST(children->next);
             NODE_AstTree child3 = buildAST(children->next->next);
+
 
 
             child1->tokens->next = (LIST_TokenInfo)malloc(sizeof(List_TokenInfo));
@@ -178,7 +181,7 @@ NODE_AstTree buildAST(TREE_NODE root){
 
         }break;
         case 10:{
-            return buildAST(children);
+            return buildAST(children->next);
         }break;
         case 11:{
             return buildAST(children);
@@ -192,12 +195,12 @@ NODE_AstTree buildAST(TREE_NODE root){
         case 14:{
             NODE_AstTree child1 = buildAST(children);
             NODE_AstTree child2 = buildAST(children->next);
-
             // child1->tokens->next = (LIST_TokenInfo)malloc(sizeof(List_TokenInfo));
             child1->tokens->tk = child2->tokens->tk;
             child1->sibling = NULL;
             child1->parent = NULL;
             child1->child = NULL;
+            child1->tokens->next = NULL;
             free(child2);
             return child1;
 
@@ -511,7 +514,8 @@ NODE_AstTree buildAST(TREE_NODE root){
             NODE_AstTree child2 = buildAST(children->next);
 
             child1->sibling = NULL;
-            if(child2->tokens->tk->token == EPS){
+
+            if(child2->tokens->tk == NULL || child2->tokens->tk->token == EPS){
                 free(child2);
                 return child1;
             }else{
@@ -529,9 +533,19 @@ NODE_AstTree buildAST(TREE_NODE root){
             return child2;
         }break;
         case 40:{
-            return buildAST(children);
+            NODE_AstTree node = (NODE_AstTree)malloc(sizeof(Node_AstTree));
+            node->child = NULL;
+            node->sibling = NULL;
+            node->parent = NULL;
+            node->tokens = (LIST_TokenInfo)malloc(sizeof(List_TokenInfo));
+            node->tokens->tk = NULL;
+            node->tokens->next = NULL;
+            return node;
         }break;
         case 41:{
+            return buildAST(children);
+        }break;
+        case 42:{
             NODE_AstTree child1 = buildAST(children);
             // NODE_AstTree child2 = buildAST(children->next);
             NODE_AstTree child3 = buildAST(children->next->next);
@@ -549,7 +563,7 @@ NODE_AstTree buildAST(TREE_NODE root){
             return child3;
 
         }break;
-        case 42:{
+        case 43:{
             // NODE_AstTree child1 = buildAST(children);
             NODE_AstTree child2 = buildAST(children->next);
             // NODE_AstTree child3 = buildAST(children->next->next);
@@ -563,10 +577,10 @@ NODE_AstTree buildAST(TREE_NODE root){
             return res;
 
         }break;
-        case 43:{
+        case 44:{
             return buildAST(children);
         }break;
-        case 44:{
+        case 45:{
             // NODE_AstTree child1 = buildAST(children);
             NODE_AstTree child2 = buildAST(children->next);
             // NODE_AstTree child3 = buildAST(children->next->next);
@@ -578,7 +592,7 @@ NODE_AstTree buildAST(TREE_NODE root){
             res->child = child2;
             return res;
         }break;
-        case 45:{
+        case 46:{
             // NODE_AstTree child1 = buildAST(children);
             // NODE_AstTree child2 = buildAST(children->next);
             NODE_AstTree child3 = buildAST(children->next->next);
@@ -615,7 +629,7 @@ NODE_AstTree buildAST(TREE_NODE root){
 
 
         }break;
-        case 46:{
+        case 47:{
             // 46. <conditionalStmt>===> TK_IF TK_OP <booleanExpression> TK_CL TK_THEN <stmt> <otherStmts> <elsePart>
             // NODE_AstTree child1 = buildAST(children);
             // NODE_AstTree child2 = buildAST(children->next);
@@ -658,7 +672,7 @@ NODE_AstTree buildAST(TREE_NODE root){
             return res;
 
         }break;
-        case 47:{
+        case 48:{
             //47. <elsePart>===> TK_ELSE <stmt> <otherStmts> TK_ENDIF
             // NODE_AstTree child1 = buildAST(children);
             NODE_AstTree child2 = buildAST(children->next);
@@ -682,26 +696,8 @@ NODE_AstTree buildAST(TREE_NODE root){
 
 
         }break;
-        case 48:{
-            return buildAST(children);
-        }break;
         case 49:{
-            NODE_AstTree child1 = buildAST(children);
-            // NODE_AstTree child2 = buildAST(children->next);
-            NODE_AstTree child3 = buildAST(children->next->next);
-            // NODE_AstTree child4 = buildAST(children->next->next->next);
-            // NODE_AstTree child5 = buildAST(children->next->next->next->next);
-
-
-            child1->sibling = NULL;
-            child1->child = child3;
-            child3->parent = child1;
-            child3->sibling = NULL;
-
-            // free(child2); free(child4); free(child5);
-
-            return child1;
-
+            return buildAST(children);
         }break;
         case 50:{
             NODE_AstTree child1 = buildAST(children);
@@ -719,9 +715,27 @@ NODE_AstTree buildAST(TREE_NODE root){
             // free(child2); free(child4); free(child5);
 
             return child1;
+
+        }break;
+        case 51:{
+            NODE_AstTree child1 = buildAST(children);
+            // NODE_AstTree child2 = buildAST(children->next);
+            NODE_AstTree child3 = buildAST(children->next->next);
+            // NODE_AstTree child4 = buildAST(children->next->next->next);
+            // NODE_AstTree child5 = buildAST(children->next->next->next->next);
+
+
+            child1->sibling = NULL;
+            child1->child = child3;
+            child3->parent = child1;
+            child3->sibling = NULL;
+
+            // free(child2); free(child4); free(child5);
+
+            return child1;
         }break;
 
-        case 51:{
+        case 52:{
             NODE_AstTree child1 = buildAST(children);
             NODE_AstTree child2 = buildAST(children->next);
 
@@ -739,36 +753,36 @@ NODE_AstTree buildAST(TREE_NODE root){
                     tmp = tmp->parent;
                 }
                 return tmp;
-            }
-
-        }break;
-        case 52:{
-            NODE_AstTree child1 = buildAST(children);
-            NODE_AstTree child2 = buildAST(children->next);
-            NODE_AstTree child3 = buildAST(children->next->next);
-
-            if (child3->tokens->tk->token == EPS) { // expPrime contains EPS info
-                free(child3);
-                child1->child = child2;
-                child2->parent = child1;
-                child2->sibling = NULL;
-                child1->sibling = NULL;
-                return child1;
-            }else{
-                NODE_AstTree tmp = child3->child;
-                child3->child = child1;
-                child1->child = child2;
-                child1->parent = child3;
-                child2->parent = child1;
-                child1->sibling = tmp;
-                return child1;
             }
 
         }break;
         case 53:{
-            return buildAST(children);
+            NODE_AstTree child1 = buildAST(children);
+            NODE_AstTree child2 = buildAST(children->next);
+            NODE_AstTree child3 = buildAST(children->next->next);
+
+            if (child3->tokens->tk->token == EPS) { // expPrime contains EPS info
+                free(child3);
+                child1->child = child2;
+                child2->parent = child1;
+                child2->sibling = NULL;
+                child1->sibling = NULL;
+                return child1;
+            }else{
+                NODE_AstTree tmp = child3->child;
+                child3->child = child1;
+                child1->child = child2;
+                child1->parent = child3;
+                child2->parent = child1;
+                child1->sibling = tmp;
+                return child1;
+            }
+
         }break;
         case 54:{
+            return buildAST(children);
+        }break;
+        case 55:{
             NODE_AstTree child1 = buildAST(children);
             NODE_AstTree child2 = buildAST(children->next);
 
@@ -789,7 +803,7 @@ NODE_AstTree buildAST(TREE_NODE root){
             }
 
         }break;
-        case 55:{
+        case 56:{
             NODE_AstTree child1 = buildAST(children);
             NODE_AstTree child2 = buildAST(children->next);
             NODE_AstTree child3 = buildAST(children->next->next);
@@ -811,17 +825,14 @@ NODE_AstTree buildAST(TREE_NODE root){
                 return child1;
             }
         }break;
-        case 56:{
+        case 57:{
             return buildAST(children);
         }break;
-        case 57:{
+        case 58:{
             // NODE_AstTree child1 = buildAST(children);
             NODE_AstTree child2 = buildAST(children->next);
             // NODE_AstTree child3 = buildAST(children->next);
             return child2;
-        }break;
-        case 58:{
-            return buildAST(children);
         }break;
         case 59:{
             return buildAST(children);
@@ -845,6 +856,9 @@ NODE_AstTree buildAST(TREE_NODE root){
             return buildAST(children);
         }break;
         case 66:{
+            return buildAST(children);
+        }break;
+        case 67:{
             // NODE_AstTree child1 = buildAST(children);
             NODE_AstTree child2 = buildAST(children->next);
             // NODE_AstTree child3 = buildAST(children->next->next);
@@ -858,10 +872,10 @@ NODE_AstTree buildAST(TREE_NODE root){
             child2->parent = child4;
             child6->parent = child4;
             child4->child  = child2;
-            child2->sibling = NULL;
+            //child2->sibling = NULL;
             return child4;
         }break;
-        case 67:{
+        case 68:{
             NODE_AstTree child1 = buildAST(children);
             NODE_AstTree child2 = buildAST(children->next);
             NODE_AstTree child3 = buildAST(children->next->next);
@@ -875,7 +889,7 @@ NODE_AstTree buildAST(TREE_NODE root){
 
             return child2;
         }break;
-        case 68:{
+        case 69:{
             NODE_AstTree child1 = buildAST(children);
             // NODE_AstTree child2 = buildAST(children->next);
             NODE_AstTree child3 = buildAST(children->next->next);
@@ -886,9 +900,6 @@ NODE_AstTree buildAST(TREE_NODE root){
             child3->parent = child1;
 
             return child1;
-        }break;
-        case 69:{
-            return buildAST(children);
         }break;
         case 70:{
             return buildAST(children);
@@ -912,12 +923,15 @@ NODE_AstTree buildAST(TREE_NODE root){
             return buildAST(children);
         }break;
         case 77:{
+            return buildAST(children);
+        }break;
+        case 78:{
             // NODE_AstTree child1 = buildAST(children);
             NODE_AstTree child2 = buildAST(children->next);
             // NODE_AstTree child3 = buildAST(children->next->next);
             return child2;
         }break;
-        case 78:{
+        case 79:{
             // NODE_AstTree child1 = buildAST(children);
             NODE_AstTree child2 = buildAST(children->next);
             // NODE_AstTree child3 = buildAST(children->next->next);
@@ -930,10 +944,10 @@ NODE_AstTree buildAST(TREE_NODE root){
 
 
         }break;
-        case 79:{
+        case 80:{
             return buildAST(children);
         }break;
-        case 80:{
+        case 81:{
             NODE_AstTree child1 = buildAST(children);
             NODE_AstTree child2 = buildAST(children->next);
             if(child2->tokens->tk->token != EPS){
@@ -945,14 +959,14 @@ NODE_AstTree buildAST(TREE_NODE root){
                 return child1;
             }
         }break;
-        case 81:{
+        case 82:{
             // NODE_AstTree child1 = buildAST(children);
             NODE_AstTree child2 = buildAST(children->next);
             // free(child1);
             // child2->sibling = NULL;
             return child2;
         }break;
-        case 82:{
+        case 83:{
             return buildAST(children);
         }break;
 

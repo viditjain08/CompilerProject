@@ -1,0 +1,90 @@
+_M1 input parameter list [real c5, int c5c3456]  
+output parameter list[real b4];
+	type real : d4cd;
+	c5c3456 <--- 63;
+	[b4] <--- call _M1 with parameters [d4cd, c5c3456];  
+	return [b4];
+end
+
+_Q1 input parameter list [real c5, int c5c3456]  
+output parameter list[real b4];
+	type real : d4cd;
+	c5c3456 <--- 63;
+	c5c3456 <--- c5c3456 + 67;
+	[b4] <--- call _M1 with parameters [d4cd, c5c3456]; 
+	return [b4];
+end
+
+_M2 input parameter list [int d5, int d5d34]  
+output parameter list[int d567];
+	type real : c3b5;
+	type real : d4;
+	type int : d5c56;
+	type int : b33;
+	[d4] <--- call _M1 with parameters [c3b5, d5c56];  
+	d567 <--- 63/45;
+	[b33] <--- call _M2 with parameters [d5c56, b33];   
+	return [d567];
+end
+
+_Q2 input parameter list [real c5, int c5c3456]  
+output parameter list[real b4];
+	type real : d4cd;
+	c5c3456 <--- 63;
+	c5c3456 <--- c5c3456 + 67;
+	return [b4];
+end
+
+_M3 input parameter list [real c6cd, real b5c, record #pilani c6c66]  
+output parameter list[real d55];
+	record #dubai
+		type real : variableone;
+		type int: variabletwo;
+		type real: variablethree;
+	endrecord;
+	type record #dubai : d43;
+	type int : c5c5;
+	type int : b3b3;
+	type real : c7c;
+	type real : d4d;
+	type int : d77;
+	[d77] <--- call _M2 with parameters [c5c5, b3b3]; 
+	[b5c] <--- call _M1 with parameters [c6cd, d77];
+	[d55] <--- call _M3 with parameters [c6cd, b5c, c6c66];
+	read(b3b3);
+	[d55] <--- call _M3 with parameters [c7c, d4d, c6c66];	
+	return [d55];
+end
+
+_Q3 input parameter list [real c5, int c5c3456]  
+output parameter list[real b4];
+	type real : d4cd;
+	c5c3456 <--- 63;
+	c5c3456 <--- c5c3456 + 67;
+	return [b4];
+end
+
+_Q4 input parameter list [int d5, int d5d34]  
+output parameter list[int d567];
+	type real : c3b5;
+	type real : d4;
+	type int : d5c56;
+	type int : b33;
+	[d567] <--- call _Q4 with parameters [d5c56, b33];   
+	d567 <--- 63/45;
+	[b33] <--- call _M2 with parameters [d5c56, b33];   
+	return [d567];
+end
+
+_main
+	record #pilani
+		type real : vone;
+		type int: vtwo;
+	endrecord;
+	type record #pilani : d43;
+	read(d43);
+	d43.vone <--- 30.96;
+	d43.vtwo <--- 1;
+	return;
+end
+

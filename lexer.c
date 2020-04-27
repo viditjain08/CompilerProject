@@ -112,6 +112,7 @@ void printTokens(const char *source_Code){
 
 char *createLexeme(int j,int flag){
     int curr;
+
     if (flag ==1){
         curr = currChar-1;
     }else{
@@ -616,7 +617,15 @@ tokenInfo* getNextToken(FILE *fp){
                         j++;
                         state = 16;
                         currChar++;
-                    }else{
+                    } else if(c =='.') {
+                    	j--;
+                    	currChar--;
+                        tkGenerated = 1;
+                        finalStateReached = 1;
+                        state = 0;
+                        lexeme = createLexeme(j,1);
+                        return getTKinfo(TK_NUM,lexeme,lineNo);
+                    } else{
 
                         lexeme = createLexeme(j,1);
                         // printf("Error while tokenizing %s at lineNo %d\n",lexeme,lineNo);
@@ -630,13 +639,16 @@ tokenInfo* getNextToken(FILE *fp){
 
                 case 16:
                     if (c >=48 && c<=57) {
-                        j++;
-                        lexeme = createLexeme(j,0);
-                        state = 0;
-                        currChar++;
-                        finalStateReached = 1;
-                        tkGenerated = 1;
-                        return getTKinfo(TK_RNUM,lexeme,lineNo);
+                    	j++;
+                    	state = 32;
+                    	currChar++;
+                        //j++;
+                        //lexeme = createLexeme(j,0);
+                        //state = 0;
+                        //currChar++;
+                        //finalStateReached = 1;
+                        //tkGenerated = 1;
+                        //return getTKinfo(TK_RNUM,lexeme,lineNo);
                     }else{
 
                         lexeme = createLexeme(j,1);
@@ -648,7 +660,53 @@ tokenInfo* getNextToken(FILE *fp){
                         return getTKinfo(TK_ERROR,lexeme,lineNo);;
                     }
                 break;
+				
+				case 32:
+					if(c==101 || c==69) {
+						j++;
+						state = 33;
+						currChar++;
+					} else {
+				    	tkGenerated = 1;
+                        finalStateReached = 1;
+                        state = 0;
+                        lexeme = createLexeme(j,1);
+                        return getTKinfo(TK_RNUM,lexeme,lineNo);
+					}
+					break;
+					
+				case 33:
+					if(c=='+'||c=='-') {
+						j++;
+						state = 34;
+						currChar++;
+					} else if (c >=48 && c<=57) {
+						j++;
+						state = 34;
+						currChar++;
+					} else {
+                        lexeme = createLexeme(j,1);
+                        // printf("Error while tokenizing %s at lineNo %d\n",lexeme,lineNo);
 
+                        state = 0;
+                        finalStateReached = 1;
+                        tkGenerated = 1;
+                        return getTKinfo(TK_ERROR,lexeme,lineNo);
+					}
+					break;
+				case 34:
+					if(c>=48 && c<=57) {
+						j++;
+						state = 34;
+						currChar++;
+					} else {
+				    	tkGenerated = 1;
+                        finalStateReached = 1;
+                        state = 0;
+                        lexeme = createLexeme(j,1);
+                        return getTKinfo(TK_RNUM,lexeme,lineNo);					
+					}
+					break;
                 case 17:
                     if (c >=97 && c<=122) {
                         state = 18;
@@ -684,7 +742,7 @@ tokenInfo* getNextToken(FILE *fp){
                         state = 0;
                         finalStateReached = 1;
                         tkGenerated = 1;
-                        return getTKinfo(TK_ERROR,lexeme,lineNo);;
+                        return getTKinfo(TK_RECORDID,lexeme,lineNo);;
                     }
                 break;
 

@@ -164,20 +164,20 @@ int computeHash(char* function, char* id, char* fieldid) {
 	int i=0;
 	long long hashVal=0;
 	while(function[i]!='\0') {
-		hashVal = hashVal + 7*(int)function[i];
+		hashVal = (hashVal + 7*(int)function[i])%hash_size;
 		i++;
 	}
 	hashVal = hashVal%hash_size;
 	i=0;
 	while(id[i]!='\0') {
-		hashVal = hashVal + 17*(int)id[i];
+		hashVal = (hashVal + 17*(int)id[i])%hash_size;
 		i++;
 	}
 	hashVal = hashVal%hash_size;
 	i=0;
 	if(fieldid!=NULL) {
 		while(fieldid[i]!='\0') {
-			hashVal = hashVal + 37*(int)fieldid[i];
+			hashVal = (hashVal + 37*(int)fieldid[i])%hash_size;
 			i++;
 		}
 		hashVal = hashVal%hash_size;
@@ -352,10 +352,10 @@ SYMBOLENTRY addDeclarations(NODE_AstTree parent, SYMBOLTABLE st, int offset, SYM
 			continue;
 		}
 		int hashval = lookupEntry(st->name, input_par->tokens->next->tk->lexeme, NULL);
-		if(hashval==-1) {
-			hashval = lookupEntry("global", input_par->tokens->next->tk->lexeme, NULL);
+		//if(hashval==-1) {
+		//	hashval = lookupEntry("global", input_par->tokens->next->tk->lexeme, NULL);
 
-		}
+		//}
 		if(hashval!=-1) {
 			if(prev==NULL) {
 				parent->child=input_par->sibling;
@@ -557,6 +557,7 @@ HASHSYMBOL populateSymbolTable(NODE_AstTree ast) {
 				errors[startLine] = (char*)malloc(sizeof(char)*(strlen(e)+1));
 				strcpy(errors[startLine],e);
 				record_temp = prev_record->sibling;
+				if(record_temp==NULL) { record_temp=main_node; flag=1; }
 				continue;
 			}
 			SYMBOLTABLE sym = symbolTableinit(record_temp->child->tokens->tk->lexeme);

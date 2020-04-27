@@ -1,0 +1,29 @@
+%Test Case for Question number 2a
+% modify as per needs maintaining the new pattern to be implemented
+% showcase the output through your lexer option one using the stage 2 driver - if problems do modify grammar
+% Option 9 of stage 2 should display the errors for all test cases
+
+_sumN  input parameter list [int d5cc34]  
+output parameter list[real d3];
+	type int : b5b567;
+	b5b567 <--- 1;
+	d3 <--- 23.45 + 45.24E+2;				% Both forms of real numbers are valid
+	d3 <--- d3 + 19.50e-3+ (26.35 - 12.35E4);     		% No error - No type mismatch - all three forms of real numbers are valid 
+	b5b567 <--- b5b567 + 1;
+	endwhile
+	return [d3];
+end
+
+_main
+	type int :b3;
+	type real :c4bd56;
+	type real: c5c5;
+	type int: c6;
+	c5c5<--- 17.28;
+	b3 <--- 7;
+	c4bd56 <--- 29.10E+4+c5c5;               		% tokenize as TK_ID TK_ASSIGNOP TK_RNUM TK_PLUS TK_ID 
+	[c4bd56]<--- call _sumN with parameters [b3];
+	b3<--- 16.23e+2 + c6;					% ERROR - type mismatch - plus with integer and real
+	write(c4bd56);
+	return;
+end

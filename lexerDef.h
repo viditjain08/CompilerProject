@@ -41,6 +41,7 @@ typedef enum{
     TK_GLOBAL,
     TK_ASSIGNOP,
     TK_DOT,
+    TK_NUM,
     TK_CALL,
     TK_WITH,
     TK_PARAMETERS,
@@ -58,7 +59,6 @@ typedef enum{
     TK_DIV,
     TK_PLUS,
     TK_MINUS,
-    TK_NUM,
     TK_RNUM,
     TK_NOT,
     TK_AND,
@@ -70,6 +70,8 @@ typedef enum{
     TK_GE,
     TK_NE,
     TK_RETURN,
+    TK_ARRAY,
+    TK_OF,
     TK_ERROR,   // For Unknown definition ERROR
     TK_ERROR2,  // for Length ERROR
     TK_ERROR3   // for Unkown Symbol error

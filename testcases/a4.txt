@@ -1,0 +1,31 @@
+_OnlineTest2019 input parameter list [real c3bcd]  
+	output parameter list[real c2, int d7 ];
+	type real : d7d765;
+	type real : c5b654;
+	read(c3bcd); 
+	c3bcd <--- 45.78e2;
+	c2 <--- (2.37e-9 + 98.67)*(23.54-102.40E9); 
+	c5b654 <--- 87.45 * 23.76e- - 4.68E+2;	
+	if(d7>=0)
+	then
+		write(d7);
+	endif
+	return[c2, d7];
+end
+
+_main
+	type real :b6dd5;
+	type real : d7d77;
+	type real : c6;
+	type int :b4:global;
+	b4 <--- b4 + 78;
+	d7d77<--- 25.23EE-76.45;	
+	c6<---2.34 + d7d77;
+	b6dd5 <--- d7d77/.23e+97;	
+	c6 <--- 46.37; 	               		
+	c6 <--- (978.11e1 + 2.36 + 9.30e-2)/c6; 
+	read(b6dd5);
+	d7d77 <--- 56.45 - 33.34e++ 78.65E-3;	
+	write(c6);
+	b6dd5 <--- 12.e+2 * d7d77;					
+end

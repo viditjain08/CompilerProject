@@ -7,7 +7,7 @@
 7. <output_par>===> TK_OUTPUT TK_PARAMETER TK_LIST TK_SQL <parameter_list> TK_SQR
 8. <output_par>===> eps
 9. <parameter_list>===> <dataType> TK_ID <remaining_list>
-10. <dataType>===> <primitiveDatatype>
+10. <dataType>===> <arrayDatatype> <primitiveDatatype>
 11. <dataType>===> <constructedDatatype>
 12. <primitiveDatatype>===> TK_INT
 13. <primitiveDatatype>===> TK_REAL
@@ -37,46 +37,49 @@
 37. <assignmentStmt>===> <singleOrRecId> TK_ASSIGNOP <arithmeticExpression> TK_SEM
 38. <singleOrRecId>===> TK_ID <new_24>
 39. <new_24>===> TK_DOT TK_FIELDID
-40. <new_24>===> eps
-41. <funCallStmt>===> <outputParameters> TK_CALL TK_FUNID TK_WITH TK_PARAMETERS <inputParameters> TK_SEM
-42. <outputParameters> ==> TK_SQL <idList> TK_SQR TK_ASSIGNOP
-43. <outputParameters> ==> eps
-44. <inputParameters>===> TK_SQL <idList> TK_SQR
-45. <iterativeStmt>===> TK_WHILE TK_OP <booleanExpression> TK_CL <stmt> <otherStmts> TK_ENDWHILE
-46. <conditionalStmt>===> TK_IF TK_OP <booleanExpression> TK_CL TK_THEN <stmt> <otherStmts> <elsePart>
-47. <elsePart>===> TK_ELSE <stmt> <otherStmts> TK_ENDIF
-48. <elsePart>===> TK_ENDIF
-49. <ioStmt>===> TK_READ TK_OP <singleOrRecId> TK_CL TK_SEM
-50. <ioStmt>===> TK_WRITE TK_OP <all> TK_CL TK_SEM
-51. <arithmeticExpression> ===> <term> <expPrime>
-52. <expPrime> ===> <lowPrecedenceOperators> <term> <expPrime>
-53. <expPrime> ===> eps
-54. <term>===> <factor> <termPrime>
-55. <termPrime> ===> <highPrecedenceOperators> <factor> <termPrime>
-56. <termPrime> ===> eps
-57. <factor> ===> TK_OP <arithmeticExpression> TK_CL
-58. <factor> ===> <all>
-59. <highPrecedenceOperators>===> TK_MUL
-60. <highPrecedenceOperators>===> TK_DIV
-61. <lowPrecedenceOperators> ===> TK_PLUS
-62. <lowPrecedenceOperators> ===> TK_MINUS
-63. <all>===> TK_NUM
-64. <all>===> TK_RNUM
-65. <all>===> <singleOrRecId>
-66. <booleanExpression>===>TK_OP <booleanExpression> TK_CL <logicalOp> TK_OP <booleanExpression> TK_CL
-67. <booleanExpression>===> <all> <relationalOp> <all>
-68. <booleanExpression>===> TK_NOT TK_OP <booleanExpression> TK_CL
-69. <logicalOp>===>TK_AND
-70. <logicalOp>===> TK_OR
-71. <relationalOp>===> TK_LT
-72. <relationalOp>===> TK_LE
-73. <relationalOp>===> TK_EQ
-74. <relationalOp>===> TK_GT
-75. <relationalOp>===> TK_GE
-76. <relationalOp>===> TK_NE
-77. <returnStmt>===> TK_RETURN <optionalReturn> TK_SEM
-78. <optionalReturn>===> TK_SQL <idList> TK_SQR
-79. <optionalReturn>===> eps
-80. <idList>===> TK_ID <more_ids>
-81. <more_ids>===> TK_COMMA <idList>
-82. <more_ids>===> eps
+40. <new_24>===> TK_SQL TK_NUM TK_SQR
+41. <new_24>===> eps
+42. <funCallStmt>===> <outputParameters> TK_CALL TK_FUNID TK_WITH TK_PARAMETERS <inputParameters> TK_SEM
+43. <outputParameters> ==> TK_SQL <idList> TK_SQR TK_ASSIGNOP
+44. <outputParameters> ==> eps
+45. <inputParameters>===> TK_SQL <idList> TK_SQR
+46. <iterativeStmt>===> TK_WHILE TK_OP <booleanExpression> TK_CL <stmt> <otherStmts> TK_ENDWHILE
+47. <conditionalStmt>===> TK_IF TK_OP <booleanExpression> TK_CL TK_THEN <stmt> <otherStmts> <elsePart>
+48. <elsePart>===> TK_ELSE <stmt> <otherStmts> TK_ENDIF
+49. <elsePart>===> TK_ENDIF
+50. <ioStmt>===> TK_READ TK_OP <singleOrRecId> TK_CL TK_SEM
+51. <ioStmt>===> TK_WRITE TK_OP <all> TK_CL TK_SEM
+52. <arithmeticExpression> ===> <term> <expPrime>
+53. <expPrime> ===> <lowPrecedenceOperators> <term> <expPrime>
+54. <expPrime> ===> eps
+55. <term>===> <factor> <termPrime>
+56. <termPrime> ===> <highPrecedenceOperators> <factor> <termPrime>
+57. <termPrime> ===> eps
+58. <factor> ===> TK_OP <arithmeticExpression> TK_CL
+59. <factor> ===> <all>
+60. <highPrecedenceOperators>===> TK_MUL
+61. <highPrecedenceOperators>===> TK_DIV
+62. <lowPrecedenceOperators> ===> TK_PLUS
+63. <lowPrecedenceOperators> ===> TK_MINUS
+64. <all>===> TK_NUM
+65. <all>===> TK_RNUM
+66. <all>===> <singleOrRecId>
+67. <booleanExpression>===>TK_OP <booleanExpression> TK_CL <logicalOp> TK_OP <booleanExpression> TK_CL
+68. <booleanExpression>===> <all> <relationalOp> <all>
+69. <booleanExpression>===> TK_NOT TK_OP <booleanExpression> TK_CL
+70. <logicalOp>===>TK_AND
+71. <logicalOp>===> TK_OR
+72. <relationalOp>===> TK_LT
+73. <relationalOp>===> TK_LE
+74. <relationalOp>===> TK_EQ
+75. <relationalOp>===> TK_GT
+76. <relationalOp>===> TK_GE
+77. <relationalOp>===> TK_NE
+78. <returnStmt>===> TK_RETURN <optionalReturn> TK_SEM
+79. <optionalReturn>===> TK_SQL <idList> TK_SQR
+80. <optionalReturn>===> eps
+81. <idList>===> TK_ID <more_ids>
+82. <more_ids>===> TK_COMMA <idList>
+83. <more_ids>===> eps
+84. <arrayDatatype>===> TK_ARRAY TK_SQL TK_NUM TK_DOT TK_DOT TK_NUM TK_SQR TK_OF
+85. <arrayDatatype>===> eps

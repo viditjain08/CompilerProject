@@ -9,6 +9,7 @@
 #include "semanticAnalyzerDef.h"
 
 char buf[256];
+extern int recursion;
 
 void checkInitialisations(NODE_AstTree expr, int funcHashVal){
     if (expr->child == NULL) { // it is an identifier
@@ -157,7 +158,12 @@ void semStmts(NODE_AstTree root, int funcHashVal){
                     break;
                 }
                 if(getHashIndex(stmt->child,funcHashVal) > 0 && errno != 1){
-                    h[getHashIndex(stmt->child,funcHashVal)].entry_ptr->init = 1;
+                	if(stmt->child->tokens->next==NULL) {
+	                    h[getHashIndex(stmt->child,funcHashVal)].entry_ptr->init = 1;
+                	} else {
+	                    h[getHashIndex(stmt->child,funcHashVal)].field_ptr->set = 1;
+                	}
+
                 }
                 errno = 0;
             }
@@ -360,6 +366,18 @@ int checkFunctionInvoke(NODE_AstTree stmt, int funcHashVal) {
     int newFuncInd = functions[index].index;
     int oldFuncInd = functions[funcHashVal].index;
 
+	if(recursion<2 && newFuncInd==oldFuncInd) {
+		recursion++;
+    	return oldFuncInd-newFuncInd;
+	}
+	if(recursion>=2 && newFuncInd==oldFuncInd) {
+		recursion++;
+        memset(buf,0,256);
+        sprintf(buf,"Line:%d ==> %s can't call recursive function after 2 recursions\n", stmt->tokens->tk->lineNo,functions[funcHashVal].function_name);
+        addError(stmt->tokens->tk->lineNo );		
+		
+		return oldFuncInd-newFuncInd;
+	}
     if(oldFuncInd <= newFuncInd){
         // stmt for error, old does not know the signature of new function
         memset(buf,0,256);
@@ -572,11 +590,14 @@ int checkUpdate(NODE_AstTree var, NODE_AstTree stmts){
                 }else if (checkUpdate(var,stmt->child->sibling->sibling) == 1) {
                     return 1;
                 }else{
-                    return 0;
+                    //return 0;
                 }
             }break;
             case TK_WHILE:{
-                return checkUpdate(var,stmt->child->sibling);
+                if(checkUpdate(var,stmt->child->sibling)) {
+                	return 1;
+                }
+                break;
             }
         }
 

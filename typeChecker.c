@@ -12,22 +12,25 @@ int errno = 0;
 int getHashIndex(NODE_AstTree var, int funcHashVal){
     int index;
     if(var->tokens->next == NULL){// single identifier is there
-        index = lookupEntry("global",var->tokens->tk->lexeme,NULL);
+
+        index = lookupEntry(functions[funcHashVal].function_name,var->tokens->tk->lexeme,NULL);
         if(index < 0){
             // error, var not defined
-            index = lookupEntry(functions[funcHashVal].function_name,var->tokens->tk->lexeme,NULL);
+        	index = lookupEntry("global",var->tokens->tk->lexeme,NULL);
             return index;
         }
 
     }else{// identifier with field id is there
-        index = lookupEntry("global",var->tokens->tk->lexeme,var->tokens->next->tk->lexeme);
+
+        index = lookupEntry(functions[funcHashVal].function_name,var->tokens->tk->lexeme,var->tokens->next->tk->lexeme);
         if(index < 0){
             // error, var not defined
-            index = lookupEntry(functions[funcHashVal].function_name,var->tokens->tk->lexeme,var->tokens->next->tk->lexeme);
+	        index = lookupEntry("global",var->tokens->tk->lexeme,var->tokens->next->tk->lexeme);
             return index;
         }
 
     }
+    return index;
 }
 
 
@@ -147,7 +150,13 @@ char* getExpressionDtype(NODE_AstTree root, int funcHashVal){
                 char* dtChild2 = getExpressionDtype(child2,funcHashVal);
 
                 if (!strcmp(dtChild1,dtChild2)) {
-                    return dtChild1;
+                    if(!strcmp(dtChild1,dtChild2)) {
+                    	if(!strcmp(dtChild1,"int")||!strcmp(dtChild1,"real")) {
+                    		return dtChild1;
+                    	} else {
+                    		return "error";
+                    	}
+                    }
                 }else if(!strcmp(dtChild1,"int") && ((strcmp("real",dtChild2) && strcmp("error",dtChild2)))){
                     return dtChild2;
                 }else if(!strcmp(dtChild1,"real") && ((strcmp("int",dtChild2) && strcmp("error",dtChild2)))){
@@ -168,9 +177,9 @@ char* getExpressionDtype(NODE_AstTree root, int funcHashVal){
                 char* dt = getExpressionDtype(child1,funcHashVal);
                 if (!strcmp(dt,"bool")) {
                     // printf("Line:%d ==> Operation is not valid on %s\n",child1->tokens->tk->lineNo,child1->tokens->tk->lexeme );
-                    return "error";
+                    return "bool";
                 }
-                return "bool";
+                return "error";
             }
             break;
 

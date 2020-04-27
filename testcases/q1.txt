@@ -1,0 +1,141 @@
+% Base test case to be modified by students to showcase the semantic features given in Question 1.
+
+% Students are advised to use their own test case or tailor make from this one - for each semantic rule separately so that if one semantic rule is not 
+% implemented or code is not working, then code works for other rules 
+
+% If these comments in this file are creating any problem, maintain a different copy of the test case and remove comments manually by editing this file
+% For Q1 part a - This code has four recursive calls - first two are not the errors and the last two are errors 
+% For Q1 part b - to understand the test case- write on paper the function names and list global variables and their types and local declarations of the 
+% same names hiding the global definition. At places the types match based on global or local type as applicable and at times the types mismatch.
+% For Q1 part c - There are four record types - Marks weather bank and coordinates - not using hash and comma for avoiding problems 
+% The records Marks and coordinates are structurally similar - also the records weather and bank are equivalent 
+% Make sure that there is no lexical or syntax error in this test case - if there are - then first fix them
+
+% You should print on the console using your stage 2 driver the question numbers you have attempted.
+
+
+_functionfive input parameter list [int d5c34, record #marks c3c4, record #bank d6d7]  
+output parameter list[real d4];
+	record #bank
+		type real : turnover;
+		type real: interestrate;
+		type int: year;
+		type int: accountholders;
+		type real: balance;
+	endrecord;
+
+	type real : c3bd:global;
+	type record #weather: b6;
+	type record #weather: d6d6666;
+	type real: b7;
+	type record #weather: b2c5555;
+	type record #bank : b7b7: global;
+	type real : b5b567;            	% No error - should not be an error for variable redeclaration
+	d5c34<--- b7 + b2cccc333; 	% ERROR- type mismatch due to plus having arguments of integer and real types, global definition of b2cccc333 applies
+	b5b567<--- b7 + c3bd;          	% No error- local definition of b5b567 applies for type checking
+	b6<--- b6 + b2c5555;		% No error- local definition of b2c5555 applies for type checking 
+	b6<--- d6d7 + d6d6666; 		% No error - types bank and weather are same structurally
+	b6<--- c3c4 + b6;		% ERROR - type mismatch as b6 and c3c4 are of incompatible types marks and weather based on their type structure
+	b6<---b2c5555 + d6d6666;	% No error - same type of all variables - by name as well as by structure trivially
+	return [d4];
+end
+
+_functiontwo input parameter list [record #marks d6d777, real d6d6666]  
+output parameter list[record #weather d3];
+	type record #weather : b3;
+	type record #marks: b2;
+	type real : c3bc;
+	b5b567 <--- 1;
+	[b3] <--- call _functiontwo with parameters [b2, c3bc];   %No error - recursive call 
+	c3bc<---45.65 + b5b567;		% ERROR - type mismatch due to plus having arguments of integer and real types, global definition of b5b567 applies
+	c3bd<---c3bc + 20.59;          	% No error - global definition of c3bd applies here
+	return [d3];
+end
+
+_sumabcd  input parameter list [int d5c34]  
+output parameter list[real d3];
+	record #marks
+		type real : subjectone;
+		type int: subjectthree;
+		type real: subjecttwo;
+	endrecord;
+	type record #marks : c3bd;
+	type int : b3;
+	type real : d4;
+	type record #weather: b6;
+	type real: b2c5555: global;
+	type real: b2cccc33;   
+	type real : b5b567;
+	b5b567 <--- 1;
+	d3 <--- d4 + b2cccc33;   	% No error - local definition of b2cccc33 applies for type checking 
+	[b6] <--- call _functiontwo with parameters [c3bd, b2cccc33];
+	d3 <--- d4 + c3bd;		% ERROR - type mismatch due to plus having arguments of integer and record types, local definition of c3bd applies
+	[d3] <--- call _sumabcd with parameters [b3];		%No error - recursive call
+	d4<--- 23.67 + d3;
+	return [d3];
+end
+_functionseven input parameter list [int c2c33, real c3c2, record #coordinates b7]  
+output parameter list[int d3];
+	type record #bank : b3;
+	type real : c3bc;
+	type record #marks: c3c4;
+	type int: c5;
+	b5b567 <--- 1;				% global definition of b5b567 applies here
+	[c3bc] <--- call _functionfive with parameters [c5, c3c4, b3];
+	d3<---0;
+	return [d3];
+end
+_functionfour input parameter list [record #bank b5b7, record #weather d2d3]  
+output parameter list[record #marks d3];
+	type record #marks : b3;
+	type record #weather : b4;
+	type record #bank : b5;
+	type real : b7b7;			
+	b5b567 <--- 1;
+	%error recursion below 
+	[b3] <--- call _functionfour with parameters [b5, b4];  %ERROR - recursive call   
+	c3bd<---b7b7 + 23.56;					%No error - local definition of b7b7 applies for type checking
+	return [d3];
+end
+_functionone input parameter list [record #marks d6d777, real d6d6666]  
+output parameter list[int d3];
+	type record #marks : b3;
+	type real : c3bc;
+	type record #weather: d4c5;
+	b5b567 <--- 1;
+	[d4c5] <--- call _functiontwo with parameters [b3, c3bc];
+	d3<---0;
+	return [d3];
+end
+_functionthree input parameter list [int d5cc34, real d5c34, record #marks d6d777, real d6d6666]  
+output parameter list[int d3];
+	record #coordinates
+		type real : xval;
+		type int: zval;
+		type real: yval;
+	endrecord;
+	type int : b2cccc333:global;
+	type record #marks : b3;
+	type real : c3bc;
+	b5b567 <--- 1;
+	[b2cccc333] <--- call _functionthree with parameters [c3bc, b3, c3bc]; 		%ERROR - recursive call 
+	d3<---0;
+	return [d3];
+end
+_main
+	type record #marks : d4;
+	type record #marks : d5;
+	type int : b5;
+	type int : d5cb34567;
+	type record #weather: b6;
+	type record #weather: b7;
+	type record #coordinates: b5b5;
+	type int: b5c4;
+	type record #marks : b5c6;
+	type real : b7b3;
+	b5 <--- 1;
+	read(d5cb34567);
+	d5<---d4 + b5b5;               	%No error - types are structurally equivalent
+	b6<--- b7+ b5c6; 		%ERROR - types are structurally different 
+	return;
+end

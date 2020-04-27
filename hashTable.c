@@ -33,6 +33,7 @@ char *tokenMap[] = {
     "TK_GLOBAL",
     "TK_ASSIGNOP",
     "TK_DOT",
+    "TK_NUM",
     "TK_CALL",
     "TK_WITH",
     "TK_PARAMETERS",
@@ -50,7 +51,6 @@ char *tokenMap[] = {
     "TK_DIV",
     "TK_PLUS",
     "TK_MINUS",
-    "TK_NUM",
     "TK_RNUM",
     "TK_NOT",
     "TK_AND",
@@ -62,6 +62,8 @@ char *tokenMap[] = {
     "TK_GE",
     "TK_NE",
     "TK_RETURN",
+    "TK_ARRAY",
+    "TK_OF",
     "TK_ERROR",
     "TK_ERROR2",
     "TK_ERROR3"
@@ -102,6 +104,8 @@ void hashInit(int no){
 	addEntry("record",TK_RECORD);
 	addEntry("endrecord",TK_ENDRECORD);
 	addEntry("else",TK_ELSE);
+	addEntry("array",TK_ARRAY);
+	addEntry("of",TK_OF);
 
 }
 
@@ -129,7 +133,7 @@ int hashFunc(char* key,int no){
 	long long value = 0;
 	for(i;i<length;i++)
 	{
-		value = 53*value + key[i];
+		value = (53*value + key[i])%no;
 	}
 	value = value % no;
 

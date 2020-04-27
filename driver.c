@@ -21,9 +21,12 @@ int hash_size;
 FN_ENTRY functions;
 int fn_size;
 FN_STACK stack = NULL;
+int recursion;
+extern int invalid_prog;
+
 int main(int argc, char *argv[]) {
 
-
+	invalid_prog=0;
 	if (argc < 2) {
 		printf("Give command line arguments\n" );
 		exit(0);
@@ -34,7 +37,7 @@ int main(int argc, char *argv[]) {
 
 
 	// initialisations
-
+	//printf("%d %d\n",'e','E');
 	hashInit(15);
 
 	hashTableInit(HASHSIZE);
@@ -54,6 +57,9 @@ int main(int argc, char *argv[]) {
 		errors[i] = NULL;
 	}
 
+	//for(int i=0;i<g->terminal_count;i++) {
+	//	printf("%s\n",terminals[g->terminals[i]].name);
+	//}
 	while(1)
 	{
 
@@ -80,11 +86,11 @@ int main(int argc, char *argv[]) {
 		else if (choice == 1)
 		{
 			printTokens(file);
+
 		}
 		else if (choice ==2)
 		{
 			pt = parseInputSourceCode(file, t, f, g);
-
 			if(invalid_prog==0) {
 				printf("Program is syntactically correct\n");
 			}
@@ -98,7 +104,14 @@ int main(int argc, char *argv[]) {
 				printf("First make Parse tree\n" );
 				continue;
 			}
-
+			printf("%d\n",invalid_prog);
+			if (invalid_prog > 0) {
+				printf("First remove all syntactic errors\n");
+				// show syntactic errors
+				pt = parseInputSourceCode(file, t, f, g);
+				// printf("temp\n" );
+				continue;
+			}
 			ast = buildAST(pt);
 			printf("\n");
 			printf("--------AST POSTORDER Traveral-------\n");
@@ -243,6 +256,7 @@ int main(int argc, char *argv[]) {
 			}
 			printf("No syntactic errors\n" );
 			printf("----------Semantic_Errors---------\n" );
+			recursion=0;
 			semAnalyze(ast);
 			printf("\n" );
 			printErrors(no_of_lines);

@@ -89,5 +89,4 @@ struct hashT {
 	int index;
 };
 
-extern int invalid_prog;
 #include "parser.h"

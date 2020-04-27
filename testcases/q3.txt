@@ -1,0 +1,38 @@
+%Base test Case for Question number 2b for testing array construct implementation 
+% Modify as per the specifications to showcase your work for all phases - lexical and syntax - recreate a copy of this and introduce some syntax errors as well
+% This testcase assumes that there is no syntax error or lexical error
+
+_arraydemo  input parameter list [int b2, array [1..10] of real b7, real b5]  
+output parameter list[real d3];
+	type int : b5b567;
+	b5b567 <--- 1;
+	return [d3];
+end
+_parameters  input parameter list [int b2, array [1..10] of real b7, real b5]  
+output parameter list[real d3];
+	type int : b5b567;
+	b5b567 <--- 1;
+	return [d3];
+end
+_main
+	type array [1..10]real: b2c3;
+	type array[1..15] of real: b3c4;
+	type array [1..20] of real: c3;
+	type int : b3;
+	type array [1..10]real: d5;
+	type array [1..10] of int: b3c5;
+	type real: c5c5;
+	type array [1..10]real: d4;
+	b2c3<---d4 + d5; 		% No error - structure of arrays match
+	d4<---c3 + d5; 			% ERROR - structures of arrays do not match
+	b3 <---b3c5[8]+b3;		% No error - types match
+	c5c5<---b3c4[5]+b2c3[5];	% ERROR - types are structurally different due to their respective array sizes of 15 and 10
+	b3<---b3c5[5]+b2c3[5];		% ERROR - types are structurally different due to their respective element types
+	b3<---23+b3c5[6];		% No error- as all are of type integer
+	d5[2]<---c5c5+34.78;		% No error - as array element of d5 is of type real as is on the rhs
+	c5c5<---d5[8]+d5[11];		% ERROR - Index out of bound 
+
+	[c4bd56]<--- call _arraydemo with parameters [b3, d4, c5c5];
+
+	return;
+end

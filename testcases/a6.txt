@@ -1,0 +1,44 @@
+_CSf363  input parameter list [array [1..25] of int c5, int c4c6]  
+output parameter list[int c4];
+	type array [1..40] of int: b7;
+	c4<---56;
+	if(c5[12] > 0)
+	then
+		c5[25]<---c4c6 + 56;	
+	else
+		c5<---c5 + b7;		
+	endif
+	c4c6 <--- b7[0] + 65;	
+	c4c6 <---65;
+	c5[24] <--- b7[1] - 23.54;	
+	write(c4c6);
+	if(c5 > 0)	 
+	then
+		c5 <---c5;
+	endif
+	return[c4];
+end
+
+
+_main
+	type array [1..25] of int: c4;
+	type array[1..25] of real: c6c7;
+
+	type array [1..13] of int: c6;
+	type array [1..13] of real: d5c5;
+
+	type real: d6b4;
+	type int : c4c5;
+	type int : c4c55;
+	read(c6c7[23]);
+	write(d5c5);
+	d5c5[10]<---(c6[12] + d6b4)*(56.87 * 156.24); 
+	c4c55<--- c6[5] + 65;	
+	c4c5<---c4[3] - (53 * c4[30]);
+	read(d6b4);
+	d5c5<---d5c5 + c6c7;	
+	c6c7[3]<---(4.34 + c6c7[19]) * 59.07; 
+	write(c4c55);
+	[c4c55]<--- call _CSf363 with parameters [c4, c4c5];
+	return;
+end

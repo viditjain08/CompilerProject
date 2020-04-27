@@ -1,0 +1,10 @@
+_main
+	type array [1..5] of int: c4;
+	type array[1..5] of int: c6c7;
+	type array[1..5] of int: d2;
+	read(c6c7);
+	read(c4);
+	d2 <--- c4 + c6c7;
+	write(d2);
+	return;
+end

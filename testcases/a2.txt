@@ -1,0 +1,101 @@
+_M1 input parameter list [real c5, int c5c3456]  
+	output parameter list[real b4];
+	record #hyderabad
+		type real : hswd;
+		type int: hid;
+		type int: haugsd;
+		type real: hcsis;
+	endrecord;
+	type record #hyderabad : d3ddd;
+	type record #hyderabad : b4bbb: global;
+	type record #hyderabad :c3cdcdcd;	
+	type real: c543;
+	type real : d4cd: global;
+	type int: d3d567567;	
+	type int : b4b4;
+	b4bbb <--- d3ddd - c3cdcdcd;	
+	c543 <--- 26.82 * 32.96;
+	c5c3456 <--- d3d567567 / b4b4 +54;	
+	c5c3456 <--- 63 - b4b4;
+	return [b4];
+end
+
+_M2 input parameter list [int d5, int d5d34]  
+	output parameter list[int d567];
+	record #pilani
+		type int : swd;
+		type int: id;
+		type real: augsd;
+		type real: csis;
+		type int: eee;
+	endrecord;
+	type record #pilani : c6c6666;
+	type record #hyderabad : d2;
+	type record #pilani : d4cd;	
+	type record #pilani : b5b6656: global;
+	type real: b4bbb;			
+	type int: d7d7654: global;
+	type real: c44356;
+	c6c6666 <--- b5b6656 - d4cd;	
+	d7d7654 <--- 56;
+	c44356 <--- b4bbb * c44356;	
+	c44356 <--- 67.56;
+	d2 <---b4bbb + d2;	
+	read(c44356);
+	c44356 <--- c44356 + d4cd;	
+	return [d567];
+end
+
+_M3 input parameter list [real c546, int c446677, real d65566]  
+	output parameter list[real d654654, int c3d3456];
+	record #goa
+		type real : gswd;
+		type real: gid;
+		type real: gaugsd;
+		type int: gcsis;
+	endrecord;
+	type record #goa : c3b456456;
+	type real: d7d7654;	
+	type real: c6ccc555;
+	type int: d3d567567;
+	type int: b5b6656;	
+	type record #goa : d3dbc456;
+	type int: c3cdcdcd: global;
+	d3d567567 <--- b5b6656 - d3d567567;	
+	c3cdcdcd <--- 56 / 32;
+	d7d7654 <--- 35 + c3cdcdcd + b5b6656;	
+	read(c546);
+	write(c446677);
+	return [d654654, c3d3456];
+end
+
+
+_M4 input parameter list [int c42, real d6d666, real c4c55567]  
+output parameter list[real c567];
+	type real : b6c5;
+	type int : d55;	% local
+	type int : c4d34: global;
+	type int : c56;
+	d55 <--- d55 + c3cdcdcd;	
+	write(d6d666);
+	read(c4c55567);
+	return [c567];
+end
+
+_main
+	record #dubai
+		type int : swd;
+		type real: id;
+		type real: augsd;
+	endrecord;
+	type record #goa : d3d567567: global;
+	type int: b555555;
+	type record #dubai : c4c;
+	type real : b4bbbbb;
+	type record #dubai : c4d34;	
+	type record #dubai : d55: global;
+	c4d34 <--- c4c + d55;	
+	b4bbbbb <--- 87.43 + 76.65;
+	b555555 <--- c4d34 - b555555;	
+	return;
+end

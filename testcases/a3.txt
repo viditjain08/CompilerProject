@@ -1,0 +1,106 @@
+_f1 input parameter list [record #goa d5cc34, record #dubai d2cd]
+	output parameter list[record #goa c5];
+	record #hyderabad
+		type real : hswd;
+		type int: hid;
+		type int: haugsd;
+		type real: htlc;
+	endrecord;
+	type record #hyderabad : d3ddd;
+	type int: c3333333;
+	type record #hyderabad : b4bbb;
+	type int: c4444444;
+	write(d3ddd);
+	d5cc34 <--- d2cd + d3ddd;	
+	read(d5cc34);
+	b4bbb <--- d3ddd + d2cd;	
+	return[c5];
+end
+_f2 input parameter list [int d5, int d5d34]  
+	output parameter list[int d567];
+	record #pureit
+		type int : swd;
+		type int: id;
+		type real: augsd;
+		type real: csis;
+		type int: eee;
+	endrecord;
+	record #galgotia
+		type real : gswd;
+		type real: gid;
+		type real: gaugsd;
+		type int: gcsis;
+	endrecord;
+	record #hail
+		type real : hswd;
+		type real: hid;
+		type real: haugsd;
+		type int: hcsis;
+	endrecord;
+	type record #hail : d3ddd;
+	type record #pureit : b4bbb; 
+	type real: d7d7654;
+	type record #galgotia : c3cdcdcd;
+	type record #pureit : b4b34;
+	type int: c5cd763;
+	type record #hail : d3d765; 
+	type record #galgotia : c3cdc647;
+	type record #galgotia : c3b456456;
+	b4bbb <--- c3cdcdcd - d3ddd;	
+	d7d7654 <--- 76.87 * d7d7654;
+	c3cdc647 <--- d3d765 + c3cdc647;	
+	return[d567];
+end
+
+_f3 input parameter list [record #hail d5cc35, record #pureit d2cd34]
+output parameter list[int c43];
+	record #dub
+		type real : duswd;
+		type real : duswded;
+		type real: duid;
+		type int: duaugsd;
+	endrecord;
+	type record #dub : d3ddd2;
+	type real: d7d76546;
+	type record #dub : b4bbb3;
+	type int: d7d765444;
+	write(d5cc35);
+	d3ddd2 <--- b4bbb3 + d5cc35;	
+	read(d3ddd2);
+	write(d5cc35);
+	d2cd34 <--- d2cd34 - d3ddd2;	
+	return[c43];
+end
+
+_main
+	record #pilani
+		type int : swd;
+		type real: id;
+		type real: augsd;
+	endrecord;
+	record #dubai
+		type real : dswd;
+		type int: did;
+		type int: daugsd;
+		type real: dtlc;
+	endrecord;
+	record #goa
+		type int : newswd;
+		type real: newid;
+		type real: newaugsd;
+	endrecord;
+
+	type record #pilani : c4c;
+	type record #goa: c5d44;
+	type record #goa: c555;
+	type record #pilani : d55;
+	type record #goa : d6c;
+	type record #dubai : b2c2;
+	type record #dubai : c2c;
+	d55 <--- d55 + b2c2;	
+	read(d55);
+	write(b2c2);
+	d6c <--- c5d44 - d55;	
+	return;
+end
+	
